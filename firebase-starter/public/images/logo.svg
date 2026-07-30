@@ -1,0 +1,57 @@
+<svg width="520" height="200" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icone: escudo com buraco de fechadura + chama -->
+  <g transform="translate(10,5)">
+    <path
+      fill="#16233A"
+      fill-rule="evenodd"
+      d="M95,10
+         L165,35
+         L165,100
+         C165,145 130,175 95,188
+         C60,175 25,145 25,100
+         L25,35
+         Z
+         M111,83
+         A16,16 0 1,0 79,83
+         A16,16 0 1,0 111,83
+         Z
+         M103,95
+         L87,95
+         L79,145
+         L111,145
+         Z"
+    />
+    <!-- Chama - camada externa -->
+    <path
+      fill="#F4511E"
+      d="M140,20
+         C156,30 163,48 152,64
+         C149,68 145,71 141,72
+         C150,60 148,46 138,36
+         C136,44 132,50 126,54
+         C122,44 126,30 138,20
+         C138.7,19.5 139.3,19.6 140,20
+         Z"
+    />
+    <!-- Chama - camada interna -->
+    <path
+      fill="#FFAB00"
+      d="M138,38
+         C146,45 149,55 143,64
+         C140,68 135,70 131,69
+         C137,62 137,54 131,47
+         C129,52 126,56 122,58
+         C120,50 125,42 133,38
+         C134.7,37.3 136.4,37.3 138,38
+         Z"
+    />
+    <!-- Brilho / faisca -->
+    <circle cx="141" cy="47" r="4" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(200,80)" font-family="Arial, Helvetica, sans-serif" font-weight="700">
+    <text x="0" y="20" font-size="34" fill="#16233A">Firebase<tspan fill="#FFAB00">Starter</tspan></text>
+    <text x="0" y="48" font-size="14" font-weight="400" fill="#5A6B85" letter-spacing="2">AUTH STARTER KIT</text>
+  </g>
+</svg>

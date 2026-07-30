@@ -1,0 +1,76 @@
+<main
+  class="
+    flex
+    min-h-screen
+    items-center
+    justify-center
+    p-6
+  "
+>
+
+  <div
+    class="
+      flex
+      w-full
+      max-w-md
+      flex-col
+      gap-8
+    "
+  >
+
+    <app-logo />
+
+    <hlm-card>
+        <hlm-card-header>
+            <h1 hlmCardTitle>
+                Entrar
+            </h1>
+            <p hlmCardDescription>
+                Informe suas credenciais para acessar sua conta.
+            </p>
+        </hlm-card-header>
+
+        <div hlmCardContent>
+            <form [formGroup]="form" class="flex flex-col gap-6">
+                <div hlmFormField>
+                    <label hlmLabel for="email">
+                        E-mail
+                    </label>
+
+                    <input hlmInput id="email" type="email"
+  autocomplete="email" placeholder="voce@email.com" formControlName="email"/>
+                <app-form-error [control]="emailControl" label="E-mail" />
+                </div>
+
+                <div hlmFormField>
+                    <label hlmLabel for="password">
+                        Senha
+                    </label>
+
+                    <input hlmInput id="password" type="password" autocomplete="current-password" placeholder="••••••••" formControlName="password"/>
+                    <app-form-error [control]="passwordControl" label="Senha" />
+                </div>
+
+                <button hlmBtn class="w-full">
+                    Entrar
+                </button>
+
+            </form>
+
+        </div>
+
+        <hlm-card-footer>
+            <div class="flex w-full flex-col items-center gap-2">
+
+                <a routerLink="/forgot-password" class="text-sm text-primary hover:underline">
+                Esqueci minha senha
+                </a>
+
+                <a routerLink="/register" class="text-sm text-primary hover:underline">
+                Criar conta
+                </a>
+            </div>
+        </hlm-card-footer>
+    </hlm-card>
+  </div>
+</main>
