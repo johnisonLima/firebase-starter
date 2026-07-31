@@ -1,1 +1,84 @@
-<p>register works!</p>
+<main class="flex min-h-screen items-center justify-center p-6">
+
+  <div class="flex w-full max-w-md flex-col gap-8">
+
+    <app-logo />
+
+    <hlm-card>
+        <hlm-card-header>
+            <h1 hlmCardTitle>
+                Criar conta
+            </h1>
+            <p hlmCardDescription>
+                Preencha os dados abaixo para criar sua conta. 
+            </p>
+        </hlm-card-header>
+
+        <div hlmCardContent>
+            <form class="flex flex-col gap-6"
+                [formGroup]="form" (ngSubmit)="register()">
+
+                <div hlmFormField>
+                    <label hlmLabel for="email">
+                        E-mail
+                    </label>
+
+                    <input hlmInput 
+                        id="email" type="email" autocomplete="email" placeholder="voce@email.com" 
+                        formControlName="email"/>
+
+                    <app-form-error [control]="emailControl" label="E-mail" />
+                </div>
+
+                <div hlmFormField>
+                    <label hlmLabel for="password">
+                        Senha
+                    </label>
+
+                    <input hlmInput 
+                        id="password" type="password" autocomplete="new-password" placeholder="••••••••" 
+                        formControlName="password"/>
+
+                    <app-form-error [control]="passwordControl" label="Senha" />
+                </div>
+
+                <div hlmFormField>
+                    <label hlmLabel for="confirmPassword">
+                        Confirmar senha
+                    </label>
+
+                    <input hlmInput
+                        id="confirmPassword" type="password" autocomplete="new-password" placeholder="••••••••"
+                        formControlName="confirmPassword" />
+
+                    <app-form-error [control]="confirmPasswordControl" label="Confirmação de senha" />
+                </div>
+
+                @if (error(); as message) {
+                    <p class="text-sm text-destructive">
+                    {{ message }}
+                    </p>
+                }
+
+                <button hlmBtn 
+                    type="submit" class="w-full"
+                    [disabled]="!canSubmit()">
+
+                    {{ loading() ? 'Criando conta...' : 'Criar conta' }}
+                </button>
+
+            </form>
+
+        </div>
+
+        <hlm-card-footer>
+            <div class="flex w-full justify-center">
+
+                <a routerLink="/login" class="text-sm text-primary hover:underline">
+                    Já possui uma conta? Entrar
+                </a>
+            </div>
+        </hlm-card-footer>
+    </hlm-card>
+  </div>
+</main>

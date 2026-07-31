@@ -72,7 +72,7 @@ const ERROR_MESSAGES: Record<ErrorKey, ErrorMessage> = {
 
   [VALIDATION_ERRORS.MOBILE_PHONE]: () => 'Celular inválido.',
 
-  [VALIDATION_ERRORS.EQUALS_TO]: () => 'Os campos não coincidem.',
+  [VALIDATION_ERRORS.EQUALS_TO]: () => 'Os valores informados não coincidem.',
 
   [VALIDATION_ERRORS.CHECKBOX_REQUIRED]: () => 'Este campo deve ser marcado.',
 

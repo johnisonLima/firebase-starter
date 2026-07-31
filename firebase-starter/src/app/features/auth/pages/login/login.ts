@@ -1,25 +1,34 @@
+// Angular
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
+// Spartan
 import { HlmCardImports } from '@spartan-ng/helm/card';
 
+// Core
 import { AuthService } from '../../../../core/auth/auth.service';
 
+// Components
 import { AppLogoComponent } from '@shared//components/app-logo/app-logo.component';
 import { FormErrorComponent } from '@shared/components/form-error/form-error.component';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
+    // Angular
     CommonModule,
     FormsModule,
+    RouterModule,
     ReactiveFormsModule,
+    // Spartan
+    HlmCardImports,
+    // Components
     AppLogoComponent,
     FormErrorComponent,
-    HlmCardImports
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -27,6 +36,7 @@ import { CommonModule } from '@angular/common';
 })
 export class Login {
   protected readonly fb = inject(FormBuilder);
+  protected readonly router = inject(Router);
   protected readonly authService = inject(AuthService);
 
   protected readonly loading = this.authService.loading;
@@ -43,8 +53,13 @@ export class Login {
   protected readonly emailControl = this.form.controls.email;
   protected readonly passwordControl = this.form.controls.password;
 
+    protected readonly formStatus = toSignal(
+    this.form.statusChanges,
+    { initialValue: this.form.status }
+  );
+
   protected readonly canSubmit = computed(() =>
-    this.form.valid && !this.loading()
+    this.formStatus() === 'VALID' && !this.loading()
   );
 
   async login(): Promise<void> {
@@ -56,55 +71,17 @@ export class Login {
 
     const { email, password } = this.form.getRawValue();
 
-    await this.authService.login(email, password);
+    try {
+      await this.authService.login(email, password);
+      
+      this.router.navigate(['/dashboard']); // ou a rota que fizer sentido
+    } catch {
+      // O AuthService já atualizou o estado de erro.
+      // Nada a fazer aqui.
+    }   
   }
 
   protected togglePasswordVisibility(): void {
     this.showPassword.update((value) => !value);
-  }
-
-  protected async onSubmit(): Promise<void> {
-    // if (this.isSubmitting() || this.isGoogleSubmitting()) {
-    //   return;
-    // }
-
-    // if (this.form.invalid) {
-    //   this.form.markAllAsTouched();
-    //   return;
-    // }
-
-    // this.errorMessage.set(null);
-    // this.isSubmitting.set(true);
-
-    // const { email, password } = this.form.getRawValue();
-    // const result = await this.authService.loginWithEmail(email, password);
-
-    // this.isSubmitting.set(false);
-
-    // if (result.success) {
-    //   await this.router.navigateByUrl('/dashboard');
-    // } else {
-    //   this.errorMessage.set(result.errorMessage ?? 'Não foi possível entrar.');
-    // }
-  }
-
-  protected async onGoogleLogin(): Promise<void> {
-  //   if (this.isSubmitting() || this.isGoogleSubmitting()) {
-  //     return;
-  //   }
-
-  //   this.errorMessage.set(null);
-  //   this.isGoogleSubmitting.set(true);
-
-  //   const result = await this.authService.loginWithGoogle();
-
-  //   this.isGoogleSubmitting.set(false);
-
-  //   if (result.success) {
-  //     await this.router.navigateByUrl('/dashboard');
-  //   } else if (result.errorCode !== 'auth/popup-closed-by-user') {
-  //     this.errorMessage.set(result.errorMessage ?? 'Não foi possível entrar com o Google.');
-  //   }
-  // }
   }
 }
