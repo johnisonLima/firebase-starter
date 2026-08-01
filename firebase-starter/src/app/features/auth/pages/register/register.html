@@ -24,7 +24,8 @@
                     </label>
 
                     <input hlmInput 
-                        id="email" type="email" autocomplete="email" placeholder="voce@email.com" 
+                        id="email" type="email" autofocus autocomplete="email" placeholder="voce@email.com" 
+                        appAutofocus
                         formControlName="email"/>
 
                     <app-form-error [control]="emailControl" label="E-mail" />
@@ -35,9 +36,21 @@
                         Senha
                     </label>
 
-                    <input hlmInput 
-                        id="password" type="password" autocomplete="new-password" placeholder="••••••••" 
-                        formControlName="password"/>
+                    <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring">
+                        <input
+                            hlmInput
+                            id="password" class="border-0 focus:ring-0" type="password" autocomplete="current-password" placeholder="••••••••"
+                            appPasswordVisibility
+                            #passwordVisibility="passwordVisibility"
+                            formControlName="password"/>
+
+                        <button
+                            type="button"
+                            class="shrink-0 px-2 text-xs text-muted-foreground cursor-pointer"
+                            (click)="passwordVisibility.toggle()">
+                            {{ passwordVisibility.visible() ? 'Ocultar' : 'Mostrar' }}
+                        </button>
+                    </div>
 
                     <app-form-error [control]="passwordControl" label="Senha" />
                 </div>
@@ -47,9 +60,24 @@
                         Confirmar senha
                     </label>
 
-                    <input hlmInput
-                        id="confirmPassword" type="password" autocomplete="new-password" placeholder="••••••••"
-                        formControlName="confirmPassword" />
+                     <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring">
+                        <input
+                            hlmInput
+                            id="confirmPassword" class="border-0 focus:ring-0" type="password" autocomplete="current-password"  placeholder="••••••••"
+                            appPasswordVisibility
+                            #confirmPasswordVisibility="passwordVisibility"
+                            formControlName="confirmPassword"/>
+
+                        <button
+                            type="button"
+                            class="shrink-0 px-2 text-xs text-muted-foreground cursor-pointer"
+                            aria-label="{{  confirmPasswordVisibility.visible()
+                                    ? 'Ocultar senha'
+                                    : 'Mostrar senha'
+                            }}">
+                            {{ confirmPasswordVisibility.visible() ? 'Ocultar' : 'Mostrar' }}
+                        </button>
+                    </div>
 
                     <app-form-error [control]="confirmPasswordControl" label="Confirmação de senha" />
                 </div>

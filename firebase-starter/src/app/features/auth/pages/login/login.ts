@@ -15,6 +15,10 @@ import { AuthService } from '../../../../core/auth/auth.service';
 import { AppLogoComponent } from '@shared//components/app-logo/app-logo.component';
 import { FormErrorComponent } from '@shared/components/form-error/form-error.component';
 
+// Directives
+import { AutofocusDirective } from '@shared/directives/AutoFocus.directive';
+import { PasswordVisibilityDirective } from '@shared/directives/PasswordVisibility.directive';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -29,6 +33,9 @@ import { FormErrorComponent } from '@shared/components/form-error/form-error.com
     // Components
     AppLogoComponent,
     FormErrorComponent,
+    // Directives
+    AutofocusDirective,
+    PasswordVisibilityDirective,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -42,7 +49,6 @@ export class Login {
   protected readonly loading = this.authService.loading;
   protected readonly error = this.authService.error;
 
-  protected readonly showPassword = signal(false);
   // protected readonly isGoogleSubmitting = signal(false);
 
   protected readonly form = this.fb.nonNullable.group({
@@ -79,9 +85,5 @@ export class Login {
       // O AuthService já atualizou o estado de erro.
       // Nada a fazer aqui.
     }   
-  }
-
-  protected togglePasswordVisibility(): void {
-    this.showPassword.update((value) => !value);
   }
 }

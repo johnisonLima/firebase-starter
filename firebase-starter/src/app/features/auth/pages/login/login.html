@@ -23,20 +23,42 @@
                     </label>
 
                     <input hlmInput 
-                        id="email" type="email" autocomplete="email" placeholder="voce@email.com" 
+                        id="email" type="email" autofocus autocomplete="email" placeholder="voce@email.com" 
+                        appAutofocus
                         formControlName="email"/>
                    
                     <app-form-error [control]="emailControl" label="E-mail" /> 
                 </div>
 
-                <div hlmFormField>
+                <div hlmFormField >
                     <label hlmLabel for="password">
                         Senha
                     </label>
 
-                    <input hlmInput 
-                        id="password" type="password" autocomplete="current-password" placeholder="••••••••" 
-                        formControlName="password"/>
+                    <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring">
+                        <input
+                            hlmInput
+                            id="password"
+                            type="password"
+                            autocomplete="current-password"
+                            appPasswordVisibility
+                            #passwordVisibility="passwordVisibility"
+                            formControlName="password"
+                            class="border-0 focus:ring-0" />
+
+                        <button
+                            type="button"
+                            class="shrink-0 px-2 text-xs text-muted-foreground cursor-pointer"
+                            (click)="passwordVisibility.toggle()"
+                            aria-label="{{  passwordVisibility.visible()
+                                    ? 'Ocultar senha'
+                                    : 'Mostrar senha'
+                            }}">
+                            {{ passwordVisibility.visible() ? 'Ocultar' : 'Mostrar' }}
+                        </button>
+                    </div>
+                   
+
                     <app-form-error [control]="passwordControl" label="Senha" />
                 </div>
 

@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Auth, User, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { Auth, User, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getAuthErrorMessage } from './auth.errors';
 
 import { FIREBASE_APP } from '../firebase/firebase.tokens';
@@ -24,6 +24,7 @@ export class AuthService {
   readonly userName = computed(() => this.user()?.displayName ?? '');
   readonly userEmail = computed(() => this.user()?.email ?? '');
   readonly photoURL = computed(() => this.user()?.photoURL ?? '');
+  readonly emailVerified = computed(() => this.user()?.emailVerified ?? false);
 
   constructor() {
     onAuthStateChanged(this.auth, user => {
@@ -44,8 +45,40 @@ export class AuthService {
     );
   }
 
+  async sendEmailVerification(): Promise<void> {
+
+    const user = this.auth.currentUser;
+
+    if (!user) {
+      return;
+    }
+
+    await this.execute(() => sendEmailVerification(user));
+
+  }
+
   async logout(): Promise<void> {
     await this.execute(() => signOut(this.auth));
+  }
+
+  async resetPassword(email: string): Promise<void> {
+    await this.execute(() =>
+      sendPasswordResetEmail(this.auth, email)
+    );
+  }
+
+  async reloadUser(): Promise<void> {
+
+    const user = this.auth.currentUser;
+
+    if (!user) {
+      return;
+    }
+
+    await this.execute(() => user.reload());
+
+    this._user.set(this.auth.currentUser);
+
   }
 
   clearError(): void {
@@ -65,5 +98,4 @@ export class AuthService {
       this._loading.set(false);
     }
   }
-
 }

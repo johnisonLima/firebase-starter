@@ -18,6 +18,10 @@ import { FormErrorComponent } from '@shared/components/form-error/form-error.com
 // Validators
 import { equalsToValidator } from '@shared/utils/forms/validators';
 
+// Directives
+import { AutofocusDirective } from '@shared/directives/AutoFocus.directive';
+import { PasswordVisibilityDirective } from '@shared/directives/PasswordVisibility.directive';
+
 
 @Component({
   selector: 'app-register',
@@ -32,6 +36,10 @@ import { equalsToValidator } from '@shared/utils/forms/validators';
     // Components
     AppLogoComponent,
     FormErrorComponent,
+    // Directives
+    AutofocusDirective,
+    PasswordVisibilityDirective,
+
   ],
   templateUrl: './register.html',
   styleUrl: './register.scss',
@@ -79,8 +87,7 @@ export class Register {
       this.authService.clearError();
 
     });
-
-}
+  }
 
   async register(): Promise<void> {
 
@@ -95,7 +102,9 @@ export class Register {
 
       await this.authService.register(email, password);
 
-      await this.router.navigate(['/']);
+      await this.authService.sendEmailVerification();
+
+      await this.router.navigate(['/verify-email']);
 
     } catch {
       // O AuthService já tratou o erro.

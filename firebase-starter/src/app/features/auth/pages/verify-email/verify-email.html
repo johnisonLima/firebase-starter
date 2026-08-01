@@ -1,0 +1,65 @@
+<main class="flex min-h-screen items-center justify-center p-6">
+
+  <div class="flex w-full max-w-md flex-col gap-8">
+
+    <app-logo />
+
+    <hlm-card>
+
+      <hlm-card-header>
+
+        <h1 hlmCardTitle>
+          Verifique seu e-mail
+        </h1>
+
+        <p class="text-sm text-muted-foreground">
+            Enviamos um e-mail de verificação para
+            <strong>{{ emailRegistered || 'seu e-mail' }}</strong>.
+        </p>
+
+      </hlm-card-header>
+
+      <div hlmCardContent>
+
+        <p class="text-sm text-muted-foreground">
+          Antes de acessar a aplicação, clique no link enviado para o seu e-mail.
+        </p>
+
+        <p class="mt-4 text-sm text-muted-foreground">
+          Caso não encontre a mensagem, verifique também sua caixa de spam.
+        </p>
+
+      </div>
+
+      <hlm-card-footer>
+
+        <div class="flex w-full flex-col gap-3">
+
+          <button
+            hlmBtn
+            class="w-full"
+            (click)="checkVerification()">
+
+            Já verifiquei meu e-mail
+
+          </button>
+
+          <button
+            hlmBtn
+            variant="outline"
+            class="w-full"
+            (click)="resendVerificationEmail()">
+
+            Reenviar e-mail
+
+          </button>
+
+        </div>
+
+      </hlm-card-footer>
+
+    </hlm-card>
+
+  </div>
+
+</main>
