@@ -13,5 +13,9 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard),
+    },
+    {
+        path: 'testes',
+        loadComponent: () => import('./features/dev/playground/firestore-test/firestore-test').then(m => m.FirestoreTest),
     }
 ];

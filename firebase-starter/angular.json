@@ -80,7 +80,7 @@
           "options": {
             "port": 4200,
             "host": "0.0.0.0",
-            "allowedHosts": ["localhost", "192.168.0.108"]
+            "allowedHosts": ["localhost", "192.168.0.108", "192.168.0.124"]
           }
         },
         "test": {

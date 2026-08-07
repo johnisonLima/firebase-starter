@@ -1,0 +1,65 @@
+<h2>Firestore Playground</h2>
+
+<hr>
+
+<h3>Create</h3>
+
+<input
+    type="email"
+    placeholder="Email"
+    [(ngModel)]="email">
+
+<button class="btn" (click)="create()">
+    Create
+</button>
+
+<hr>
+
+<h3>Document</h3>
+
+<input
+    type="text"
+    placeholder="Document Id"
+    [(ngModel)]="id">
+
+<button (click)="findById()">
+    Find By Id
+</button>
+
+<button (click)="findAll()">
+    Find All
+</button>
+
+<hr>
+
+<h3>Update</h3>
+
+<input
+    type="email"
+    placeholder="New Email"
+    [(ngModel)]="updatedEmail">
+
+<button (click)="update()">
+    Update
+</button>
+
+<hr>
+
+<h3>Delete</h3>
+
+<button (click)="delete()">
+    Delete
+</button>
+
+<hr>
+
+<button (click)="onClear()">
+    Clear
+</button>
+
+<hr>
+
+<h3>Result</h3>
+
+<pre>{{ result | json }}</pre> 
+
