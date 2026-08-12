@@ -1,0 +1,19 @@
+<button
+  class="theme-toggle"
+  type="button"
+  [attr.aria-label]=" isDarkTheme()
+      ? 'Ativar tema claro'
+      : 'Ativar tema escuro'
+  "
+  [title]=" isDarkTheme()
+      ? 'Ativar tema claro'
+      : 'Ativar tema escuro'
+  "
+  (click)="onToggle()"
+>
+  @if (isDarkTheme()) {
+    <svg lucideSun></svg>
+  } @else {
+    <svg lucideMoon></svg>
+  }
+</button>
