@@ -16,6 +16,6 @@ export const routes: Routes = [
     },
     {
         path: 'testes',
-        loadComponent: () => import('./features/dev/playground/firestore-test/firestore-test').then(m => m.FirestoreTest),
+        loadComponent: () => import('./features/dev/playground/lucide/lucide').then(m => m.Lucide),
     }
 ];

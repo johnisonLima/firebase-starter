@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideFirebase } from './core/firebase/firebase.providers';
 import { provideBrand } from './core/config/brand';
+import { provideLucideConfig } from '@lucide/angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +18,9 @@ export const appConfig: ApplicationConfig = {
       description: 'Angular 21 + Firebase + Spartan UI',
       logo: 'images/logo.svg',
       favicon: 'favicon.ico',
+    }),
+    provideLucideConfig({
+      strokeWidth: 1.5,
     }),
   ]
 };
