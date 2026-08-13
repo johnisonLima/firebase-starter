@@ -19,6 +19,12 @@
   --radius-xl: 1.125rem;  // 18px
   --radius-full: 9999px;
 
+  --success: #22bb33;
+  --success-foreground: #ffffff;
+
+  --info: #14cff5;
+  --info-foreground: #16233a;
+
   /* Brand */
   --brand-dark: #16233a;
   --primary: #476b8c;
@@ -67,6 +73,12 @@
 
 :root.dark {
   color-scheme: dark;
+
+  --success: #81c995;
+  --success-foreground: #16233a;
+
+  --info: #3b82f6;
+  --info-foreground: #ffffff;
 
   /* Brand */
   --brand-dark: #16233a;
