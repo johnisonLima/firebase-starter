@@ -1,0 +1,67 @@
+@if (open()) {
+  <div class="dialog-overlay" animate.leave="leaving" (click)="onOverlayClick()">
+    <section
+        class="dialog"
+        cdkTrapFocus
+        cdkTrapFocusAutoCapture
+        [class.dialog-sm]="size() === 'sm'"
+        [class.dialog-md]="size() === 'md'"
+        [class.dialog-lg]="size() === 'lg'"
+        [attr.aria-labelledby]="titleId"
+        [attr.aria-describedby]="description() ? descriptionId : null"
+        role="dialog"
+        aria-modal="true"
+        (click)="$event.stopPropagation()"
+    >
+      <header class="dialog-header">
+
+        <div class="dialog-header-content">
+
+          @if (hasIcon()) {
+            <div class="dialog-icon">
+              <ng-content select="[dialog-icon]" />
+            </div>
+          }
+
+          <div class="dialog-heading">
+
+            <h2 [id]="titleId">
+              {{ title() }}
+            </h2>
+
+            @if (description()) {
+              <p [id]="descriptionId">
+                {{ description() }}
+              </p>
+            }
+
+          </div>
+        </div>
+
+        @if (showCloseButton()) {
+          <button
+            type="button"
+            class="dialog-close"
+            aria-label="Fechar diálogo"
+            title="Fechar diálogo"
+            (click)="close()"
+          >
+           <svg lucideX></svg>
+          </button>
+        }
+
+      </header>
+      <div class="dialog-content">
+        <ng-content select="[dialog-content]" />
+      </div>
+
+      @if (hasFooter()) {
+        <footer class="dialog-footer">
+          <ng-content select="[dialog-footer]" />
+        </footer>
+      }
+
+    </section>
+  </div>
+}
+
