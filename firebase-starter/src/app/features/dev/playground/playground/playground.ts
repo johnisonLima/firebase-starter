@@ -1,7 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 
+// Teste Theme
+import { ThemeToggle } from '@shared/components/theme-toggle/theme-toggle';
+
 // Teste Lucide
-import { LucideHouse, LucideSettings, LucideTrash2, LucideUser, } from '@lucide/angular';
+import { LucideHouse, LucideSettings, LucideTrash2, LucideUser, LucideArrowRight, LucideSave, } from '@lucide/angular';
 
 // Teste Toast
 import { ToastService } from '@shared/services/toast.service';
@@ -11,26 +14,38 @@ import { Dialog } from '@shared/components/dialog/dialog';
 import { DialogIconDirective } from '@shared/components/dialog/dialog-icon.directive';
 import { DialogFooterDirective } from '@shared/components/dialog/dialog-footer.directive';
 
+// Loading
+import { Loading } from '@shared/components/loading/loading';
+import { LoadingService } from '@shared/services/loading.service';
+
+// Loading Button
+import { Button } from '@shared/components/button/button';
+
 @Component({
-  selector: 'app-lucide',
+  selector: 'app-playground',
   imports: [
+    ThemeToggle,
     LucideHouse, 
     LucideUser, 
     LucideSettings,
+    LucideSave,
+    LucideArrowRight,
     Dialog,
     LucideTrash2,
     DialogIconDirective,
     DialogFooterDirective,
+    Loading,
+    Button,
   ],
-  templateUrl: './lucide.html',
-  styleUrl: './lucide.scss',
+  templateUrl: './playground.html',
+  styleUrl: './playground.scss',
 })
-export class Lucide {
+export class Playground {
 
   readonly toastService = inject(ToastService);
+  readonly loadingService = inject(LoadingService);
 
   ngOnInit(): void {
-    this.openDialog();
   }
 
   testToast(): void {
@@ -57,6 +72,14 @@ export class Lucide {
 
   closeDialog(): void {
     this.showDialog.set(false);
+  }
+
+  startLoading(): void {
+    this.loadingService.start();
+  }
+
+  stopLoading(): void {
+    this.loadingService.stop();
   }
 
 }

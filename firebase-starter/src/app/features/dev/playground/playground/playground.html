@@ -1,0 +1,390 @@
+<div class="container-test">
+
+  <div class="theme-test">
+    <h1>Theme Playground</h1>
+    <p>Troque entre os temas claro e escuro</p>
+    <app-theme-toggle />
+  </div>
+  
+  <div class="icon-test test-closed">
+    <h1>Lucide Playground</h1>
+    <div class="icons">
+      <svg lucideHouse></svg>
+      <svg
+        lucideUser
+        width="32"
+        height="32"
+      ></svg>
+      <svg
+        lucideSettings
+        width="40"
+        height="40"
+      ></svg>
+    </div>
+  </div>
+  
+  <div class="toast-test test-closed">
+    <h1>Toast Playground</h1>
+    <div class="wrap-btns">
+      <button
+        type="button"
+        class="btn"
+        (click)="testToast()"
+      >
+        Testar Toast
+      </button>
+      
+      <button
+        class="btn"
+        type="button"
+        (click)="testMultipleToasts()"
+      >
+        Testar Múltiplos Toasts
+      </button>
+    </div>
+  </div>
+
+  <div class="dialog-test test-closed">
+    <h1>Dialog Playground</h1>
+
+    <button class="btn" type="button" (click)="openDialog()">
+      Abrir Dialog
+    </button>
+
+    <app-dialog
+      [open]="showDialog()"
+      title="Novo projeto"
+      description="Preencha os dados básicos — você pode editar tudo depois."
+      (closed)="closeDialog()"
+    >
+      <div dialog-icon>
+        <svg lucideTrash2></svg>
+      </div>
+
+      <div dialog-content>
+          <h3 class="dialog__panel-title">Preferências gerais</h3>
+
+          <div class="setting-row">
+            <div>
+              <p class="setting-row__title">Modo escuro por padrão</p>
+              <p class="setting-row__desc">Aplica-se a todos os membros novos</p>
+            </div>
+            <input type="checkbox" class="toggle" checked>
+          </div>
+          <div class="setting-row">
+            <div>
+              <p class="setting-row__title">Permitir convites externos</p>
+              <p class="setting-row__desc">Qualquer membro pode convidar pessoas de fora</p>
+            </div>
+            <input type="checkbox" class="toggle">
+          </div>
+          <div class="setting-row">
+            <div>
+              <p class="setting-row__title">Backup automático diário</p>
+              <p class="setting-row__desc">Executa às 03:00, horário do workspace</p>
+            </div>
+            <input type="checkbox" class="toggle" checked>
+          </div>
+
+          <div class="setting-group">
+            <h3 class="dialog__panel-title">Idioma e região</h3>
+            <div class="field__row">
+              <div class="field">
+                <label class="field__label">Idioma</label>
+                <select class="select">
+                  <option>Português (Brasil)</option>
+                  <option>English</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field__label">Fuso horário</label>
+                <select class="select">
+                  <option>America/Bahia (GMT-3)</option>
+                </select>
+              </div>
+            </div>
+          </div>      
+      </div>
+
+      <div class="wrap-wrap-btns" dialog-footer>
+        <button class="btn btn--block" type="button" (click)="closeDialog()">
+          Cancelar
+        </button>
+
+        <button class="btn btn--block" type="button">
+          Criar projeto
+        </button>
+      </div>
+    </app-dialog>
+  </div>
+
+  <div class="loading-test  test-closed">
+    <h1>Loading Playground</h1>
+
+    <app-loading
+      size="sm"
+      text="Carregando..."
+    ></app-loading>
+
+    <app-loading
+      size="md"
+      text="Carregando..."
+    ></app-loading>
+
+    <app-loading
+      size="lg"
+      text="Carregando..."
+    ></app-loading>
+  </div>
+
+  <div class="test-button">
+    <h2>Este é um exemplo de texto para demonstrar testar o contador do serviço de loading e o overlay.</h2>
+    
+    <div class="wrap-btns">
+      <button
+        class="btn"
+        type="button"
+        (click)="startLoading()"
+      >
+        Start
+      </button>
+      <button
+        class="btn"
+        type="button"
+        (click)="stopLoading()"
+      >
+        Stop
+      </button>
+    </div>
+
+    <p>
+      Loading:
+      {{ loadingService.isLoading() }}
+    </p>
+
+    <h2>Teste de button desabilitado</h2>
+
+    <div class="wrap-btns">
+      <app-button>
+        Salvar
+      </app-button>
+
+      <app-button
+        [loading]="true"
+      >
+        Salvar
+      </app-button>
+
+      <app-button
+        [disabled]="true"
+      >
+        Desabilitado
+      </app-button>
+    </div>
+    
+    <h2> Teste tamanho do button</h2>  
+    <div class="wrap-btns">
+      <app-button 
+        size="sm"
+        [loading]="true"
+      >
+        Pequeno
+      </app-button>
+      <app-button 
+        size="md"
+        [loading]="true"
+      >
+        Médio
+      </app-button>
+      <app-button 
+        size="lg"
+        [loading]="true"
+      >
+        Grande
+      </app-button>
+    </div>
+
+    <h2> Teste variantes do button</h2>
+    <div class="wrap-btns">
+      <app-button variant="primary">
+        Primary
+      </app-button>
+
+      <app-button variant="secondary">
+        Secondary
+      </app-button>
+
+      <app-button variant="outline">
+        Outline
+      </app-button>
+
+      <app-button variant="ghost">
+        Ghost
+      </app-button>
+
+      <app-button variant="destructive">
+        Destructive
+      </app-button>
+    </div>
+
+    <h2>Teste auto/full</h2>
+    <div class="wrap-btns">
+      
+      <app-button>
+        Auto
+      </app-button>
+
+      <app-button width="full">
+        Full
+      </app-button>
+
+      <div style="width: 320px;">
+        <app-button
+          size="lg"
+          width="full"
+          [loading]="true" 
+        >
+          Salvar
+        </app-button>
+      </div>
+      
+      <app-button
+        width="full"
+        [loading]="true"
+      >
+        Salvando
+      </app-button>
+    </div>
+
+    <h2>Teste icon start/end</h2>
+    <div class="wrap-btns">
+
+      <app-button>
+        <svg lucideSave></svg>
+        Salvar
+      </app-button>
+
+      <app-button>
+        Ver detalhes
+        <svg lucideArrowRight></svg>
+      </app-button>
+    </div>
+
+    <div class="wrap-btns">
+
+      <app-button size="sm">
+        <svg lucideSave></svg>
+        Salvar
+      </app-button>
+
+      <app-button size="md">
+        <svg lucideSave></svg>
+        Salvar
+      </app-button>
+
+      <app-button size="lg">
+        <svg lucideSave></svg>
+        Salvar
+      </app-button>
+    </div>
+
+    <div class="wrap-btns">
+
+      <app-button variant="primary">
+        <svg lucideSave></svg>
+        Salvar
+      </app-button>
+
+      <app-button variant="destructive">
+        <svg lucideSettings></svg>
+        Configurações
+      </app-button>
+    </div>
+
+    <div class="wrap-btns">
+      <app-button
+        iconOnly
+        aria-label="Configurações"
+      >
+        <svg lucideSettings></svg>
+      </app-button>
+    </div>
+
+    <div class="wrap-btns">
+      <app-button
+        size="sm"
+        iconOnly
+        aria-label="Configurações"
+      >
+        <svg lucideSettings></svg>
+      </app-button>
+
+      <app-button
+        size="md"
+        iconOnly
+        aria-label="Configurações"
+      >
+        <svg lucideSettings></svg>
+      </app-button>
+
+      <app-button
+        size="lg"
+        iconOnly
+        aria-label="Configurações"
+      >
+        <svg lucideSettings></svg>
+      </app-button>
+    </div>
+
+    <div class="wrap-btns">
+      <app-button
+        iconOnly
+        [loading]="true"
+        aria-label="Salvando"
+      >
+        <svg lucideSave></svg>
+      </app-button>
+    </div>
+
+    <h3>Teste final</h3>
+
+    <div class="wrap-btns">
+      <app-button
+        variant="primary"
+        size="sm"
+        [loading]="true"
+      >
+        Salvar
+      </app-button>
+
+      <app-button
+        variant="destructive"
+        size="lg"
+        width="full"
+      >
+        <svg lucideTrash2></svg>
+        Excluir
+      </app-button>
+
+      <app-button
+        variant="outline"
+        size="md"
+        iconOnly
+        aria-label="Configurações"
+      >
+        <svg lucideSettings></svg>
+      </app-button>
+
+      <app-button
+        variant="ghost"
+        size="sm"
+        iconOnly
+        [loading]="true"
+        aria-label="Atualizando"
+      >
+        <svg lucideRefreshCw></svg>
+      </app-button>
+    </div>
+  </div>
+
+</div>

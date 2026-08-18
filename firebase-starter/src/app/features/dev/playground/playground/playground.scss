@@ -36,6 +36,7 @@ h1 {
 .wrap-btns {
   display: flex;
   gap: 10px;
+  margin-block: 8px;
 }
 
 .icon-test {
@@ -60,6 +61,9 @@ h1 {
   } 
 }
 
+.test-closed {
+  display: none;
+}
 
 /* ---------- Form elements (md) ---------- */
 

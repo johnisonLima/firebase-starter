@@ -1,0 +1,14 @@
+@if (loadingService.isLoading()) {
+  <div
+    class="loading-overlay"
+    role="status"
+    aria-label="Carregando"
+  >
+    <div class="loading-overlay-content">
+      <app-loading
+        size="lg"
+        text="Carregando..."
+      />
+    </div>
+  </div>
+}

@@ -16,6 +16,6 @@ export const routes: Routes = [
     },
     {
         path: 'testes',
-        loadComponent: () => import('./features/dev/playground/lucide/lucide').then(m => m.Lucide),
+        loadComponent: () => import('./features/dev/playground/playground/playground').then(m => m.Playground),
     }
 ];
