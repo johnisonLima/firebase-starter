@@ -1,24 +1,34 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Auth, User, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
 import { getAuthErrorMessage } from './auth.errors';
 
-import { FIREBASE_APP } from '../firebase/firebase.tokens';
+import { FIREBASE_AUTH } from '../firebase/firebase.tokens';
+
+export type AuthState =
+  | 'unknown'
+  | 'authenticated'
+  | 'unauthenticated';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private readonly app = inject(FIREBASE_APP);
-  private readonly auth: Auth = getAuth(this.app);
+  private readonly auth = inject(FIREBASE_AUTH);
 
   private readonly _user = signal<User | null>(null);
   private readonly _loading = signal(true);
   private readonly _error = signal<string | null>(null);
 
+  private readonly _authState = signal<AuthState>('unknown');
+
+  private _resolveAuthInitialization!: () => void;
+
   readonly user = this._user.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
+
+  readonly authState = this._authState.asReadonly();
 
   readonly isAuthenticated = computed(() => this.user() !== null);
   readonly userName = computed(() => this.user()?.displayName ?? '');
@@ -29,8 +39,25 @@ export class AuthService {
   constructor() {
     onAuthStateChanged(this.auth, user => {
       this._user.set(user);
+
+      this._authState.set(
+        user
+          ? 'authenticated'
+          : 'unauthenticated'
+      );
+
       this._loading.set(false);
+
+      this._resolveAuthInitialization();
     });
+  }
+
+  private readonly _authInitialized = new Promise<void>(resolve => {
+    this._resolveAuthInitialization = resolve;
+  });
+
+  async waitForAuthInitialization(): Promise<void> {
+    await this._authInitialized;
   }
 
   async login(email: string, password: string): Promise<void> {

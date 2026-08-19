@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+// Angular
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+
+// Core
 import { AuthService } from '@core/auth/auth.service';
 
 // Spartan
@@ -22,28 +25,33 @@ import { AppLogoComponent } from '@shared//components/app-logo/app-logo.componen
   styleUrl: './verify-email.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VerifyEmail { private readonly router = inject(Router);
+export class VerifyEmail implements OnInit  { 
+  
+  private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
 
   protected readonly loading = this.authService.loading;
   protected readonly error = this.authService.error;
   readonly emailRegistered = this.authService.userEmail;
 
-  protected readonly emailVerified = this.authService.sendEmailVerification;
+  async ngOnInit(): Promise<void> {
 
-  // Adicionar quando implementar o guarda de rota
+    if (this.authService.emailVerified()) {
+      await this.router.navigate(['/dashboard']);
+    }
+    
+  }
+
   async checkVerification(): Promise<void> {
 
     await this.authService.reloadUser();
 
-    // Adicionar quando implementar o guarda de rota
-    // if (this.emailVerified()) {
-    //   await this.router.navigate(['/']);
-    // }
+    if (this.authService.emailVerified()) {
+      await this.router.navigate(['/dashboard']);
+    }
 
   }
 
-  // Verificar esse fluxo de envio de email de verificação, pois o firebase não permite enviar mais de 5 emails por hora para o mesmo usuário.
   async resendVerificationEmail(): Promise<void> {
 
     await this.authService.sendEmailVerification();

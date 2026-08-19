@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '@core/guards/auth.guard';
+import { emailVerifiedGuard } from '@core/guards/email-verified.guard';
 
 export const routes: Routes = [
     {
@@ -8,14 +10,21 @@ export const routes: Routes = [
     },
     {
         path: '',
-        loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES),
+        loadChildren: () => import('./features/auth/auth.routes')
+            .then(m => m.AUTH_ROUTES),
     },
     {
         path: 'dashboard',
-        loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard),
+        loadComponent: () => import('./features/dashboard/dashboard')
+            .then(m => m.Dashboard),
+        canActivate: [
+            authGuard,
+            emailVerifiedGuard,
+        ],
     },
     {
-        path: 'testes',
-        loadComponent: () => import('./features/dev/playground/playground/playground').then(m => m.Playground),
+        path: 'playground',
+        loadComponent: () => import('./features/dev/playground/playground/playground')
+            .then(m => m.Playground),
     }
 ];

@@ -21,6 +21,10 @@ import { LoadingService } from '@shared/services/loading.service';
 // Loading Button
 import { Button } from '@shared/components/button/button';
 
+// Guard
+import { AuthService } from '@core/auth/auth.service';
+
+
 @Component({
   selector: 'app-playground',
   imports: [
@@ -44,6 +48,7 @@ export class Playground {
 
   readonly toastService = inject(ToastService);
   readonly loadingService = inject(LoadingService);
+  readonly authService = inject(AuthService);
 
   ngOnInit(): void {
   }
@@ -80,6 +85,11 @@ export class Playground {
 
   stopLoading(): void {
     this.loadingService.stop();
+  }
+
+  // Teste Guard
+  async logout(): Promise<void> {
+    await this.authService.logout();
   }
 
 }

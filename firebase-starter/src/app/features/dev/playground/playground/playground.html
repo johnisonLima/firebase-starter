@@ -137,7 +137,7 @@
     ></app-loading>
   </div>
 
-  <div class="test-button">
+  <div class="test-button test-closed">
     <h2>Este é um exemplo de texto para demonstrar testar o contador do serviço de loading e o overlay.</h2>
     
     <div class="wrap-btns">
@@ -385,6 +385,36 @@
         <svg lucideRefreshCw></svg>
       </app-button>
     </div>
+
+  </div>
+
+  <div class="test-guard">
+    <h1>Auth Playground</h1>
+    <p>
+      Auth State: {{ authService.authState() }}
+    </p>
+
+    <p>
+      Authenticated: {{ authService.isAuthenticated() }}
+    </p>
+
+    <p>
+      Loading: {{ authService.loading() }}
+    </p>
+
+    <p>
+      Email Verified: {{ authService.emailVerified() }}      
+    </p>
+    
+    @if (authService.isAuthenticated()) {
+      <app-button
+        variant="destructive"
+        (click)="logout()"
+        [loading]="authService.loading()"
+      >
+        Logout
+      </app-button>
+    }
   </div>
 
 </div>
