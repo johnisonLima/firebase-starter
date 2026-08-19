@@ -1,0 +1,18 @@
+<div
+  class="loading"
+  [class.loading-sm]="size() === 'sm'"
+  [class.loading-md]="size() === 'md'"
+  [class.loading-lg]="size() === 'lg'"
+  [attr.role]="text() ? 'status' : null"
+>
+  <span
+    class="loading-spinner"
+    aria-hidden="true"
+  ></span>
+
+  @if (text()) {
+    <span class="loading-text">
+      {{ text() }}
+    </span>
+  }
+</div>

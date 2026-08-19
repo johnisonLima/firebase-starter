@@ -1,0 +1,182 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  min-height: 40px;
+  padding: 0.625rem 1rem;
+
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+
+  background: var(--primary);
+  color: var(--primary-foreground);
+
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    opacity 150ms ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:active:not(:disabled) {
+    opacity: 0.8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+.btn-sm {
+  min-height: 32px;
+  padding: 0.5rem 0.75rem;
+
+  font-size: 0.8125rem;
+  
+  .btn-content svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+.btn-md {
+  min-height: 40px;
+  padding: 0.625rem 1rem;
+
+  font-size: 0.875rem;
+
+  .btn-content svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.btn-lg {
+  min-height: 48px;
+  padding: 0.75rem 1.25rem;
+
+  font-size: 1rem;
+
+  .btn-content svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}
+
+.btn-content {
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* icon start/end */
+.btn-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.btn-icon-only {
+  aspect-ratio: 1;
+  padding: 0;
+}
+
+/* iconOnly */
+.btn-icon-only {
+  aspect-ratio: 1;
+  padding: 0;
+
+  .btn-content {
+    gap: 0;
+  }
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:active:not(:disabled) {
+    opacity: 0.8;
+  }
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+
+  &:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--foreground);
+  border-color: var(--border);
+
+  &:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--secondary);
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--foreground);
+
+  &:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--secondary);
+  }
+}
+
+.btn-destructive {
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:active:not(:disabled) {
+    opacity: 0.8;
+  }
+}

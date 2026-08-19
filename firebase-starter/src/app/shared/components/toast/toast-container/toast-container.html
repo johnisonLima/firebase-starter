@@ -1,0 +1,14 @@
+<div
+  class="toast-container"
+  [class]="toastService.position"
+>
+  @for (
+    toast of toastService.visibleToasts();
+    track toast.id
+  ) {
+    <app-toast
+      [toast]="toast"
+      (closed)="toastService.close(toast.id)"
+    />
+  }
+</div>

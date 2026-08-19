@@ -1,0 +1,44 @@
+<div
+  class="toast shadow-sm"
+  animate.enter="enter-animation"
+  animate.leave="toast-leave"
+  role="status"
+  [class.success]="toast().type === 'success'"
+  [class.info]="toast().type === 'info'"
+  [class.warning]="toast().type === 'warning'"
+  [class.error]="toast().type === 'error'"
+>
+  <div class="toast-icon">
+    @switch (toast().type) {
+      @case ('success') {
+        <svg lucideCheck></svg>
+      }
+
+      @case ('info') {
+        <svg lucideInfo></svg>
+      }
+
+      @case ('warning') {
+        <svg lucideTriangleAlert></svg>
+      }
+
+      @case ('error') {
+        <svg lucideCircleX></svg>
+      }
+    }
+  </div>
+
+  <p class="toast-message">
+    {{ toast().message }}
+  </p>
+
+  <button
+    type="button"
+    class="toast-close"
+    aria-label="Fechar notificação"
+    title="Fechar notificação"
+    (click)="close()"
+  >
+    <svg lucideX></svg>
+  </button>
+</div>

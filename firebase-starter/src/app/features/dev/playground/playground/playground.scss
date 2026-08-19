@@ -1,0 +1,125 @@
+.container-test {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  padding: 10px 18px;
+  border: 1px solid transparent;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+
+  background: var(--primary); // teste
+}
+
+.btn--block {
+  flex: 1;
+}
+
+
+.wrap-btns {
+  display: flex;
+  gap: 10px;
+  margin-block: 8px;
+}
+
+.icon-test {
+  display: flex;
+  flex-direction: column;
+
+  .icons {
+    display: flex;
+    gap: 20px;
+  }
+
+  svg {
+    color: blue; 
+  }
+}
+
+.toast-test{
+  .btns {
+    display: flex;
+    gap: 20px;
+
+  } 
+}
+
+.test-closed {
+  display: none;
+}
+
+/* ---------- Form elements (md) ---------- */
+
+  .dialog__header {
+    padding: 24px 28px 0;
+  }
+  .dialog__header-title { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
+  .dialog__header-desc { font-size: 13px; color: var(--brand-dark); margin: 0; line-height: 1.5; }
+
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+  .field__label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--brand-dark);
+    margin-bottom: 6px;
+  }
+  .field__row { display: flex; gap: 14px; }
+  .field__row .field { flex: 1; }
+
+  .input, .textarea, .select {
+    width: 100%;
+    background: var(--foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--brand-dark);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .input:focus, .textarea:focus, .select:focus { border-color: var(--primary); }
+  .textarea { resize: vertical; min-height: 64px; font-family: inherit; }
+
+  .toggle {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .toggle:checked { background: var(--success); }
+  .toggle::before {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.15s ease;
+  }
+  .toggle:checked::before { transform: translateX(18px); }

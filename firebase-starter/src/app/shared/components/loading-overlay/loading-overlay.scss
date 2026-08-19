@@ -1,0 +1,78 @@
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+
+  background: rgb(0 0 0 / 0.45);
+
+  cursor: wait;
+
+  animation: loading-overlay-enter 150ms ease-out;
+}
+
+.loading-overlay-content {
+  width: min(280px, calc(100vw - 2rem));
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0cap;
+  min-height: 120px;
+  padding: 1.5rem;
+
+  background: var(--card);
+  color: var(--card-foreground);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.12);
+  
+  animation: loading-content-enter 180ms ease-out;
+}
+
+@media (max-width: 360px) {
+  .loading-overlay-content {
+    width: calc(100vw - 1.5rem);
+    padding: 1.25rem;
+  }
+}
+
+.loading-overlay {
+  animation: loading-overlay-enter 150ms ease-out;
+}
+
+@keyframes loading-overlay-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+@keyframes loading-content-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-overlay,
+  .loading-overlay-content {
+    animation: none;
+  }
+}
