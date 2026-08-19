@@ -939,6 +939,30 @@ A versão **1.0** estabelece os princípios fundamentais da arquitetura. As pró
 
 ---
 
+### Evolução Futura
+
+#### Interceptors futuros
+Os seguintes interceptors foram avaliados durante a Sprint 4, mas não fazem parte da implementação atual por não haver necessidade concreta:
+
+ErrorInterceptor — poderá centralizar comportamentos globais para erros HTTP, como tratamento de falhas de autenticação, autorização e indisponibilidade da API.
+
+RetryInterceptor — poderá implementar políticas de repetição automática para requisições adequadas, principalmente operações idempotentes e falhas transitórias.
+
+LoggingInterceptor — poderá centralizar observabilidade das requisições HTTP, incluindo duração, status e informações necessárias para diagnóstico e monitoramento.
+
+Esses interceptors deverão ser implementados somente quando houver uma necessidade real que justifique sua introdução, evitando infraestrutura prematura.
+
+| Interceptor          | Estado         | Quando considerar                             |
+| -------------------- | -------------- | --------------------------------------------- |
+| `AuthInterceptor`    | ✅ Implementado | —                                             |
+| `LoadingInterceptor` | ✅ Implementado | —                                             |
+| `ErrorInterceptor`   | ⏳ Futuro       | Quando houver política global de erros HTTP   |
+| `RetryInterceptor`   | ⏳ Futuro       | Quando houver necessidade de retry controlado |
+| `LoggingInterceptor` | ⏳ Futuro       | Quando houver necessidade de observabilidade  |
+
+
+---
+
 ## 17. ADRs Relacionadas
 
 A Architecture v1.0 apresenta a visão geral da solução e estabelece os princípios arquiteturais adotados pelo Firebase Starter. Entretanto, decisões específicas de arquitetura são registradas de forma independente por meio dos **Architecture Decision Records (ADRs)**.

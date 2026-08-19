@@ -108,6 +108,16 @@ export class AuthService {
 
   }
 
+  async getIdToken(): Promise<string | null> {
+    const user = this.auth.currentUser;
+
+    if (!user) {
+      return null;
+    }
+
+    return user.getIdToken();
+  }
+
   clearError(): void {
     this._error.set(null);
   }

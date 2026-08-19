@@ -23,6 +23,8 @@ import { Button } from '@shared/components/button/button';
 
 // Guard
 import { AuthService } from '@core/auth/auth.service';
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { SKIP_LOADING } from '@core/interceptors/loading.interceptor';
 
 
 @Component({
@@ -49,6 +51,7 @@ export class Playground {
   readonly toastService = inject(ToastService);
   readonly loadingService = inject(LoadingService);
   readonly authService = inject(AuthService);
+   private readonly http = inject(HttpClient);
 
   ngOnInit(): void {
   }
@@ -92,4 +95,51 @@ export class Playground {
     await this.authService.logout();
   }
 
+  // Teste interceptor
+  testHttp(): void {
+    this.http
+      .get('https://jsonplaceholder.typicode.com/posts/1')
+      .subscribe({
+        next: response => {
+          console.log(response);
+        },
+        error: error => {
+          console.error(error);
+        },
+      });
+  }
+
+  testHttpWithError(): void {
+    this.http
+      .get('https://jsonplaceholder.typicode.com/rota-inexistente')
+      .subscribe({
+        next: response => {
+          console.log(response);
+        },
+        error: error => {
+          console.error(error);
+        },
+      });
+  }
+
+  testHttpWithoutLoading(): void {
+    this.http
+      .get(
+        'https://jsonplaceholder.typicode.com/posts/1',
+        {
+          context: new HttpContext().set(
+            SKIP_LOADING,
+            true
+          ),
+        }
+      )
+      .subscribe({
+        next: response => {
+          console.log(response);
+        },
+        error: error => {
+          console.error(error);
+        },
+      });
+  }
 }

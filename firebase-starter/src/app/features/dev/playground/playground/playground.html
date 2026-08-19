@@ -417,4 +417,36 @@
     }
   </div>
 
+  <div class="test-interceptor">
+    <h2>Interceptor Playground</h2>
+
+    <div class="wrap-btns">
+      <app-button
+        type="button"
+        (click)="testHttp()"
+      >
+        Testar HTTP
+      </app-button>
+
+      <app-button
+        variant="destructive"
+        type="button"
+        (click)="testHttpWithError()"
+      >
+        Testar HTTP com Erro
+      </app-button>
+
+      <app-button
+        variant="outline"
+        type="button"
+        (click)="testHttpWithoutLoading()"
+      >
+        Testar HTTP sem Loading
+      </app-button>
+
+
+    </div>
+
+  </div>
+
 </div>
