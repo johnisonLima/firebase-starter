@@ -449,4 +449,33 @@
 
   </div>
 
+  <div class="test-inputs">
+    <h2>Teste de Inputs</h2>
+
+    <app-input 
+      label="E-mail" 
+      type="email" 
+      formControlName="email"
+    >
+      <svg lucideMail icon-start></svg>
+    </app-input>
+
+    
+    <app-input 
+      label="Senha" 
+      type="password" 
+      formControlName="password"
+    >
+    <svg lucideLock icon-start></svg>
+      <svg lucideEye icon-show-password></svg>
+      <svg lucideEyeOff icon-hide-password></svg> 
+    </app-input>
+
+    <!-- sem nenhum ícone, funciona igual -->
+    <app-input 
+      label="Usuário" 
+      formControlName="username" 
+    />
+  </div>
+
 </div>

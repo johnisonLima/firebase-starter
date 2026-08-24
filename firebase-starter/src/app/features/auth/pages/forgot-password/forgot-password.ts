@@ -1,12 +1,15 @@
 // Angular
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 // Spartan
 import { HlmCardImports } from '@spartan-ng/helm/card';
+
+// Lucide
+import { LucideMail, } from '@lucide/angular';
 
 // Core
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -14,6 +17,8 @@ import { AuthService } from '../../../../core/auth/auth.service';
 // Components
 import { AppLogoComponent } from '@shared//components/app-logo/app-logo.component';
 import { FormErrorComponent } from '@shared/components/form-error/form-error.component';
+import { Button } from '@shared/components/button/button';
+import { Input } from '@shared/components/input/input';
 
 // Directives
 import { AutofocusDirective } from '@shared/directives/AutoFocus.directive';
@@ -28,9 +33,13 @@ import { AutofocusDirective } from '@shared/directives/AutoFocus.directive';
     ReactiveFormsModule,
     // Spartan
     HlmCardImports,
+    // Lucide
+    LucideMail,
     // Components
     AppLogoComponent,
     FormErrorComponent,
+    Input,
+    Button, 
     // Directives
     AutofocusDirective,
   ],
@@ -61,7 +70,7 @@ export class ForgotPassword {
   );
 
   protected readonly canSubmit = computed(() =>
-    this.formStatus() === 'VALID' && !this.loading()
+    this.formStatus() === 'VALID'
   );
 
   protected readonly formValue = toSignal(

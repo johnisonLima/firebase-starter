@@ -8,6 +8,8 @@ export type ButtonWidth = 'auto' | 'full';
 
 export type ButtonIconPosition = 'start' | 'end';
 
+export type ButtonType = 'button' | 'submit' | 'reset';
+
 export type ButtonVariant =
   | 'primary'
   | 'secondary'
@@ -32,6 +34,8 @@ export class Button {
     readonly width = input<ButtonWidth>('auto');
 
     readonly iconPosition = input<ButtonIconPosition>('start');
+
+    readonly type = input<ButtonType>('button');
 
     readonly loading = input(false, {
         transform: booleanAttribute,

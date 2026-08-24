@@ -1,12 +1,15 @@
 // Angular
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 // Spartan
 import { HlmCardImports } from '@spartan-ng/helm/card';
+
+// Lucide
+import { LucideLock, LucideMail, LucideEye, LucideEyeOff} from '@lucide/angular';
 
 // Core
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -14,10 +17,11 @@ import { AuthService } from '../../../../core/auth/auth.service';
 // Components
 import { AppLogoComponent } from '@shared//components/app-logo/app-logo.component';
 import { FormErrorComponent } from '@shared/components/form-error/form-error.component';
+import { Button } from '@shared/components/button/button';
+import { Input } from '@shared/components/input/input';
 
 // Directives
 import { AutofocusDirective } from '@shared/directives/AutoFocus.directive';
-import { PasswordVisibilityDirective } from '@shared/directives/PasswordVisibility.directive';
 
 @Component({
   selector: 'app-login',
@@ -30,12 +34,18 @@ import { PasswordVisibilityDirective } from '@shared/directives/PasswordVisibili
     ReactiveFormsModule,
     // Spartan
     HlmCardImports,
+    // Lucide
+    LucideLock,
+    LucideMail,
+    LucideEye,
+    LucideEyeOff,
     // Components
     AppLogoComponent,
     FormErrorComponent,
+    Input,
+    Button, 
     // Directives
     AutofocusDirective,
-    PasswordVisibilityDirective,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -59,13 +69,14 @@ export class Login {
   protected readonly emailControl = this.form.controls.email;
   protected readonly passwordControl = this.form.controls.password;
 
-    protected readonly formStatus = toSignal(
-    this.form.statusChanges,
-    { initialValue: this.form.status }
+  protected readonly canSubmit = computed(() =>
+    this.formStatus() === 'VALID'
   );
 
-  protected readonly canSubmit = computed(() =>
-    this.formStatus() === 'VALID' && !this.loading()
+
+  protected readonly formStatus = toSignal(
+    this.form.statusChanges,
+    { initialValue: this.form.status }
   );
 
   async login(): Promise<void> {
@@ -76,6 +87,7 @@ export class Login {
     }
 
     const { email, password } = this.form.getRawValue();
+
 
     try {
       await this.authService.login(email, password);

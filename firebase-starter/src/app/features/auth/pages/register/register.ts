@@ -1,12 +1,15 @@
 // Angular
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 // Spartan
 import { HlmCardImports } from '@spartan-ng/helm/card';
+
+// Lucide
+import { LucideLock, LucideMail, LucideEye, LucideEyeOff} from '@lucide/angular';
 
 // Core
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -14,14 +17,14 @@ import { AuthService } from '../../../../core/auth/auth.service';
 // Components
 import { AppLogoComponent } from '@shared//components/app-logo/app-logo.component';
 import { FormErrorComponent } from '@shared/components/form-error/form-error.component';
+import { Button } from '@shared/components/button/button';
+import { Input } from '@shared/components/input/input';
 
 // Validators
 import { equalsToValidator } from '@shared/utils/forms/validators';
 
 // Directives
 import { AutofocusDirective } from '@shared/directives/AutoFocus.directive';
-import { PasswordVisibilityDirective } from '@shared/directives/PasswordVisibility.directive';
-
 
 @Component({
   selector: 'app-register',
@@ -33,12 +36,19 @@ import { PasswordVisibilityDirective } from '@shared/directives/PasswordVisibili
     ReactiveFormsModule,
     // Spartan
     HlmCardImports,
+    // Lucide
+    LucideLock,
+    LucideMail,
+    LucideEye,
+    LucideEyeOff,
     // Components
     AppLogoComponent,
     FormErrorComponent,
+    Button,
+    Input,
     // Directives
     AutofocusDirective,
-    PasswordVisibilityDirective,
+    // PasswordVisibilityDirective,
 
   ],
   templateUrl: './register.html',
@@ -69,7 +79,7 @@ export class Register {
   );
 
   protected readonly canSubmit = computed(() =>
-    this.formStatus() === 'VALID' && !this.loading()
+    this.formStatus() === 'VALID'
   );
 
   protected readonly formValue = toSignal(

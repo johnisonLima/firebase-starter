@@ -1,0 +1,125 @@
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  &-full {
+    width: 100%;
+  }
+}
+
+.input-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+
+  &-required::after {
+    content: ' *';
+    color: var(--error);
+  }
+}
+
+/* 1. O CONTAINER PASSA A SER A "CAIXA" DO INPUT */
+.input-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background-color: var(--background, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 0.5rem;
+  padding: 0 0.75rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus-within {
+    border-color: var(--primary, #2563eb);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+
+  /* Tamanhos definidos via padding/altura no container */
+  &.input-sm {
+    height: 2.25rem;
+    padding: 0 0.5rem;
+  }
+
+  &.input-md {
+    height: 2.75rem;
+    padding: 0 0.75rem;
+  }
+
+  &.input-lg {
+    height: 3.25rem;
+    padding: 0 1rem;
+  }
+
+  /* Estados */
+  &.input-error {
+    border-color: var(--error, #ef4444);
+  }
+
+  &.input-success {
+    border-color: var(--success, #22c55e);
+  }
+
+  &.input-disabled {
+    background-color: var(--disabled-bg, #f1f5f9);
+    cursor: not-allowed;
+  }
+}
+
+/* 2. O FIELD FICA SEM BORDA E PREENCHE O ESPAÇO RESTANTE */
+.input-field {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--foreground);
+
+  &::placeholder {
+    color: var(--muted-foreground, #94a3b8);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+/* 3. ÍCONES (Tanto SVG quanto componentes customizados) */
+.input-container > ::ng-deep *,
+.input-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--muted-foreground, #94a3b8);
+}
+
+.input-container ::ng-deep svg,
+.input-icon-button ::ng-deep svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.input-icon-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--foreground);
+  }
+}
+
+.input-hint {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+
+  &-error {
+    color: var(--error, #ef4444);
+  }
+}
