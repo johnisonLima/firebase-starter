@@ -4,7 +4,7 @@ import { Component, inject, signal } from '@angular/core';
 import { ThemeToggle } from '@shared/components/theme-toggle/theme-toggle';
 
 // Teste Lucide
-import { LucideHouse, LucideSettings, LucideTrash2, LucideUser, LucideArrowRight, LucideSave, } from '@lucide/angular';
+import { LucideHouse, LucideSettings, LucideTrash2, LucideUser, LucideArrowRight, LucideSave, LucideLock, LucideMail, LucideEye, LucideEyeOff} from '@lucide/angular';
 
 // Teste Toast
 import { ToastService } from '@shared/services/toast.service';
@@ -20,6 +20,7 @@ import { LoadingService } from '@shared/services/loading.service';
 
 // Loading Button
 import { Button } from '@shared/components/button/button';
+import { Input } from '@shared/components/input/input';
 
 // Guard
 import { AuthService } from '@core/auth/auth.service';
@@ -31,17 +32,25 @@ import { SKIP_LOADING } from '@core/interceptors/loading.interceptor';
   selector: 'app-playground',
   imports: [
     ThemeToggle,
+    // Lucide
+    LucideMail,
+    LucideLock,
+    LucideEye,
+    LucideEyeOff,
     LucideHouse, 
     LucideUser, 
     LucideSettings,
     LucideSave,
     LucideArrowRight,
+    LucideTrash2,
+
     Dialog,
     LucideTrash2,
     DialogIconDirective,
     DialogFooterDirective,
     Loading,
     Button,
+    Input,
   ],
   templateUrl: './playground.html',
   styleUrl: './playground.scss',
@@ -51,7 +60,11 @@ export class Playground {
   readonly toastService = inject(ToastService);
   readonly loadingService = inject(LoadingService);
   readonly authService = inject(AuthService);
-   private readonly http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
+
+  protected readonly MailIcon = LucideMail;
+  protected readonly LockIcon = LucideLock;
+  protected readonly UserIcon = LucideUser;
 
   ngOnInit(): void {
   }

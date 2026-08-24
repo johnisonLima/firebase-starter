@@ -1,0 +1,58 @@
+<div class="input-wrapper" [class.input-wrapper-full]="width() === 'full'">
+  @if (label()) {
+    <label class="input-label" [for]="inputId" [class.input-label-required]="required()">
+      {{ label() }}
+    </label>
+  }
+
+  <div
+    class="input-container"
+    [class.input-sm]="size() === 'sm'"
+    [class.input-md]="size() === 'md'"
+    [class.input-lg]="size() === 'lg'"
+    [class.input-error]="state() === 'error'"
+    [class.input-success]="state() === 'success'"
+    [class.input-disabled]="isDisabled()"
+  >
+    <ng-content select="[icon-start]" />
+
+    <input
+      [id]="inputId"
+      class="input-field"
+      [type]="resolvedType()"
+      [value]="value()"
+      [placeholder]="placeholder()"
+      [autocomplete]="autocomplete()"
+      [disabled]="isDisabled()"
+      [readOnly]="readonlyInput()"
+      [required]="required()"
+      [attr.aria-invalid]="state() === 'error' ? 'true' : null"
+      (input)="handleInput($event)"
+      (blur)="handleBlur()"
+    />
+
+    @if (showToggleButton()) {
+      <button
+        type="button"
+        class="input-icon-button"
+        tabindex="-1"
+        (click)="togglePasswordVisibility()"
+        [attr.aria-label]="isPasswordVisible() ? 'Ocultar senha' : 'Mostrar senha'"
+      >
+        @if (isPasswordVisible()) {
+          <ng-content select="[icon-hide-password]" />
+        } @else {
+          <ng-content select="[icon-show-password]" />
+        }
+      </button>
+    } @else {
+      <ng-content select="[icon-end]" />
+    }
+  </div>
+
+  @if (state() === 'error' && errorMessage()) {
+    <span class="input-hint input-hint-error">{{ errorMessage() }}</span>
+  } @else if (hint()) {
+    <span class="input-hint">{{ hint() }}</span>
+  }
+</div>

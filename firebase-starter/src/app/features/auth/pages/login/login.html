@@ -18,55 +18,50 @@
             <form class="flex flex-col gap-6"
                 [formGroup]="form" (ngSubmit)="login()">
                 <div hlmFormField>
-                    <label hlmLabel for="email">
-                        E-mail
-                    </label>
 
-                    <input hlmInput 
-                        id="email" type="email" autofocus autocomplete="email" placeholder="voce@email.com" 
+                    <app-input 
+                        hlmInput
+                        id="email"
+                        label="E-mail" 
+                        type="email" 
+                        autofocus
+                        autocomplete="email" 
+                        placeholder="voce@email.com" 
                         appAutofocus
-                        formControlName="email"/>
+                        formControlName="email"
+                    >
+                        <svg lucideMail icon-start></svg>
+                    </app-input>
                    
                     <app-form-error [control]="emailControl" label="E-mail" /> 
                 </div>
 
                 <div hlmFormField >
-                    <label hlmLabel for="password">
-                        Senha
-                    </label>
-
-                    <div class="flex items-center rounded-md border border-input focus-within:ring-2 focus-within:ring-ring">
-                        <input
-                            hlmInput
-                            id="password"
-                            type="password"
-                            autocomplete="current-password"
-                            appPasswordVisibility
-                            #passwordVisibility="passwordVisibility"
-                            formControlName="password"
-                            class="border-0 focus:ring-0" />
-
-                        <button
-                            type="button"
-                            class="shrink-0 px-2 text-xs text-muted-foreground cursor-pointer"
-                            (click)="passwordVisibility.toggle()"
-                            aria-label="{{  passwordVisibility.visible()
-                                    ? 'Ocultar senha'
-                                    : 'Mostrar senha'
-                            }}">
-                            {{ passwordVisibility.visible() ? 'Ocultar' : 'Mostrar' }}
-                        </button>
-                    </div>
-                   
+                    <app-input 
+                        hlmInput
+                        id="password"
+                        label="Senha" 
+                        type="password" 
+                        autocomplete="current-password"
+                        formControlName="password"
+                        >
+                        <svg lucideLock icon-start></svg>
+                        <svg lucideEye icon-show-password></svg>
+                        <svg lucideEyeOff icon-hide-password></svg> 
+                    </app-input>                   
 
                     <app-form-error [control]="passwordControl" label="Senha" />
                 </div>
 
-                <button hlmBtn 
-                    type="submit" class="w-full cursor-pointer"
-                    [disabled]="!canSubmit()">
-                    {{ loading() ? 'Entrando...' : 'Entrar' }}
-                </button>
+                <app-button
+                    type="submit"
+                    width="full"
+                    size="lg"
+                    [disabled]="!canSubmit()"
+                    [loading]="loading()"
+                >
+                    Entrar
+                </app-button>
 
             </form>
 
