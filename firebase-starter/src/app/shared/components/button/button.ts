@@ -37,6 +37,8 @@ export class Button {
 
     readonly type = input<ButtonType>('button');
 
+    readonly ariaLabel = input<string | undefined>();
+
     readonly loading = input(false, {
         transform: booleanAttribute,
     });

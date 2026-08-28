@@ -4,6 +4,8 @@ import { AbstractControl } from '@angular/forms';
 
 import { getControlErrorMessage } from '@shared/utils/forms/error-messages';
 
+let nextId = 0;
+
 @Component({
   selector: 'app-form-error',
   standalone: true,
@@ -17,6 +19,8 @@ export class FormErrorComponent {
   readonly control = input.required<AbstractControl>();
 
   readonly label = input<string>('');
+
+  readonly errorId = `form-error-${nextId++}`;
 
   private readonly tick = signal(0);
 

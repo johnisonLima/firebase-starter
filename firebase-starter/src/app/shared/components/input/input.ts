@@ -44,7 +44,6 @@ export class Input implements ControlValueAccessor {
   readonly label = input<string>();
   readonly placeholder = input<string>('');
   readonly hint = input<string>();
-  readonly errorMessage = input<string>();
 
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readonlyInput = input(false, { transform: booleanAttribute });
@@ -59,6 +58,8 @@ export class Input implements ControlValueAccessor {
 
   protected readonly isPasswordVisible = signal(false);
   protected readonly isPassword = computed(() => this.type() === 'password');
+
+  readonly ariaDescribedBy = input<string>();
 
   protected readonly showToggleButton = computed(
     () => this.isPassword() && this.showPasswordToggle(),

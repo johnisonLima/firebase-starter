@@ -29,11 +29,16 @@
                         placeholder="voce@email.com" 
                         appAutofocus
                         formControlName="email"
+                        [ariaDescribedBy]="emailError.errorId"
                     >
                         <svg lucideMail icon-start></svg>
                     </app-input>
                    
-                    <app-form-error [control]="emailControl" label="E-mail" /> 
+                    <app-form-error
+                        #emailError
+                        [control]="emailControl" 
+                        label="E-mail" 
+                    /> 
                 </div>
 
                 <div hlmFormField >
@@ -44,13 +49,18 @@
                         type="password" 
                         autocomplete="current-password"
                         formControlName="password"
-                        >
+                        [ariaDescribedBy]="passwordError.errorId"
+                    >
                         <svg lucideLock icon-start></svg>
                         <svg lucideEye icon-show-password></svg>
                         <svg lucideEyeOff icon-hide-password></svg> 
                     </app-input>                   
 
-                    <app-form-error [control]="passwordControl" label="Senha" />
+                    <app-form-error 
+                        #passwordError
+                        [control]="passwordControl" 
+                        label="Senha" 
+                    />
                 </div>
 
                 <app-button

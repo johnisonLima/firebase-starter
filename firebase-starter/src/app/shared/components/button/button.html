@@ -20,6 +20,8 @@
 
     [disabled]="disabled() || loading()"
 
+    [attr.aria-label]="ariaLabel()"
+
     [attr.aria-busy]="loading() ? 'true' : null"
 >
   @if (loading()) {

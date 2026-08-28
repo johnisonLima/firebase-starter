@@ -25,11 +25,16 @@
                         type="email" 
                         appAutofocus
                         formControlName="email"
+                        [ariaDescribedBy]="emailError.errorId"
                     >
                         <svg lucideMail icon-start></svg>
                     </app-input>
 
-                    <app-form-error [control]="emailControl" label="E-mail" />
+                    <app-form-error 
+                        #emailError
+                        [control]="emailControl" 
+                        label="E-mail" 
+                    />
                 </div>
 
                 <div hlmFormField>
@@ -39,13 +44,18 @@
                         autocomplete="current-password"
                         type="password" 
                         formControlName="password"
+                        [ariaDescribedBy]="passwordError.errorId"
                     >
                         <svg lucideLock icon-start></svg>
                         <svg lucideEye icon-show-password></svg>
                         <svg lucideEyeOff icon-hide-password></svg> 
                     </app-input>
 
-                    <app-form-error [control]="passwordControl" label="Senha" />
+                    <app-form-error 
+                        #passwordError
+                        [control]="passwordControl" 
+                        label="Senha" 
+                    />
                 </div>
 
                 <div hlmFormField>
@@ -56,13 +66,18 @@
                         autocomplete="current-password"
                         type="password" 
                         formControlName="confirmPassword"
+                        [ariaDescribedBy]="confirmPasswordError.errorId"
                     >
                         <svg lucideLock icon-start></svg>
                         <svg lucideEye icon-show-password></svg>
                         <svg lucideEyeOff icon-hide-password></svg> 
                     </app-input>
 
-                    <app-form-error [control]="confirmPasswordControl" label="Confirmação de senha" />
+                    <app-form-error 
+                        #confirmPasswordError
+                        [control]="confirmPasswordControl" 
+                        label="Confirmação de senha" 
+                    />
                 </div>
 
                 @if (error(); as message) {

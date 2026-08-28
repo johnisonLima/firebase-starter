@@ -135,33 +135,31 @@
       size="lg"
       text="Carregando..."
     ></app-loading>
-  </div>
 
-  <div class="test-button test-closed">
     <h2>Este é um exemplo de texto para demonstrar testar o contador do serviço de loading e o overlay.</h2>
     
     <div class="wrap-btns">
-      <button
-        class="btn"
+      <app-button
         type="button"
         (click)="startLoading()"
       >
         Start
-      </button>
-      <button
-        class="btn"
+      </app-button>
+      <app-button
         type="button"
         (click)="stopLoading()"
       >
         Stop
-      </button>
+      </app-button>
     </div>
 
     <p>
       Loading:
       {{ loadingService.isLoading() }}
     </p>
+  </div>
 
+  <div class="test-button test-closed">    
     <h2>Teste de button desabilitado</h2>
 
     <div class="wrap-btns">
@@ -234,7 +232,9 @@
         Auto
       </app-button>
 
-      <app-button width="full">
+      <app-button 
+        width="full"
+      >
         Full
       </app-button>
 
@@ -270,8 +270,8 @@
       </app-button>
     </div>
 
+    <h2>Teste tamanho do button com ícone</h2>
     <div class="wrap-btns">
-
       <app-button size="sm">
         <svg lucideSave></svg>
         Salvar
@@ -288,6 +288,7 @@
       </app-button>
     </div>
 
+    <h2>Teste variantes do button com ícone</h2>
     <div class="wrap-btns">
 
       <app-button variant="primary">
@@ -301,20 +302,11 @@
       </app-button>
     </div>
 
-    <div class="wrap-btns">
-      <app-button
-        iconOnly
-        aria-label="Configurações"
-      >
-        <svg lucideSettings></svg>
-      </app-button>
-    </div>
-
+    <h2>Teste button com ícone apenas</h2>
     <div class="wrap-btns">
       <app-button
         size="sm"
         iconOnly
-        aria-label="Configurações"
       >
         <svg lucideSettings></svg>
       </app-button>
@@ -322,7 +314,7 @@
       <app-button
         size="md"
         iconOnly
-        aria-label="Configurações"
+        ariaLabel="Configurações"
       >
         <svg lucideSettings></svg>
       </app-button>
@@ -336,6 +328,7 @@
       </app-button>
     </div>
 
+    <h2>Teste button com ícone apenas e loading</h2>
     <div class="wrap-btns">
       <app-button
         iconOnly
@@ -347,7 +340,6 @@
     </div>
 
     <h3>Teste final</h3>
-
     <div class="wrap-btns">
       <app-button
         variant="primary"
@@ -385,7 +377,6 @@
         <svg lucideRefreshCw></svg>
       </app-button>
     </div>
-
   </div>
 
   <div class="test-guard">
@@ -417,7 +408,7 @@
     }
   </div>
 
-  <div class="test-interceptor">
+  <div class="test-interceptor test-closed">
     <h2>Interceptor Playground</h2>
 
     <div class="wrap-btns">
@@ -464,6 +455,7 @@
     <app-input 
       label="Senha" 
       type="password" 
+      hint="A senha deve ter pelo menos 8 caracteres"
       formControlName="password"
     >
     <svg lucideLock icon-start></svg>
