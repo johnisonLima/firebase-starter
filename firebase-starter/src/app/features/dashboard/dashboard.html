@@ -1,3 +1,13 @@
 <p>dashboard works!</p>
 
+@if (authService.isAuthenticated()) {
+    <app-button
+        variant="destructive"
+        (click)="logout()"
+        [loading]="authService.loading()"
+    >
+    Logout
+    </app-button>
+}
+
 <app-theme-toggle />

@@ -1,5 +1,5 @@
 // Angular
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -59,6 +59,8 @@ export class Login {
   protected readonly loading = this.authService.loading;
   protected readonly error = this.authService.error;
 
+  protected readonly formError = signal<string | null>(null);
+
   // protected readonly isGoogleSubmitting = signal(false);
 
   protected readonly form = this.fb.nonNullable.group({
@@ -97,5 +99,25 @@ export class Login {
       // O AuthService já atualizou o estado de erro.
       // Nada a fazer aqui.
     }   
+  }
+
+  private getLoginErrorMessage(error: unknown): string {
+    const code = (error as { code?: string })?.code;
+
+    switch (code) {
+      case 'auth/invalid-credential':
+      case 'auth/wrong-password':
+      case 'auth/user-not-found':
+        return 'E-mail ou senha inválidos.';
+
+      case 'auth/too-many-requests':
+        return 'Muitas tentativas. Tente novamente mais tarde.';
+
+      case 'auth/network-request-failed':
+        return 'Não foi possível conectar. Verifique sua conexão.';
+
+      default:
+        return 'Não foi possível entrar. Tente novamente.';
+    }
   }
 }

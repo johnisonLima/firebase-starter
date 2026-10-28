@@ -5,16 +5,21 @@ import { afterNextRender, AfterViewInit, Directive, ElementRef, inject, } from '
   standalone: true,
 })
 
-export class AutofocusDirective implements AfterViewInit {
+export class AutofocusDirective {
   private readonly el = inject(ElementRef<HTMLElement>);
 
-  ngAfterViewInit(): void {
-    const host = this.el.nativeElement;
-    const target = this.isFocusable(host)
-      ? host
-      : (host.querySelector('input, textarea, select, button, [tabindex]') as HTMLElement | null);
+  constructor() {
+    afterNextRender(() => {
+      const host = this.el.nativeElement;
 
-    target?.focus();
+      const target = this.isFocusable(host)
+        ? host
+        : host.querySelector(
+            'input, textarea, select, button, [tabindex]'
+          );
+
+      target?.focus();
+    });
   }
 
   private isFocusable(el: HTMLElement): boolean {
