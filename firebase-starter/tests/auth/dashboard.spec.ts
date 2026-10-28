@@ -3,6 +3,7 @@ import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 
 test.describe('Dashboard', () => {
+  test.describe.configure({ mode: 'serial' });
   test('redireciona para login quando não autenticado', async ({ page }) => {
     await page.goto('/dashboard');
 
