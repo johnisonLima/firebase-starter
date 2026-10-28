@@ -34,11 +34,9 @@ test.describe('Login', () => {
 
     await registerLink.click();
 
-    await page.waitForURL('**/register');
-
     await expect(page).toHaveURL(/\/register$/);
 
-    });
+  });
 
   test('permite entrar com uma conta válida', async ({ page }) => {
     const email = process.env.E2E_USER_EMAIL;

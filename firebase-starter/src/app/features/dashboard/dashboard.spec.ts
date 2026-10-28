@@ -1,3 +1,4 @@
+import { AuthService } from './../../core/auth/auth.service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Dashboard } from './dashboard';
@@ -8,6 +9,26 @@ describe('Dashboard', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: AuthService,
+          useValue: {
+            isAuthenticated: () => false,
+            loading: () => false,
+            error: () => null,
+            user: () => null,
+            userName: () => '',
+            userEmail: () => '',
+            emailVerified: () => false,
+            logout: vi.fn(),
+            login: vi.fn(),
+            register: vi.fn(),
+            resetPassword: vi.fn(),
+            sendEmailVerification: vi.fn(),
+            reloadUser: vi.fn(),
+          },
+        },
+      ],
       imports: [Dashboard],
     }).compileComponents();
 
