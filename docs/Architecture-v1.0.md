@@ -118,7 +118,7 @@ Centraliza a lógica responsável por coordenar o comportamento da aplicação. 
 
 Representa a integração com os serviços externos utilizados pela aplicação. Na versão inicial do projeto, essa camada é composta pelo Firebase SDK e pelos principais serviços disponibilizados pela plataforma, como Authentication, Firestore e Cloud Storage.
 
-Ao concentrar o acesso ao Firebase nesta camada, reduz-se o acoplamento entre as funcionalidades da aplicação e a tecnologia utilizada para persistência e autenticação.
+Ao concentrar as operações do SDK nos providers e nos serviços de infraestrutura, reduz-se o acoplamento das funcionalidades. Para persistência, o repositório concreto de cada domínio compõe o provider adequado; os demais consumidores acessam o repositório sem chamar diretamente o SDK.
 
 ---
 
@@ -502,25 +502,27 @@ Essa estratégia reduz a complexidade da arquitetura, elimina a necessidade de s
 
 A arquitetura do Firebase Starter foi concebida para desacoplar a aplicação da tecnologia responsável pela persistência dos dados.
 
-Embora a versão inicial utilize o Cloud Firestore como principal mecanismo de armazenamento, a camada de aplicação não deve depender diretamente de APIs específicas do Firebase. Essa decisão busca preservar a flexibilidade da arquitetura e facilitar futuras evoluções da infraestrutura.
+Embora a versão inicial utilize o Cloud Firestore como principal mecanismo de armazenamento, componentes e serviços consumidores não devem acessar diretamente as APIs específicas do Firebase. Para persistência, o repositório concreto de cada domínio é o ponto de composição: ele instancia o provider apropriado e configura dados específicos, como a coleção.
 
-Para atingir esse objetivo, o acesso aos dados é centralizado em uma camada responsável por abstrair a origem das informações. Os serviços da aplicação consomem essa abstração sem conhecer detalhes da implementação utilizada para persistência.
+`BaseRepository<T>` depende do contrato `DataProvider<T>`, e `FirestoreDataProvider<T>` encapsula as operações do Firestore. O repositório concreto, como `UserRepository`, instancia o provider e o fornece ao `BaseRepository<T>`. Os consumidores utilizam o repositório e não precisam conhecer a implementação nem acessar diretamente o SDK.
 
 A arquitetura lógica pode ser representada da seguinte forma:
 
 ```mermaid
 flowchart LR
+    Consumer["Consumer"]
+    UserRepository["UserRepository"]
+    DataProvider["DataProvider&lt;T&gt; interface"]
+    FirestoreDataProvider["FirestoreDataProvider&lt;T&gt;"]
+    FirestoreSDK["Firestore SDK"]
+    CloudFirestore["Cloud Firestore"]
 
-    Component["Component"]
-    Service["Service"]
-    Provider["Data Provider"]
-    Firebase["Firebase SDK"]
-    Firestore["Cloud Firestore"]
+    Consumer -->|Injeta o FirestoreDataProvider| UserRepository
+    UserRepository -->|Depende apenas da interface| DataProvider
+    FirestoreDataProvider -. implementa .-> DataProvider
+    FirestoreDataProvider --> FirestoreSDK
+    FirestoreSDK --> CloudFirestore
 
-    Component --> Service
-    Service --> Provider
-    Provider --> Firebase
-    Firebase --> Firestore
 ```
 
 Essa organização estabelece uma separação clara entre a lógica da aplicação e a infraestrutura de persistência.
@@ -529,7 +531,7 @@ Essa organização estabelece uma separação clara entre a lógica da aplicaç�
 
 Os **Data Providers** representam a camada responsável pela comunicação com a origem dos dados.
 
-Na versão inicial do projeto, essa responsabilidade será desempenhada por implementações baseadas no Firebase SDK. Entretanto, a aplicação permanecerá preparada para que novas implementações possam ser incorporadas sem alterar a lógica das funcionalidades.
+Na versão inicial do projeto, essa responsabilidade será desempenhada por implementações baseadas no Firebase SDK. Novas implementações poderão ser incorporadas mantendo o contrato `DataProvider<T>`; a composição do repositório concreto poderá precisar ser atualizada para instanciar o provider escolhido, sem exigir que seus consumidores conheçam a implementação.
 
 Exemplos de possíveis implementações futuras incluem:
 
@@ -540,7 +542,7 @@ Exemplos de possíveis implementações futuras incluem:
 * Banco de dados local
 * Mecanismos híbridos de sincronização
 
-Essa abordagem permite que a tecnologia de persistência evolua independentemente da aplicação.
+Essa abordagem permite substituir a tecnologia de persistência sem alterar o contrato do provider ou a interface utilizada pelos consumidores do repositório. A associação entre o domínio e a implementação concreta permanece no repositório correspondente.
 
 ---
 
@@ -565,7 +567,7 @@ A estratégia de dados define responsabilidades bem delimitadas entre as camadas
 | **Data Providers** | Realizar operações de persistência e recuperação de dados.             |
 | **Infraestrutura** | Implementar a comunicação com a tecnologia de armazenamento utilizada. |
 
-Essa divisão impede que componentes ou serviços conheçam detalhes específicos da tecnologia de persistência.
+Essa divisão impede que componentes e serviços consumidores acessem diretamente o SDK de persistência. O repositório concreto conhece o provider que instancia e configura; o `BaseRepository<T>` conhece somente a interface `DataProvider<T>`.
 
 ---
 
@@ -573,7 +575,7 @@ Essa divisão impede que componentes ou serviços conheçam detalhes específico
 
 Embora o Firebase seja a plataforma escolhida para esta versão do projeto, a arquitetura não considera essa decisão como permanente.
 
-Caso surja a necessidade de utilizar um backend próprio, expor APIs REST, adotar GraphQL ou integrar novos serviços de persistência, espera-se que a maior parte da aplicação permaneça inalterada. As modificações deverão concentrar-se na camada de infraestrutura e nos respectivos Data Providers, preservando os contratos utilizados pelas funcionalidades da aplicação.
+Caso surja a necessidade de utilizar um backend próprio, expor APIs REST, adotar GraphQL ou integrar novos serviços de persistência, os consumidores dos repositórios poderão continuar utilizando os mesmos contratos. As modificações deverão concentrar-se nas implementações dos Data Providers e na composição dos repositórios concretos, que poderá precisar selecionar e configurar outro provider.
 
 Essa estratégia reduz o acoplamento entre a lógica de negócio e a infraestrutura, contribuindo para uma arquitetura mais flexível, sustentável e preparada para evoluções futuras.
 
@@ -812,9 +814,9 @@ Essa organização facilita a manutenção do projeto e reduz o risco de regress
 
 A arquitetura adota a separação entre apresentação, aplicação e infraestrutura, permitindo que cada camada evolua de forma relativamente independente.
 
-Decisões como a utilização de **Data Providers**, serviços especializados e abstrações para acesso aos dados reduzem a dependência direta de tecnologias específicas, facilitando futuras substituições ou ampliações da infraestrutura.
+Decisões como a utilização de **Data Providers**, serviços especializados e abstrações para acesso aos dados reduzem a dependência direta dos consumidores em relação a tecnologias específicas, facilitando futuras substituições ou ampliações da infraestrutura. A composição do provider permanece no repositório concreto correspondente.
 
-Essa abordagem possibilita, por exemplo, substituir o Firebase por um backend próprio sem exigir alterações significativas na lógica da aplicação.
+Essa abordagem possibilita, por exemplo, substituir o Firebase por um backend próprio preservando o contrato dos providers e dos repositórios; a implementação do provider e sua composição no repositório concreto poderão precisar mudar.
 
 ---
 
