@@ -40,7 +40,7 @@ Os principais objetivos arquiteturais são:
 
 Esses objetivos servirão como critérios para avaliar futuras decisões arquiteturais, garantindo que novas implementações permaneçam alinhadas com a visão estabelecida neste documento.
 
---- 
+---
 # 4. Escopo
 
 A versão inicial da arquitetura contempla a estrutura necessária para o desenvolvimento de uma aplicação Angular integrada ao Firebase utilizando uma abordagem moderna e orientada por funcionalidades.
@@ -57,7 +57,7 @@ Nesta fase, fazem parte do escopo arquitetural:
 
 Não fazem parte do escopo desta versão decisões específicas de implementação, regras de negócio da aplicação ou otimizações voltadas para cenários particulares. Esses aspectos serão documentados posteriormente, conforme forem definidos durante o desenvolvimento do projeto, seja por meio de novas versões desta arquitetura ou pela criação de ADRs específicas.
 
-----
+---
 
 # 5. Visão Geral da Solução
 
@@ -94,7 +94,7 @@ De forma simplificada, a solução pode ser representada pela seguinte arquitetu
 Nesta arquitetura, o Angular concentra a experiência da aplicação, enquanto o Firebase Authentication e o Cloud Firestore fornecem os serviços de infraestrutura utilizados pelo cliente. Essa divisão de responsabilidades mantém a solução simples, moderna e adequada aos objetivos definidos para a versão inicial do projeto.
 
 ---
-## 6. Arquitetura de Alto Nível
+# 6. Arquitetura de Alto Nível
 
 A arquitetura do Firebase Starter é organizada em camadas com responsabilidades bem definidas, promovendo baixo acoplamento entre os componentes da aplicação e facilitando sua evolução ao longo do desenvolvimento.
 
@@ -102,19 +102,19 @@ Embora o projeto utilize uma arquitetura cliente-servidor simplificada, sua estr
 
 Em alto nível, a solução é composta pelos seguintes blocos arquiteturais:
 
-### Interface do Usuário (Presentation)
+## Interface do Usuário (Presentation)
 
 Responsável pela interação com o usuário, renderização das telas e navegação da aplicação. Esta camada concentra páginas, componentes visuais e layouts, utilizando os recursos modernos do Angular para construir interfaces reativas e responsivas.
 
 ---
 
-### Camada de Aplicação (Application)
+## Camada de Aplicação (Application)
 
 Centraliza a lógica responsável por coordenar o comportamento da aplicação. Nesta camada encontram-se os serviços que coordenam o fluxo entre a interface e as funcionalidades compartilhadas, incluindo regras de negócio e operações por meio dos repositórios. Para persistência, os serviços consumidores não acessam diretamente o SDK.
 
 ---
 
-### Infraestrutura (Infrastructure)
+## Infraestrutura (Infrastructure)
 
 Representa a integração com os serviços externos utilizados pela aplicação. Na versão inicial do projeto, essa camada utiliza o Firebase SDK, Firebase Authentication e Cloud Firestore.
 
@@ -122,7 +122,7 @@ Ao concentrar as operações do SDK nos providers e nos serviços de infraestrut
 
 ---
 
-### Plataforma (Platform)
+## Plataforma (Platform)
 
 Corresponde ao ambiente de execução da aplicação, formado pelo navegador e pelos serviços gerenciados do Firebase utilizados pelo projeto: autenticação de usuários e persistência dos dados.
 
@@ -164,7 +164,7 @@ Essa divisão em camadas estabelece uma base arquitetural simples e organizada, 
 
 ---
 
-## 7. Stack Tecnológica
+# 7. Stack Tecnológica
 
 O Firebase Starter utiliza tecnologias consolidadas no ecossistema Angular, priorizando ferramentas oficiais ou amplamente adotadas pela comunidade. A escolha dessa stack busca reduzir a complexidade da infraestrutura, favorecer a produtividade durante o desenvolvimento e permitir o estudo das práticas recomendadas para aplicações modernas.
 
@@ -221,7 +221,7 @@ Novas tecnologias poderão ser incorporadas ao projeto conforme sua evolução j
 
 ---
 
-## 8. Organização do Projeto
+# 8. Organização do Projeto
 
 A organização do Firebase Starter segue uma arquitetura baseada em funcionalidades (*Feature-Based Architecture*), na qual o código é estruturado de acordo com os domínios da aplicação, e não pelo tipo de artefato.
 
@@ -282,19 +282,19 @@ A estrutura apresentada representa a organização inicial do projeto e poderá 
 
 ---
 
-## 9. Convenções Arquiteturais
+# 9. Convenções Arquiteturais
 
 Além da organização física do projeto, o Firebase Starter estabelece um conjunto de convenções arquiteturais destinadas a manter a consistência do código ao longo de sua evolução.
 
 Essas convenções não têm como objetivo limitar a implementação das funcionalidades, mas fornecer diretrizes que favoreçam legibilidade, previsibilidade e facilidade de manutenção. Sempre que possível, serão adotadas as convenções recomendadas pelo Angular, complementadas por padrões específicos definidos para este projeto.
 
-### Organização por responsabilidade
+## Organização por responsabilidade
 
 Cada artefato deve possuir uma única responsabilidade bem definida. Componentes são responsáveis pela apresentação da interface, serviços concentram a lógica de aplicação e integrações, enquanto modelos e utilitários permanecem desacoplados das regras de negócio.
 
 ---
 
-### Organização por funcionalidades
+## Organização por funcionalidades
 
 Novas funcionalidades deverão ser criadas dentro do diretório `features`, mantendo todos os arquivos relacionados próximos entre si.
 
@@ -302,7 +302,7 @@ Uma feature deve ser capaz de evoluir de forma independente, reduzindo dependên
 
 ---
 
-### Compartilhamento de código
+## Compartilhamento de código
 
 Recursos utilizados exclusivamente por uma funcionalidade devem permanecer dentro da própria feature.
 
@@ -312,7 +312,7 @@ Recursos de infraestrutura e serviços globais permanecem centralizados no diret
 
 ---
 
-### Convenções de nomenclatura
+## Convenções de nomenclatura
 
 A nomenclatura dos arquivos seguirá o padrão recomendado pelo Angular, facilitando sua identificação e localização.
 
@@ -331,7 +331,7 @@ Alguns exemplos:
 
 ---
 
-### Componentes
+## Componentes
 
 Os componentes devem possuir responsabilidade única e representar partes reutilizáveis da interface.
 
@@ -339,7 +339,7 @@ Sempre que uma página crescer excessivamente, ela deverá ser decomposta em com
 
 ---
 
-### Serviços
+## Serviços
 
 Serviços representam a camada responsável pela lógica da aplicação e pela comunicação com serviços externos.
 
@@ -347,7 +347,7 @@ Sempre que possível, componentes não devem acessar diretamente o Firebase SDK,
 
 ---
 
-### Gerenciamento de estado
+## Gerenciamento de estado
 
 O gerenciamento de estado seguirá a estratégia definida pela arquitetura do projeto, priorizando recursos nativos do Angular.
 
@@ -355,7 +355,7 @@ A utilização de Signals, serviços e demais mecanismos será detalhada em seç
 
 ---
 
-### Evolução das convenções
+## Evolução das convenções
 
 As convenções apresentadas nesta seção representam o conjunto inicial de diretrizes adotadas pelo projeto.
 
@@ -363,7 +363,7 @@ Novas convenções poderão ser incorporadas conforme a arquitetura evoluir, des
 
 ---
 
-## 10. Estrutura das Features
+# 10. Estrutura das Features
 
 As funcionalidades da aplicação são organizadas utilizando uma **Feature-Based Architecture**, na qual cada feature representa um domínio funcional da aplicação e concentra todos os artefatos necessários para sua implementação.
 
@@ -411,8 +411,8 @@ Componentes não devem acessar diretamente os serviços do Firebase nem conter r
 
 À medida que o projeto evoluir, novas convenções poderão ser estabelecidas para a organização interna das features. Sempre que essas alterações representarem uma decisão arquitetural relevante, elas serão registradas por meio de ADRs ou incorporadas em futuras versões deste documento.
 
---- 
-## 11. Fluxo Geral da Aplicação
+---
+# 11. Fluxo Geral da Aplicação
 
 O Firebase Starter adota um fluxo de execução unidirecional, no qual cada camada da aplicação possui responsabilidades bem definidas. Essa abordagem facilita o entendimento do código, reduz dependências desnecessárias e torna o comportamento da aplicação mais previsível.
 
@@ -465,7 +465,7 @@ Essa separação favorece a reutilização de código, simplifica testes e reduz
 
 ---
 
-## 12. Estratégia de Estado
+# 12. Estratégia de Estado
 
 O gerenciamento de estado da aplicação prioriza os recursos nativos disponibilizados pelo Angular, evitando a introdução de bibliotecas externas enquanto sua utilização não se mostrar necessária.
 
@@ -498,9 +498,9 @@ A comunicação com o Firebase permanece sob responsabilidade dos serviços da a
 
 Essa estratégia reduz a complexidade da arquitetura, elimina a necessidade de soluções mais robustas para gerenciamento de estado em cenários simples e acompanha a evolução recomendada pelo ecossistema Angular. Caso o crescimento da aplicação justifique novas abordagens, essas decisões serão avaliadas e registradas por meio de ADRs específicas.
 
---- 
+---
 
-## 13. Estratégia de Dados
+# 13. Estratégia de Dados
 
 A arquitetura do Firebase Starter foi concebida para desacoplar a aplicação da tecnologia responsável pela persistência dos dados.
 
@@ -532,7 +532,7 @@ flowchart TB
 
 Essa organização estabelece uma separação clara entre a lógica da aplicação e a infraestrutura de persistência.
 
-### Data Providers
+## Data Providers
 
 Os **Data Providers** representam a camada responsável pela comunicação com a origem dos dados.
 
@@ -551,7 +551,7 @@ Essa abordagem permite substituir a tecnologia de persistência sem alterar o co
 
 ---
 
-### Modelos de Domínio
+## Modelos de Domínio
 
 Os modelos utilizados pela aplicação representam entidades do domínio e não documentos específicos do Firestore.
 
@@ -561,7 +561,7 @@ Esse desacoplamento reduz o impacto de alterações futuras no modelo de armazen
 
 ---
 
-### Responsabilidades
+## Responsabilidades
 
 A estratégia de dados define responsabilidades bem delimitadas entre as camadas da aplicação.
 
@@ -576,7 +576,7 @@ Essa divisão impede que componentes e serviços consumidores acessem diretament
 
 ---
 
-### Evolução da Arquitetura
+## Evolução da Arquitetura
 
 Embora o Firebase seja a plataforma escolhida para esta versão do projeto, a arquitetura não considera essa decisão como permanente.
 
@@ -586,7 +586,7 @@ Essa estratégia reduz o acoplamento entre a lógica de negócio e a infraestrut
 
 ---
 
-## 14. Estratégia de Interface
+# 14. Estratégia de Interface
 
 A interface do Firebase Starter é concebida como uma camada independente da lógica da aplicação, responsável exclusivamente pela experiência do usuário, apresentação dos dados e captura das interações realizadas durante o uso do sistema.
 
@@ -594,7 +594,7 @@ Sua construção segue os princípios de componentização, reutilização e com
 
 A arquitetura da interface é baseada na combinação entre Angular, Tailwind CSS e Spartan UI, permitindo unir a flexibilidade dos componentes Standalone com um sistema visual moderno e altamente personalizável.
 
-### Arquitetura da Interface
+## Arquitetura da Interface
 
 A interface é organizada em diferentes níveis de responsabilidade.
 
@@ -625,7 +625,7 @@ Cada camada possui uma finalidade específica.
 
 ---
 
-### Componentização
+## Componentização
 
 Os componentes representam a menor unidade reutilizável da interface.
 
@@ -635,7 +635,7 @@ Componentes devem concentrar apenas responsabilidades relacionadas à apresenta�
 
 ---
 
-### Mobile First
+## Mobile First
 
 A interface será desenvolvida seguindo a abordagem **Mobile First**, considerando dispositivos móveis como ponto de partida para o desenvolvimento das telas.
 
@@ -645,7 +645,7 @@ Essa estratégia favorece desempenho, simplicidade da interface e melhor experi�
 
 ---
 
-### Consistência Visual
+## Consistência Visual
 
 A consistência visual da aplicação será obtida por meio da reutilização de componentes, da padronização dos estilos e da utilização dos recursos oferecidos pelo Spartan UI.
 
@@ -655,7 +655,7 @@ Customizações visuais deverão ocorrer preferencialmente através do Tailwind 
 
 ---
 
-### Separação entre Interface e Aplicação
+## Separação entre Interface e Aplicação
 
 A camada de interface não deve possuir dependência direta dos mecanismos de persistência de dados nem implementar regras de negócio.
 
@@ -665,7 +665,7 @@ Essa separação contribui para maior reutilização dos componentes, simplifica
 
 ---
 
-### Evolução da Interface
+## Evolução da Interface
 
 A estratégia apresentada estabelece as diretrizes iniciais para construção da interface do Firebase Starter.
 
@@ -673,15 +673,15 @@ Novos componentes, layouts e padrões visuais poderão ser incorporados durante 
 
 Sempre que alterações impactarem significativamente a organização ou a estratégia da interface, essas decisões serão registradas por meio de ADRs específicas.
 
-## 15. Atributos de Qualidade Arquitetural
+# 15. Atributos de Qualidade Arquitetural
 
-### 15.1 Segurança
+## 15.1 Segurança
 
 A segurança constitui um dos pilares arquiteturais do Firebase Starter e deve estar presente em todas as camadas da aplicação. Sua arquitetura busca adotar práticas compatíveis com aplicações utilizadas em ambientes reais.
 
 A estratégia de segurança fundamenta-se no princípio do **menor privilégio**, permitindo que usuários e componentes tenham acesso apenas aos recursos estritamente necessários para desempenhar suas funções.
 
-#### Autenticação
+### Autenticação
 
 A autenticação será realizada utilizando o Firebase Authentication, responsável pela identificação dos usuários e emissão das credenciais necessárias para acesso aos serviços da aplicação.
 
@@ -689,7 +689,7 @@ A arquitetura foi projetada para que os mecanismos de autenticação permaneçam
 
 ---
 
-#### Autorização
+### Autorização
 
 O controle de acesso aos recursos deve ser definido por meio das regras de segurança do Firebase e das políticas da aplicação. Este repositório não contém configuração de regras de segurança do Firebase.
 
@@ -697,7 +697,7 @@ A interface poderá ocultar funcionalidades indisponíveis para determinados per
 
 ---
 
-#### Proteção de Dados
+### Proteção de Dados
 
 A arquitetura procura minimizar a exposição de informações sensíveis durante todo o fluxo da aplicação.
 
@@ -707,7 +707,7 @@ Sempre que possível, apenas os dados necessários para a execução da funciona
 
 ---
 
-#### Comunicação Segura
+### Comunicação Segura
 
 Toda comunicação entre a aplicação e os serviços do Firebase ocorre utilizando conexões seguras providas pela própria plataforma.
 
@@ -715,13 +715,13 @@ A camada de aplicação permanece responsável apenas pela utilização dessas i
 
 ---
 
-#### Evolução da Segurança
+### Evolução da Segurança
 
 À medida que o projeto evoluir, novos mecanismos poderão ser incorporados, como controle de permissões por papéis, autenticação multifator, auditoria de operações e integração com provedores externos de identidade.
 
 Essas evoluções deverão preservar o princípio de separação entre regras de negócio, autenticação e infraestrutura, mantendo a arquitetura consistente e preparada para novos requisitos de segurança.
 
-### 15.2 Performance
+## 15.2 Performance
 
 A arquitetura do Firebase Starter foi projetada para oferecer uma experiência fluida ao usuário, utilizando recursos modernos do Angular e do ecossistema Firebase para reduzir o consumo de recursos e otimizar o tempo de resposta da aplicação.
 
@@ -729,7 +729,7 @@ As estratégias adotadas priorizam simplicidade, eficiência e escalabilidade, e
 
 ---
 
-#### Renderização Reativa
+### Renderização Reativa
 
 A atualização da interface é baseada na utilização de **Angular Signals**, permitindo que apenas os componentes afetados por uma alteração de estado sejam atualizados.
 
@@ -737,7 +737,7 @@ Essa abordagem reduz renderizações desnecessárias, melhora a previsibilidade 
 
 ---
 
-#### Carregamento Sob Demanda
+### Carregamento Sob Demanda
 
 As rotas verificadas já utilizam carregamento sob demanda com `loadChildren` e `loadComponent`.
 
@@ -747,7 +747,7 @@ Essa estratégia favorece principalmente aplicações que tendem a crescer ao lo
 
 ---
 
-#### Componentização
+### Componentização
 
 A arquitetura incentiva a construção de componentes pequenos, especializados e reutilizáveis.
 
@@ -755,7 +755,7 @@ Além de favorecer a manutenção do código, componentes menores reduzem a comp
 
 ---
 
-#### Comunicação com o Firebase
+### Comunicação com o Firebase
 
 As operações de leitura e escrita devem ser planejadas para minimizar acessos desnecessários aos serviços do Firebase.
 
@@ -765,7 +765,7 @@ Sempre que possível, as consultas deverão recuperar apenas os dados necessári
 
 ---
 
-#### Recursos Estáticos
+### Recursos Estáticos
 
 Arquivos estáticos, como imagens, ícones e demais recursos públicos, serão disponibilizados por meio do diretório `public`, seguindo a convenção adotada pelo Angular.
 
@@ -773,7 +773,7 @@ Essa organização simplifica a distribuição dos recursos e contribui para um 
 
 ---
 
-#### Otimizações da Plataforma
+### Otimizações da Plataforma
 
 A arquitetura procura aproveitar os mecanismos disponibilizados pelo Angular e pelas ferramentas adotadas no projeto, entre eles:
 
@@ -787,7 +787,7 @@ Esses recursos são utilizados de forma transparente pelo ecossistema Angular, c
 
 ---
 
-#### Evolução da Performance
+### Evolução da Performance
 
 As estratégias apresentadas representam a base de desempenho do Firebase Starter.
 
@@ -795,9 +795,9 @@ Conforme novas funcionalidades forem incorporadas, técnicas adicionais poderão
 
 Qualquer decisão arquitetural que impacte significativamente a estratégia de performance deverá ser documentada por meio de ADRs específicas, preservando a rastreabilidade das decisões adotadas.
 
----- 
+---
 
-### 15.3 Escalabilidade
+## 15.3 Escalabilidade
 
 A arquitetura do Firebase Starter foi concebida para evoluir de forma incremental, permitindo a incorporação de novas funcionalidades, serviços e tecnologias sem comprometer a organização do projeto ou exigir reestruturações significativas.
 
@@ -805,7 +805,7 @@ A estratégia de escalabilidade não se limita ao aumento do número de usuário
 
 ---
 
-#### Escalabilidade Funcional
+### Escalabilidade Funcional
 
 A utilização da **Feature-Based Architecture** permite que novas funcionalidades sejam adicionadas de maneira independente, reduzindo o impacto sobre as funcionalidades já existentes.
 
@@ -815,7 +815,7 @@ Essa organização facilita a manutenção do projeto e reduz o risco de regress
 
 ---
 
-#### Escalabilidade Arquitetural
+### Escalabilidade Arquitetural
 
 A arquitetura adota a separação entre apresentação, aplicação e infraestrutura, permitindo que cada camada evolua de forma relativamente independente.
 
@@ -825,7 +825,7 @@ Essa abordagem possibilita, por exemplo, substituir o Firebase por um backend pr
 
 ---
 
-#### Escalabilidade Tecnológica
+### Escalabilidade Tecnológica
 
 Embora a versão inicial utilize Angular e Firebase, a arquitetura procura evitar acoplamentos desnecessários entre a lógica da aplicação e as tecnologias empregadas.
 
@@ -833,7 +833,7 @@ Sempre que possível, novas tecnologias deverão ser incorporadas por meio de ca
 
 ---
 
-#### Escalabilidade da Equipe
+### Escalabilidade da Equipe
 
 A organização por funcionalidades facilita o trabalho colaborativo, permitindo que diferentes desenvolvedores atuem em features distintas com menor probabilidade de conflitos.
 
@@ -841,7 +841,7 @@ A documentação arquitetural, as ADRs e as convenções estabelecidas pelo proj
 
 ---
 
-#### Evolução Incremental
+### Evolução Incremental
 
 A arquitetura incentiva que novas estruturas sejam criadas apenas quando houver uma necessidade concreta.
 
@@ -851,7 +851,7 @@ Essa estratégia está alinhada aos princípios de simplicidade, reutilização 
 
 ---
 
-#### Evolução da Escalabilidade
+### Evolução da Escalabilidade
 
 A escalabilidade da arquitetura será continuamente reavaliada conforme o crescimento do projeto.
 
@@ -861,33 +861,33 @@ Sempre que essas evoluções representarem mudanças relevantes na arquitetura, 
 
 ---
 
-## 16. Melhorias e evoluções futuras
+# 16. Melhorias e evoluções futuras
 
 As possibilidades abaixo poderão ser avaliadas conforme as necessidades do projeto. Elas não constituem requisitos obrigatórios nem indicam funcionalidades já implementadas.
 
-### Serviços Firebase e publicação
+## Serviços Firebase e publicação
 
 * Integrar o Cloud Storage para upload, preview, organização, associação a registros, exclusão e regras de acesso a arquivos.
 * Configurar Firebase Hosting e realizar o deploy da aplicação, incluindo os ajustes de produção necessários.
 
-### Evoluções de dados e interface
+## Evoluções de dados e interface
 
 * Ampliar o CRUD com pesquisa, paginação e ordenação de registros.
 * Avaliar melhorias de interface, como dashboard e temas, conforme a necessidade.
 
-### Carregamento, performance e infraestrutura
+## Carregamento, performance e infraestrutura
 
 * Avaliar otimizações adicionais de carregamento e performance, como pré-carregamento de rotas, cache, otimização de imagens e virtualização de listas. As rotas verificadas já usam carregamento sob demanda.
 * Considerar backend próprio, APIs externas, processamento assíncrono, suporte a múltiplos ambientes e evolução da camada de persistência quando houver necessidade concreta.
 * Avaliar `ErrorInterceptor` para tratamento global de erros HTTP, `RetryInterceptor` para repetição controlada de requisições adequadas e `LoggingInterceptor` para observabilidade.
 
-### Segurança
+## Segurança
 
 * Definir e revisar regras de segurança do Firebase e preparar um checklist de publicação antes do deploy.
 
 Essas possibilidades poderão ser incorporadas de forma incremental e registradas em ADRs quando representarem decisões arquiteturais relevantes.
 
-## 17. ADRs Relacionadas
+# 17. ADRs Relacionadas
 
 A Architecture v1.0 apresenta a visão geral da solução e estabelece os princípios arquiteturais adotados pelo Firebase Starter. Entretanto, decisões específicas de arquitetura são registradas de forma independente por meio dos **Architecture Decision Records (ADRs)**.
 
@@ -934,7 +934,7 @@ Dessa forma, a evolução arquitetural permanece documentada de maneira incremen
 
 ---
 
-## 18. Glossário
+# 18. Glossário
 
 Para facilitar a compreensão da arquitetura, esta seção reúne os principais termos utilizados ao longo deste documento.
 
@@ -959,7 +959,7 @@ O glossário poderá ser ampliado conforme novos conceitos forem incorporados à
 
 ---
 
-## 19. Considerações Finais
+# 19. Considerações Finais
 
 A **Architecture v1.0** representa o ponto de partida para o desenvolvimento do Firebase Starter. Mais do que definir uma estrutura inicial de diretórios ou tecnologias, este documento estabelece os princípios que orientarão a evolução da aplicação ao longo de seu ciclo de vida.
 
