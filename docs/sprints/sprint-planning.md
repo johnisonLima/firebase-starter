@@ -54,11 +54,11 @@ Este documento registra o histórico das cinco sprints executadas e mantém um b
 
 ## Sprint 5 — E2E e CI
 
-**Status: em andamento — documentação final pendent**
+**Status: concluída.**
 
 - Testes E2E.
 - CI e GitHub Actions.
-- Documentação final permanece pendente.
+- Documentação.
 
 ---
 
