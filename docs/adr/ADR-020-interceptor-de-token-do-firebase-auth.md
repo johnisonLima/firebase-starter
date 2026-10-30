@@ -1,4 +1,4 @@
-# Decisão 020
+# ADR-020 — Interceptor de token do firebase auth
 
 ### Título
 

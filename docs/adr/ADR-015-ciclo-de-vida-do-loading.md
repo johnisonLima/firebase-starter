@@ -1,4 +1,4 @@
-# Decisão 015
+# ADR-015 — Ciclo de vida do loading
 
 ### Título
 

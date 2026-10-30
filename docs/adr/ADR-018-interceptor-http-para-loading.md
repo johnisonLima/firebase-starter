@@ -1,4 +1,4 @@
-# Decisão 018
+# ADR-018 — Interceptor http para loading
 
 ### Título
 

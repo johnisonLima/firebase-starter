@@ -1,4 +1,4 @@
-# Decisão 006
+# ADR-006 — Adotar providers baseados em funções no padrão moderno
 
 ### Título
 

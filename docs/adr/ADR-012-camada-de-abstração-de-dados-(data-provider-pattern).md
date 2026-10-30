@@ -1,4 +1,4 @@
-# Decisão 012
+# ADR-012 — Camada de abstração de dados (data-provider-pattern)
 
 ### Título
 

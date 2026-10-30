@@ -1,4 +1,4 @@
-# ADR 007 – Não criar um FirebaseService genérico
+# ADR-007 — Não criar um firebaseService genérico
 
 ## Contexto
 

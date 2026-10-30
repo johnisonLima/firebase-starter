@@ -1,4 +1,4 @@
-# ADR011 — Feature Organization Pattern
+# ADR-011 — Feature Organization Pattern
 
 ## Contexto
 

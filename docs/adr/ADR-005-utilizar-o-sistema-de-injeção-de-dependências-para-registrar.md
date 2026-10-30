@@ -1,4 +1,4 @@
-# Decisão 005
+# ADR-005 — Utilizar o sistema de injeção de dependências para registrar
 
 ### Título
 
