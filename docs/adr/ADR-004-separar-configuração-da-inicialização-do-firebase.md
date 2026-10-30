@@ -1,4 +1,4 @@
-## Decisão 004
+# ADR-004 — Separar configuração da inicialização do Firebase
 
 ### Título
 

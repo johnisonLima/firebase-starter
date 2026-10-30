@@ -1,4 +1,4 @@
-# Decisão 017
+# ADR-017 — Overlay do loading global e loading local
 
 ### Título
 

@@ -1,4 +1,4 @@
-# ADR010 — Interface Mobile First
+# ADR-010 — Interface mobile first
 
 ## Contexto
 

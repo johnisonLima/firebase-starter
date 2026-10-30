@@ -1,4 +1,4 @@
-## Decisão 003
+# ADR-003 — Registrar o Firebase durante o bootstrap
 
 ### Título
 

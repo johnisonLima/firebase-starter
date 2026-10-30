@@ -10,7 +10,7 @@ O **Firebase Starter** é um projeto de referência desenvolvido para a constru�
 
 O projeto busca mostrar como decisões arquiteturais influenciam a organização, manutenção e evolução de um sistema real.
 
-Durante o desenvolvimento, cada etapa será construída de forma incremental, permitindo compreender tanto a implementação quanto as motivações técnicas por trás de cada decisão.
+Durante o desenvolvimento, cada etapa é construída de forma incremental, permitindo compreender tanto a implementação quanto as motivações técnicas por trás de cada decisão.
 
 Toda a arquitetura do projeto é documentada através de ADRs (Architecture Decision Records), garantindo que as escolhas realizadas permaneçam registradas e possam ser revisitadas ao longo da evolução do sistema.
 
@@ -31,23 +31,26 @@ Ao final, o projeto deverá representar uma base sólida para aplicações Full 
 
 # Stack Tecnológica
 
-O projeto utiliza tecnologias atuais do ecossistema Angular.
+A tabela apresenta as tecnologias e ferramentas cuja dependência, configuração ou utilização está confirmada no projeto atual.
 
-| Tecnologia            | Finalidade                      |
-| --------------------- | ------------------------------- |
-| Angular 21            | Framework Front-end             |
-| TypeScript            | Linguagem principal             |
-| Firebase SDK          | Backend as a Service            |
-| Authentication        | Autenticação de usuários        |
-| Firestore             | Banco de dados NoSQL            |
-| Cloud Storage         | Armazenamento de arquivos       |
-| Tailwind CSS          | Estilização                     |
-| Spartan UI            | Biblioteca de componentes       |
-| Angular Signals       | Gerenciamento reativo de estado |
-| Standalone Components | Arquitetura moderna do Angular  |
-| Angular Router        | Navegação entre páginas         |
-| ESLint                | Padronização de código          |
-| Prettier              | Formatação automática           |
+| Tecnologia/Ferramenta | Finalidade |
+| --------------------- | ---------- |
+| Angular 21 | Framework Front-end |
+| TypeScript | Linguagem principal |
+| Firebase SDK | Integração com serviços Firebase |
+| Firebase Authentication | Autenticação de usuários |
+| Cloud Firestore | Banco de dados NoSQL |
+| Tailwind CSS 4 | Estilização |
+| Spartan UI | Biblioteca de componentes |
+| Angular Signals | Gerenciamento reativo de estado |
+| Standalone Components | Organização de componentes Angular |
+| Angular Router | Navegação entre páginas |
+| Prettier | Formatação automática, com configuração no repositório |
+| Vitest | Testes unitários |
+| Playwright | Testes E2E |
+| GitHub Actions | Integração contínua pelo workflow do repositório |
+
+Cloud Storage, ESLint e Firebase Hosting não fazem parte da configuração atual. Storage e Hosting permanecem possibilidades no roadmap; ESLint não é uma ferramenta adotada nem um compromisso futuro deste projeto.
 
 ---
 
@@ -72,28 +75,31 @@ Esses princípios orientam todas as decisões arquiteturais registradas nas ADRs
 
 # Organização da Documentação
 
-A documentação está organizada por responsabilidade.
+A documentação está organizada por responsabilidade. Estes são os caminhos existentes no repositório:
 
 ```text
 docs/
-├── README.md                ← Visão geral do projeto
-├── architecture/
-│   └── Architecture-v1.0.md
+├── Architecture-v1.0.md
+├── project-status.md
 ├── adr/
-│   ├── README.md
 │   ├── ADR-001-objetivo-do-projeto.md
-│   ├── ADR-002-...
-│   └── ...
-├── sprint/
-    └── Sprint-Planning.md
-
+│   ├── ADR-002-não-utilizar-enviroments.md
+│   ├── ...
+│   └── ADR-023-playwright-e2e-testing.md
+├── sprints/
+│   └── sprint-planning.md
+└── ui/
+    └── design-system/
+        ├── 01-Iconografia.md
+        ├── ...
+        └── 09-Componentes.md
 ```
 
 ---
 
 # Architecture Decision Records (ADRs)
 
-As ADRs registram todas as decisões arquiteturais importantes do projeto.
+As ADRs registram as decisões arquiteturais importantes do projeto.
 
 Cada documento responde às seguintes perguntas:
 
@@ -108,47 +114,22 @@ Essa abordagem permite compreender a evolução da arquitetura ao longo do proje
 
 # Roadmap
 
-O desenvolvimento será realizado de forma incremental.
+As cinco sprints executadas e seus estados estão registradas em [`docs/sprints/sprint-planning.md`](docs/sprints/sprint-planning.md). Os itens abaixo são evolução futura e não indicam funcionalidades já implementadas.
 
-## Fase 1 — Fundação
+## Backlog funcional
 
-* Estrutura inicial do projeto
-* Configuração do Angular
-* Tailwind CSS
-* Spartan UI
-* Organização Feature-Based
-* Configuração do Firebase
+* Integração com Cloud Storage para upload, preview, organização, associação a registros, exclusão e regras de acesso.
+* Evoluções do CRUD, como pesquisa, paginação e ordenação, conforme necessário.
+* Evoluções de interface, como dashboard e temas, conforme necessidade.
+* Avaliação de Lazy Loading e otimizações de performance quando justificadas.
 
-## Fase 2 — Autenticação
+## Publicação
 
-* Login
-* Cadastro
-* Recuperação de senha
-* Guards
-* Controle de sessão
+* Avaliar e configurar Firebase Hosting.
+* Preparar regras de segurança e checklist de publicação.
+* Realizar o deploy e os ajustes de produção quando essa etapa for iniciada.
 
-## Fase 3 — Firestore
-
-* CRUD completo
-* Coleções
-* Consultas
-* Paginação
-* Boas práticas
-
-## Fase 4 — Storage
-
-* Upload de imagens
-* Organização de arquivos
-* Exclusão
-* Regras de acesso
-
-## Fase 5 — Recursos Avançados
-
-* Signals
-* Otimizações
-* Lazy Loading
-* Performance
-* Responsividade
+Esses itens permanecem como possibilidades planejadas; ainda não há configuração de Firebase Hosting ou deploy neste repositório.
 
 ---
 

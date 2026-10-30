@@ -1,4 +1,4 @@
-# Decisão 020
+# ADR-020 — Interceptor de token do firebase auth
 
 ### Título
 
@@ -36,6 +36,8 @@ Cada serviço responsável por realizar uma requisição HTTP obteria o token e 
 
 O `AuthInterceptor` será responsável por obter o Firebase ID Token disponibilizado pelo mecanismo de autenticação e adicioná-lo às requisições HTTP quando houver um usuário autenticado.
 
+A implementação do `AuthInterceptor` deverá seguir o padrão funcional estabelecido na ADR-019 — Adoção de Interceptors HTTP Funcionais.
+
 ### Decisão
 
 Requisições HTTP da aplicação **podem receber automaticamente o Firebase ID Token através de um interceptor**, utilizando o header:
@@ -63,6 +65,8 @@ valida credencial
 ```
 
 O `AuthService` permanece responsável pelo contexto de autenticação e pela disponibilização da credencial.
+
+Essa responsabilidade do `AuthService` como fachada única de autenticação está definida na ADR-021 — AuthService como Fachada Única de Autenticação.
 
 O `AuthInterceptor` atua exclusivamente como mecanismo de transporte, adicionando o token à requisição quando aplicável.
 

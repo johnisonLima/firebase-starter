@@ -1,157 +1,90 @@
 # Firebase Starter
 
-# Sprint Planning
+# Planejamento e Histórico das Sprints
 
-Este documento descreve a evolução planejada do projeto durante o desenvolvimento.
-
-Cada Sprint deverá entregar uma funcionalidade completa, utilizando a arquitetura definida nas ADRs e seguindo os princípios de Angular Moderno, Standalone Components, Signals, Firebase SDK Oficial, Spartan UI, Tailwind CSS e abordagem Mobile First.
-
-As sprints poderão sofrer pequenos ajustes conforme a evolução do projeto, porém a ordem macro deverá ser mantida.
+Este documento registra o histórico das cinco sprints executadas e mantém um backlog de evolução futura. Os itens concluídos abaixo refletem o histórico informado para o projeto; esta lista não acrescenta resultados de testes além do que foi registrado.
 
 ---
 
-# Sprint 1 — Autenticação
+# Sprints executadas
 
-Objetivo
+## Sprint 1 — Brand e base de autenticação
 
-Implementar todo o fluxo de autenticação da aplicação.
+**Status: concluída.**
 
-## Entregas
+- Brand.
+- Auth Base.
+- Documents.
+- Forms Utils.
 
-- Página de Login
-- Página de Cadastro
-- Recuperação de senha
-- Integração com Firebase Authentication
-- Reactive Forms
-- Validações
-- Loading
-- Tratamento de erros
-- Guards de autenticação
-- Navegação autenticada
+## Sprint 2 — Formulários e fluxos de autenticação
 
----
+**Status: concluída.**
 
-# Sprint 2 — Layout da Aplicação
+- FormErrorComponent.
+- Login, Register e Forgot Password.
+- Autofoco.
+- Mostrar e ocultar senha.
+- Verificação de e-mail.
 
-Objetivo
+## Sprint 3 — Dados, Firestore e CRUD
 
-Construir toda a estrutura visual da aplicação.
+**Status: concluída.**
 
-## Entregas
+- Entity, Collections e QueryFilter.
+- DataProvider e Firestore.
+- FirestoreDataProvider.
+- CRUD Base.
+- BaseRepository e UserRepository.
+- Repository Pattern.
+- Playground de Desenvolvimento.
+- CRUD validado ponta a ponta.
 
-- Navbar
-- Sidebar
-- Footer
-- Layout responsivo
-- Navegação
-- Área autenticada
+## Sprint 4 — Design System, serviços e testes
 
----
+**Status: concluída.**
 
-# Sprint 3 — Sistema de Temas
+- Design System.
+- Loading, Dialog e Toast.
+- Buttons e Spinner.
+- Firebase Auth e persistência.
+- Guards e HTTP Interceptors.
+- Testes do Playground.
+- ADRs.
 
-Objetivo
+## Sprint 5 — E2E e CI
 
-Adicionar personalização visual da aplicação.
+**Status: concluída.**
 
-## Entregas
-
-- Tema Claro
-- Tema Escuro
-- Tema Sistema
-- Persistência da preferência
-- Alternância dinâmica
-
----
-
-# Sprint 4 — Dashboard
-
-Objetivo
-
-Desenvolver a tela inicial da aplicação.
-
-## Entregas
-
-- Cards
-- Indicadores
-- Estatísticas
-- Componentes reutilizáveis
+- Testes E2E.
+- CI e GitHub Actions.
+- Documentação.
 
 ---
 
-# Sprint 5 — Firestore
+# Backlog e roadmap futuro
 
-Objetivo
+Os itens desta seção não são sprints executadas e não representam funcionalidades implementadas. Permanecem no planejamento para avaliação conforme as necessidades do projeto.
 
-Integrar a aplicação ao banco de dados.
+## Storage e uploads
 
-## Entregas
+- Integração com Firebase Cloud Storage.
+- Upload e preview de imagens.
+- Associação de arquivos aos registros.
+- Organização e exclusão de arquivos.
+- Regras de acesso para arquivos.
 
-- Estrutura de coleções
-- Serviços
-- Operações básicas
-- Conversores
-- Tipagem
-- Consultas
+## Evoluções de CRUD e interface
 
----
+- Pesquisa, paginação e ordenação de registros.
+- Melhorias de interface, incluindo dashboard e temas, conforme necessidade.
+- Avaliação de Lazy Loading e otimizações de performance quando justificadas.
 
-# Sprint 6 — CRUD
+## Hosting e publicação
 
-Objetivo
+- Avaliar e configurar Firebase Hosting.
+- Preparar regras de segurança e checklist de publicação.
+- Ajustes de produção para publicação.
+- Deploy da aplicação.
 
-Implementar operações completas sobre os dados.
-
-## Entregas
-
-- Listagem
-- Cadastro
-- Edição
-- Exclusão
-- Pesquisa
-- Paginação
-- Ordenação
-
----
-
-# Sprint 7 — Uploads
-
-Objetivo
-
-Adicionar gerenciamento de arquivos.
-
-## Entregas
-
-- Firebase Storage
-- Upload de imagens
-- Preview
-- Exclusão
-- Associação aos registros
-
----
-
-# Sprint 8 — Deploy
-
-Objetivo
-
-Publicar a aplicação.
-
-## Entregas
-
-- Build de Produção
-- Configuração do Firebase Hosting
-- Regras de Segurança
-- Deploy
-- Ajustes finais
-- Checklist de publicação
-
-
-
-
-
-
-
-
-
-
-
+Firebase Hosting e deploy ainda não têm configuração identificada no repositório. Estes itens permanecem como etapas futuras do backlog.

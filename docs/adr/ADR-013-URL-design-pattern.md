@@ -1,4 +1,4 @@
-# ADR011 — URL Design Pattern
+# ADR-013 — URL Design Pattern
 
 ## Contexto
 
@@ -143,10 +143,8 @@ Rejeitada por dificultar a escalabilidade e aumentar o acoplamento entre funcion
 
 ## ADRs Relacionadas
 
-- ADR001 — Arquitetura Base
-- ADR002 — Estrutura de Diretórios
-- ADR009 — Interface Mobile First
-- ADR010 — Feature Organization Pattern
+- ADR-010 — Interface Mobile First
+- ADR-011 — Feature Organization Pattern
 
 
 ## Data

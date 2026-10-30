@@ -1,4 +1,4 @@
-# Decisão 016
+# ADR-016 — Contador de concorrencia do loading global
 
 ### Título
 
