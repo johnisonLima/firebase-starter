@@ -249,10 +249,7 @@ Embora ainda seja válido, o termo **containers** tornou-se menos semântico no 
 
 ## ADRs Relacionadas
 
-- ADR001 — Arquitetura Base
-- ADR002 — Estrutura de Diretórios
-- ADR003 — Configuração do Firebase
-- ADR009 — Interface Mobile First
+- ADR-010 — Interface Mobile First
 
 ## Data
 

@@ -82,7 +82,7 @@ Requisição HTTP
 
 Essa exceção permite que determinadas requisições não provoquem o bloqueio global da interface quando esse comportamento não for desejado.
 
-A decisão mantém o interceptor como parte da infraestrutura responsável pela integração entre HTTP e o mecanismo global de Loading, enquanto as regras definidas nas ADRs anteriores continuam válidas para o ciclo de vida e concorrência do Loading.
+A decisão mantém o interceptor como parte da infraestrutura responsável pela integração entre HTTP e o mecanismo global de Loading, enquanto as regras definidas na ADR-015 — Ciclo de vida do loading e na ADR-016 — Contador de concorrência do loading global continuam válidas para o ciclo de vida e concorrência do Loading.
 
 ### Consequências
 

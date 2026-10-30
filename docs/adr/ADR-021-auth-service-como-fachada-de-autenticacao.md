@@ -8,6 +8,8 @@ AuthService como Fachada Única de Autenticação
 
 Durante a refatoração da camada de autenticação, surgiu a possibilidade de separar as responsabilidades relacionadas à autenticação em diferentes serviços, como serviços específicos para sessão, verificação de e-mail e obtenção do Firebase ID Token.
 
+A obtenção e a propagação desse token nas requisições HTTP são tratadas pelo AuthInterceptor, conforme definido na ADR-020 — Propagação do Firebase ID Token por AuthInterceptor.
+
 Embora a separação de responsabilidades seja importante para manter o código organizado, a criação prematura de múltiplos serviços para responsabilidades que ainda possuem forte coesão poderia resultar em uma fragmentação artificial da arquitetura.
 
 O `AuthService` já representa o ponto de entrada da aplicação para operações relacionadas à autenticação e possui contexto suficiente para coordenar essas responsabilidades.
