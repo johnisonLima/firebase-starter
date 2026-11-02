@@ -50,7 +50,7 @@ A tabela apresenta as tecnologias e ferramentas cuja dependência, configuraçã
 | Playwright | Testes E2E |
 | GitHub Actions | Integração contínua pelo workflow do repositório |
 
-Cloud Storage, ESLint e Firebase Hosting não fazem parte da configuração atual. Storage e Hosting permanecem possibilidades no roadmap; ESLint não é uma ferramenta adotada nem um compromisso futuro deste projeto.
+Cloud Storage, ESLint e Firebase Hosting não fazem parte da configuração atual. Storage e Hosting permanecem no planejamento futuro; ESLint não é uma ferramenta adotada nem um compromisso futuro deste projeto.
 
 ---
 
@@ -87,7 +87,9 @@ docs/
 │   ├── ...
 │   └── ADR-023-playwright-e2e-testing.md
 ├── sprints/
-│   └── sprint-planning.md
+│   ├── sprints.md
+│   ├── sprint-planning.md
+│   └── backlog.md
 └── ui/
     └── design-system/
         ├── 01-Iconografia.md
@@ -114,22 +116,9 @@ Essa abordagem permite compreender a evolução da arquitetura ao longo do proje
 
 # Roadmap
 
-As cinco sprints executadas e seus estados estão registradas em [`docs/sprints/sprint-planning.md`](docs/sprints/sprint-planning.md). Os itens abaixo são evolução futura e não indicam funcionalidades já implementadas.
+O histórico das Sprints 1 a 5 está registrado em [`docs/sprints/sprints.md`](docs/sprints/sprints.md). O planejamento das Sprints 6 a 10 está em [`docs/sprints/sprint-planning.md`](docs/sprints/sprint-planning.md). As funcionalidades futuras ainda sem Sprint definida estão em [`docs/sprints/backlog.md`](docs/sprints/backlog.md).
 
-## Backlog funcional
-
-* Integração com Cloud Storage para upload, preview, organização, associação a registros, exclusão e regras de acesso.
-* Evoluções do CRUD, como pesquisa, paginação e ordenação, conforme necessário.
-* Evoluções de interface, como dashboard e temas, conforme necessidade.
-* Avaliação de Lazy Loading e otimizações de performance quando justificadas.
-
-## Publicação
-
-* Avaliar e configurar Firebase Hosting.
-* Preparar regras de segurança e checklist de publicação.
-* Realizar o deploy e os ajustes de produção quando essa etapa for iniciada.
-
-Esses itens permanecem como possibilidades planejadas; ainda não há configuração de Firebase Hosting ou deploy neste repositório.
+Esses documentos são as fontes de verdade sobre o histórico, o planejamento e o backlog do projeto. Nenhum item de planejamento ou backlog representa funcionalidade já implementada.
 
 ---
 

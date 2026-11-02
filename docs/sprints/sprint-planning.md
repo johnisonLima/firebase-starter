@@ -1,90 +1,94 @@
 # Firebase Starter
 
-# Planejamento e Histórico das Sprints
+# Planejamento
 
-Este documento registra o histórico das cinco sprints executadas e mantém um backlog de evolução futura. Os itens concluídos abaixo refletem o histórico informado para o projeto; esta lista não acrescenta resultados de testes além do que foi registrado.
+Este documento registra o planejamento da próxima rodada de desenvolvimento.
 
----
-
-# Sprints executadas
-
-## Sprint 1 — Brand e base de autenticação
-
-**Status: concluída.**
-
-- Brand.
-- Auth Base.
-- Documents.
-- Forms Utils.
-
-## Sprint 2 — Formulários e fluxos de autenticação
-
-**Status: concluída.**
-
-- FormErrorComponent.
-- Login, Register e Forgot Password.
-- Autofoco.
-- Mostrar e ocultar senha.
-- Verificação de e-mail.
-
-## Sprint 3 — Dados, Firestore e CRUD
-
-**Status: concluída.**
-
-- Entity, Collections e QueryFilter.
-- DataProvider e Firestore.
-- FirestoreDataProvider.
-- CRUD Base.
-- BaseRepository e UserRepository.
-- Repository Pattern.
-- Playground de Desenvolvimento.
-- CRUD validado ponta a ponta.
-
-## Sprint 4 — Design System, serviços e testes
-
-**Status: concluída.**
-
-- Design System.
-- Loading, Dialog e Toast.
-- Buttons e Spinner.
-- Firebase Auth e persistência.
-- Guards e HTTP Interceptors.
-- Testes do Playground.
-- ADRs.
-
-## Sprint 5 — E2E e CI
-
-**Status: concluída.**
-
-- Testes E2E.
-- CI e GitHub Actions.
-- Documentação.
+Cada Sprint deverá entregar uma funcionalidade completa, respeitando as ADRs existentes e os princípios de Angular Moderno, Standalone Components, Signals, Firebase SDK Oficial, Spartan UI, Tailwind CSS e abordagem Mobile First.
 
 ---
 
-# Backlog e roadmap futuro
+# Nova rodada de Sprints
 
-Os itens desta seção não são sprints executadas e não representam funcionalidades implementadas. Permanecem no planejamento para avaliação conforme as necessidades do projeto.
+## Sprint 6 — Autenticação com Google
 
-## Storage e uploads
+**Objetivo**
 
-- Integração com Firebase Cloud Storage.
-- Upload e preview de imagens.
-- Associação de arquivos aos registros.
-- Organização e exclusão de arquivos.
-- Regras de acesso para arquivos.
+Adicionar autenticação utilizando uma conta Google.
 
-## Evoluções de CRUD e interface
+### Entregas
 
-- Pesquisa, paginação e ordenação de registros.
-- Melhorias de interface, incluindo dashboard e temas, conforme necessidade.
-- Avaliação de Lazy Loading e otimizações de performance quando justificadas.
+- Login com Google.
+- Integração com Firebase Authentication.
+- Tratamento de erros.
+- Loading.
+- Integração com o fluxo de autenticação existente.
 
-## Hosting e publicação
+---
 
-- Avaliar e configurar Firebase Hosting.
-- Preparar regras de segurança e checklist de publicação.
-- Ajustes de produção para publicação.
-- Deploy da aplicação.
+## Sprint 7 — Autenticação por telefone
 
-Firebase Hosting e deploy ainda não têm configuração identificada no repositório. Estes itens permanecem como etapas futuras do backlog.
+**Objetivo**
+
+Implementar autenticação por número de telefone utilizando verificação por SMS.
+
+### Entregas
+
+- Formulário de telefone.
+- Envio do código de verificação.
+- Validação do código.
+- Integração com Firebase Authentication.
+- Tratamento de erros.
+- Loading.
+- Testes utilizando números fictícios do Firebase.
+
+---
+
+## Sprint 8 — Evolução do CRUD
+
+**Objetivo**
+
+Ampliar os recursos de consulta e organização dos registros.
+
+### Entregas
+
+- Pesquisa.
+- Paginação.
+- Ordenação.
+- Melhorias na listagem.
+- Estados vazios.
+
+---
+
+## Sprint 9 — Storage e Uploads
+
+**Objetivo**
+
+Adicionar gerenciamento de arquivos utilizando Firebase Storage.
+
+### Entregas
+
+- Integração com Firebase Storage.
+- Upload de imagens.
+- Preview.
+- Exclusão.
+- Associação aos registros.
+
+---
+
+## Sprint 10 — Hosting e Publicação
+
+**Objetivo**
+
+Preparar e publicar a aplicação.
+
+### Entregas
+
+- Build de Produção.
+- Configuração do Firebase Hosting.
+- Regras de Segurança.
+- Deploy.
+- Ajustes finais.
+- Checklist de publicação.
+
+---
