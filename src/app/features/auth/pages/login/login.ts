@@ -20,9 +20,6 @@ import { FormErrorComponent } from '@shared/components/form-error/form-error.com
 import { Button } from '@shared/components/button/button';
 import { Input } from '@shared/components/input/input';
 
-// Directives
-import { AutofocusDirective } from '@shared/directives/AutoFocus.directive';
-
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -44,8 +41,6 @@ import { AutofocusDirective } from '@shared/directives/AutoFocus.directive';
     FormErrorComponent,
     Input,
     Button, 
-    // Directives
-    AutofocusDirective,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
