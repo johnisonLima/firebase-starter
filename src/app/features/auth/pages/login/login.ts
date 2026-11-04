@@ -1,5 +1,5 @@
 // Angular
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -70,11 +70,30 @@ export class Login {
     this.formStatus() === 'VALID'
   );
 
-
   protected readonly formStatus = toSignal(
     this.form.statusChanges,
     { initialValue: this.form.status }
   );
+
+  protected readonly formValue = toSignal(
+    this.form.valueChanges, {
+      initialValue: this.form.getRawValue(),
+    },
+  );
+
+  constructor() {
+    let initialized = false;
+
+    effect(() => {
+      this.formValue();
+
+      if (initialized) {
+        this.authService.clearError();
+      }
+
+      initialized = true;
+    });
+  }
 
   async login(): Promise<void> {
 

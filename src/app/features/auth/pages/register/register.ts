@@ -88,16 +88,19 @@ export class Register {
     },
   );
 
-  constructor() {
+    constructor() {
+      let initialized = false;
 
-    effect(() => {
+      effect(() => {
+        this.formValue();
 
-      this.formValue();
+        if (initialized) {
+          this.authService.clearError();
+        }
 
-      this.authService.clearError();
-
-    });
-  }
+        initialized = true;
+      });
+    }
 
   async register(): Promise<void> {
 
