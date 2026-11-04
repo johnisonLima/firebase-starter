@@ -22,6 +22,9 @@ import { LoadingService } from '@shared/services/loading.service';
 import { Button } from '@shared/components/button/button';
 import { Input } from '@shared/components/input/input';
 
+// Firestore
+import { FirestoreTest } from '@features/dev/playground/firestore-test/firestore-test';
+
 // Guard
 import { AuthService } from '@core/auth/auth.service';
 import { HttpClient, HttpContext } from '@angular/common/http';
@@ -51,6 +54,7 @@ import { SKIP_LOADING } from '@core/interceptors/loading.interceptor';
     Loading,
     Button,
     Input,
+    FirestoreTest,
   ],
   templateUrl: './playground.html',
   styleUrl: './playground.scss',

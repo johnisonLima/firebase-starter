@@ -26,5 +26,9 @@ export const routes: Routes = [
         path: 'playground',
         loadComponent: () => import('./features/dev/playground/playground/playground')
             .then(m => m.Playground),
+        canActivate: [
+            authGuard,
+            emailVerifiedGuard,
+        ],
     }
 ];
