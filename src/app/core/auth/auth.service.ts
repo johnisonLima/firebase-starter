@@ -77,7 +77,7 @@ export class AuthService {
     const user = this.auth.currentUser;
 
     if (!user) {
-      return;
+      throw new Error('No authenticated user.');
     }
 
     await this.execute(() => sendEmailVerification(user));

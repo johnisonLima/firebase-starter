@@ -34,25 +34,26 @@
       <hlm-card-footer>
 
         <div class="flex w-full flex-col gap-3">
-
-          <button
-            hlmBtn
-            class="w-full"
-            (click)="checkVerification()">
-
+          <app-button
+            type="submit"
+            width="full"
+            size="sm"
+            (click)="checkVerification()"
+            [loading]="loading()"
+          >
             Já verifiquei meu e-mail
+          </app-button>
 
-          </button>
-
-          <button
-            hlmBtn
-            variant="outline"
-            class="w-full"
-            (click)="resendVerificationEmail()">
-
+          <app-button
+            type="button"
+            width="full"
+            size="sm"
+            (click)="resendVerificationEmail()"
+            [loading]="resendingVerification()"
+            [disabled]="resendingVerification()"
+          >
             Reenviar e-mail
-
-          </button>
+          </app-button>
 
         </div>
 
