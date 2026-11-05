@@ -1,6 +1,7 @@
 import { APP_BRAND } from './../../../../core/config/brand/brand.token';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { signal } from '@angular/core';
 
 import { VerifyEmail } from './verify-email';
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -14,12 +15,12 @@ const brand: Brand = {
 
 const createAuthServiceMock = () => ({
   isAuthenticated: vi.fn(() => false),
-  loading: vi.fn(() => false),
   error: vi.fn(() => null),
   user: vi.fn(() => null),
   userName: vi.fn(() => ''),
-  userEmail: vi.fn(() => ''),
+  userEmail: vi.fn(() => 'e2e@example.com'),
   emailVerified: vi.fn(() => false),
+  loading: signal(false),
   logout: vi.fn(),
   login: vi.fn(),
   register: vi.fn(),
@@ -92,6 +93,72 @@ describe('VerifyEmail', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('deve exibir o e-mail do usuário cadastrado', () => {
+    fixture.detectChanges();
+
+    expect(getText()).toContain(
+      'Enviamos um e-mail de verificação para e2e@example.com.',
+    );
+  });
+
+  it('deve redirecionar para o dashboard no ngOnInit quando o e-mail já estiver verificado', async () => {
+    authServiceMock.emailVerified.mockReturnValue(true);
+
+    await component.ngOnInit();
+
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/dashboard']);
+  });
+
+  it('deve permanecer na página no ngOnInit quando o e-mail não estiver verificado', async () => {
+    authServiceMock.emailVerified.mockReturnValue(false);
+
+    await component.ngOnInit();
+
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+
+  it('deve recarregar o usuário e redirecionar quando a verificação for confirmada', async () => {
+    authServiceMock.reloadUser.mockResolvedValue(undefined);
+    authServiceMock.emailVerified.mockReturnValue(true);
+
+    await component.checkVerification();
+
+    expect(authServiceMock.reloadUser).toHaveBeenCalledTimes(1);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/dashboard']);
+  });
+
+  it('deve recarregar o usuário e permanecer na página quando ainda não estiver verificado', async () => {
+    authServiceMock.reloadUser.mockResolvedValue(undefined);
+    authServiceMock.emailVerified.mockReturnValue(false);
+
+    await component.checkVerification();
+
+    expect(authServiceMock.reloadUser).toHaveBeenCalledTimes(1);
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+
+  it('não deve navegar quando a recarga do usuário falhar', async () => {
+    authServiceMock.reloadUser.mockRejectedValue(
+      new Error('falha na recarga'),
+    );
+
+    await expect(component.checkVerification()).rejects.toThrow(
+      'falha na recarga',
+    );
+
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+
+  it('deve refletir o loading no botão de confirmação de verificação', () => {
+    authServiceMock.loading.set(true);
+    fixture.detectChanges();
+
+    const button = getButtonByText('Já verifiquei meu e-mail');
+
+    expect(button.disabled).toBe(true);
+    expect(button.getAttribute('aria-busy')).toBe('true');
   });
 
   it('deve reenviar o e-mail e apresentar Toast de sucesso', async () => {
@@ -202,19 +269,27 @@ describe('VerifyEmail', () => {
     expect(getResendButton().disabled).toBe(false);
   });
 
-  function getResendButton(): HTMLButtonElement {
+  function getButtonByText(text: string): HTMLButtonElement {
     const buttons = fixture.nativeElement.querySelectorAll(
       'button',
     ) as NodeListOf<HTMLButtonElement>;
 
     const button = Array.from(buttons).find(candidate =>
-      candidate.textContent?.includes('Reenviar e-mail'),
+      candidate.textContent?.includes(text),
     );
 
     if (!button) {
-      throw new Error('Botão de reenvio não encontrado');
+      throw new Error(`Botão "${text}" não encontrado`);
     }
 
     return button;
+  }
+
+  function getResendButton(): HTMLButtonElement {
+    return getButtonByText('Reenviar e-mail');
+  }
+
+  function getText(): string {
+    return (fixture.nativeElement as HTMLElement).textContent ?? '';
   }
 });
