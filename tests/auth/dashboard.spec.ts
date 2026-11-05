@@ -1,9 +1,8 @@
-import 'dotenv/config';
-
 import { test, expect } from '@playwright/test';
 
+import { login } from '../support/auth';
+
 test.describe('Dashboard', () => {
-  test.describe.configure({ mode: 'serial' });
   test('redireciona para login quando não autenticado', async ({ page }) => {
     await page.goto('/dashboard');
 
@@ -13,13 +12,21 @@ test.describe('Dashboard', () => {
   test('permite acesso após login', async ({ page }) => {
     await login(page);
 
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(
+      page.getByText('dashboard works!', { exact: true }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole('button', { name: 'Logout' }),
+    ).toBeVisible();
   });
 
   test('permite sair da conta', async ({ page }) => {
     await login(page);
 
-    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(
+      page.getByRole('button', { name: 'Logout' }),
+    ).toBeVisible();
 
     await page.getByRole('button', { name: 'Logout' }).click();
 
@@ -31,23 +38,3 @@ test.describe('Dashboard', () => {
     await expect(page).toHaveURL(/\/login$/);
   });
 });
-
-async function login(page: import('@playwright/test').Page) {
-  const email = process.env.E2E_USER_EMAIL;
-  const password = process.env.E2E_USER_PASSWORD;
-
-  if (!email || !password) {
-    throw new Error(
-      'Configure E2E_USER_EMAIL e E2E_USER_PASSWORD no arquivo .env',
-    );
-  }
-
-  await page.goto('/login');
-
-  await page.getByRole('textbox', { name: 'E-mail' }).fill(email);
-  await page.getByRole('textbox', { name: 'Senha' }).fill(password);
-
-  await page.getByRole('button', { name: 'Entrar' }).click();
-
-  await expect(page).toHaveURL(/\/dashboard$/);
-}
