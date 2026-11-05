@@ -33,6 +33,14 @@ describe('CPF', () => {
 
     });
 
+    it('deve remover tabulações e quebras de linha', () => {
+
+      expect(
+        normalizeCpf('529.\t982.\n247-25'),
+      ).toBe('52998224725');
+
+    });
+
   });
 
   describe('isValidCpf', () => {
@@ -82,6 +90,38 @@ describe('CPF', () => {
         ).toBe(false);
 
       });
+
+    });
+
+    it('deve rejeitar CPF com 10 dígitos', () => {
+
+      expect(
+        isValidCpf('5299822472'),
+      ).toBe(false);
+
+    });
+
+    it('deve rejeitar CPF com 12 dígitos', () => {
+
+      expect(
+        isValidCpf('529982247251'),
+      ).toBe(false);
+
+    });
+
+    it('deve rejeitar entrada composta apenas por espaços', () => {
+
+      expect(
+        isValidCpf('   '),
+      ).toBe(false);
+
+    });
+
+    it('deve validar CPF iniciado por zero', () => {
+
+      expect(
+        isValidCpf('00000000191'),
+      ).toBe(true);
 
     });
 
