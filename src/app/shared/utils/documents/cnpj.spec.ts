@@ -20,6 +20,12 @@ describe('CNPJ', () => {
       ).toBe('12ABC34501DE35');
     });
 
+    it('deve remover espaços internos, tabulações e quebras de linha', () => {
+      expect(
+        normalizeCnpj(' 12.\tABC.\n345/01DE-35 ')
+      ).toBe('12ABC34501DE35');
+    });
+
   });
 
   describe('isValidCnpj', () => {
@@ -69,6 +75,42 @@ describe('CNPJ', () => {
     it('deve rejeitar tamanho inválido', () => {
       expect(
         isValidCnpj('123')
+      ).toBe(false);
+    });
+
+    it('deve rejeitar CNPJ vazio', () => {
+      expect(
+        isValidCnpj('')
+      ).toBe(false);
+    });
+
+    it('deve rejeitar entrada composta apenas por espaços', () => {
+      expect(
+        isValidCnpj('   ')
+      ).toBe(false);
+    });
+
+    it('deve rejeitar CNPJ com 13 caracteres', () => {
+      expect(
+        isValidCnpj('1234567800019')
+      ).toBe(false);
+    });
+
+    it('deve rejeitar CNPJ com 15 caracteres', () => {
+      expect(
+        isValidCnpj('123456780001950')
+      ).toBe(false);
+    });
+
+    it('deve validar CNPJ iniciado por zero', () => {
+      expect(
+        isValidCnpj('00000000000191')
+      ).toBe(true);
+    });
+
+    it('deve rejeitar caractere não suportado pela normalização', () => {
+      expect(
+        isValidCnpj('12ABC34501DE3?')
       ).toBe(false);
     });
 
