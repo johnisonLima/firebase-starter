@@ -1,7 +1,11 @@
 import { test, expect } from '@playwright/test';
 
-test('acessa a aplicação', async ({ page }) => {
+test('redireciona o acesso inicial para a tela de login', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page).toHaveURL(/localhost:4200/);
+  await expect(page).toHaveURL(/\/login\/?$/);
+
+  await expect(
+    page.getByRole('heading', { name: 'Entrar' }),
+  ).toBeVisible();
 });
