@@ -2,6 +2,15 @@ import 'dotenv/config';
 
 import { expect, type Page } from '@playwright/test';
 
+/**
+ * Estado de autenticação preparado pelo projeto `setup` e reutilizado apenas
+ * pelos cenários que não precisam validar o fluxo de login.
+ *
+ * O arquivo fica em `test-results/`, que é ignorado pelo Git e não é publicado
+ * como artefato no CI.
+ */
+export const AUTH_STATE_PATH = 'test-results/auth-state.json';
+
 interface E2ECredentials {
   email: string;
   password: string;

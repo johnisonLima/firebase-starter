@@ -52,6 +52,8 @@ Thumbs.db
 # Playwright
 node_modules/
 /test-results/
+# Estado de autenticação gerado pelos testes E2E (contém tokens de sessão)
+/test-results/auth-state.json
 /playwright-report/
 /blob-report/
 /playwright/.cache/

@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-import { login } from '../support/auth';
+import { AUTH_STATE_PATH, login } from '../support/auth';
+
+// Evita capturar credenciais e tokens de sessão em traces.
+test.use({ trace: 'off' });
 
 test.describe('Dashboard', () => {
   test('redireciona para login quando não autenticado', async ({ page }) => {
@@ -9,32 +12,46 @@ test.describe('Dashboard', () => {
     await expect(page).toHaveURL(/\/login$/);
   });
 
-  test('permite acesso após login', async ({ page }) => {
-    await login(page);
+  test.describe('sessão preparada pelo setup', () => {
+    test.use({ storageState: AUTH_STATE_PATH });
 
-    await expect(
-      page.getByText('dashboard works!', { exact: true }),
-    ).toBeVisible();
+    test('reutiliza a sessão após reload e permite sair da conta', async ({
+      page,
+    }) => {
+      await page.goto('/dashboard');
 
-    await expect(
-      page.getByRole('button', { name: 'Logout' }),
-    ).toBeVisible();
+      await expect(
+        page.getByRole('button', { name: 'Logout' }),
+      ).toBeVisible();
+
+      await page.reload();
+
+      await expect(
+        page.getByText('dashboard works!', { exact: true }),
+      ).toBeVisible();
+
+      await page.getByRole('button', { name: 'Logout' }).click();
+
+      await expect(page).toHaveURL(/\/login$/);
+
+      // Após o logout, a rota protegida não deve permanecer acessível.
+      await page.goto('/dashboard');
+
+      await expect(page).toHaveURL(/\/login$/);
+    });
   });
 
-  test('permite sair da conta', async ({ page }) => {
-    await login(page);
+  test.describe('login real', () => {
+    test('permite acesso após login', async ({ page }) => {
+      await login(page);
 
-    await expect(
-      page.getByRole('button', { name: 'Logout' }),
-    ).toBeVisible();
+      await expect(
+        page.getByText('dashboard works!', { exact: true }),
+      ).toBeVisible();
 
-    await page.getByRole('button', { name: 'Logout' }).click();
-
-    await expect(page).toHaveURL(/\/login$/);
-
-    // Após o logout, a rota protegida não deve permanecer acessível.
-    await page.goto('/dashboard');
-
-    await expect(page).toHaveURL(/\/login$/);
+      await expect(
+        page.getByRole('button', { name: 'Logout' }),
+      ).toBeVisible();
+    });
   });
 });
