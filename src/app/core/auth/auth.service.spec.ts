@@ -343,6 +343,24 @@ describe('AuthService', () => {
       expect(service.userEmail()).toBe('atualizado@example.com');
       expect(service.loading()).toBe(false);
     });
+
+    it('deve atualizar emailVerified quando o SDK mutar a mesma instância', async () => {
+      const user = createUser({ emailVerified: false });
+
+      authMock.currentUser = user;
+      authStateCallback(user);
+
+      expect(service.emailVerified()).toBe(false);
+
+      user.reload.mockImplementation(async () => {
+        (user as unknown as { emailVerified: boolean }).emailVerified = true;
+      });
+
+      await service.reloadUser();
+
+      expect(service.user()).toBe(user);
+      expect(service.emailVerified()).toBe(true);
+    });
   });
 
   describe('getIdToken', () => {

@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+import { AUTH_STATE_PATH } from '../support/auth';
+
+// Evita capturar o estado de autenticação real em traces de retry.
+test.use({ trace: 'off' });
+
 test.describe('Login', () => {
   test('exibe a tela de login', async ({ page }) => {
     await page.goto('/login');
@@ -31,5 +36,19 @@ test.describe('Login', () => {
     await registerLink.click();
 
     await expect(page).toHaveURL(/\/register$/);
+  });
+
+  test.describe('usuário autenticado', () => {
+    test.use({ storageState: AUTH_STATE_PATH });
+
+    test('redireciona login e cadastro para o dashboard', async ({ page }) => {
+      await page.goto('/login');
+
+      await expect(page).toHaveURL(/\/dashboard$/);
+
+      await page.goto('/register');
+
+      await expect(page).toHaveURL(/\/dashboard$/);
+    });
   });
 });

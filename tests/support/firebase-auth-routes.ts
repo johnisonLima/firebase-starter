@@ -35,6 +35,19 @@ export interface FirebaseAuthMockOptions {
 export interface FirebaseAuthMock {
   readonly handledOperations: FirebaseAuthOperation[];
   readonly blockedRequests: string[];
+
+  /**
+   * Substitui a resposta de uma operação durante o cenário. Útil para
+   * transições de estado, como um usuário que passa de não verificado para
+   * verificado entre duas consultas de `lookup`.
+   *
+   * Use `null` para restaurar a resposta padrão.
+   */
+  setResponse(
+    operation: FirebaseAuthOperation,
+    response: FirebaseAuthMockResponse | null,
+  ): void;
+
   expectNoUnexpectedRequests(): void;
 }
 
@@ -131,6 +144,12 @@ export async function mockFirebaseAuth(
   const allowed = new Set(options.allow);
   const handledOperations: FirebaseAuthOperation[] = [];
   const blockedRequests: string[] = [];
+  const responses = new Map<FirebaseAuthOperation, FirebaseAuthMockResponse>(
+    Object.entries(options.responses ?? {}) as [
+      FirebaseAuthOperation,
+      FirebaseAuthMockResponse,
+    ][],
+  );
 
   const handleRoute = async (route: Route): Promise<void> => {
     const request = route.request();
@@ -163,7 +182,7 @@ export async function mockFirebaseAuth(
       return;
     }
 
-    const response = options.responses?.[operation] ?? {
+    const response = responses.get(operation) ?? {
       body: DEFAULT_RESPONSES[operation](),
     };
 
@@ -183,6 +202,18 @@ export async function mockFirebaseAuth(
   return {
     handledOperations,
     blockedRequests,
+
+    setResponse(
+      operation: FirebaseAuthOperation,
+      response: FirebaseAuthMockResponse | null,
+    ): void {
+      if (response === null) {
+        responses.delete(operation);
+        return;
+      }
+
+      responses.set(operation, response);
+    },
 
     expectNoUnexpectedRequests(): void {
       expect(
