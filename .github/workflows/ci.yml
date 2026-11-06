@@ -1,4 +1,3 @@
-
 name: CI
 
 on:
@@ -14,10 +13,29 @@ concurrency:
 
 jobs:
   verify:
-    name: Build, Unit and E2E Tests
+    name: Build, Unit and Type-check
     runs-on: ubuntu-latest
+    outputs:
+      e2e_enabled: ${{ steps.e2e_secrets.outputs.enabled }}
 
     steps:
+      - name: Check E2E credentials availability
+        id: e2e_secrets
+        env:
+          E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
+          E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+        run: |
+          if [ -n "$E2E_USER_EMAIL" ] && [ -n "$E2E_USER_PASSWORD" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "### E2E: credenciais disponíveis" >> "$GITHUB_STEP_SUMMARY"
+            echo "A suíte E2E será executada no job \`e2e\`." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=E2E ignorado::Os secrets E2E_USER_EMAIL e E2E_USER_PASSWORD não estão disponíveis. A suíte E2E não será executada."
+            echo "### E2E ignorado" >> "$GITHUB_STEP_SUMMARY"
+            echo "Os secrets \`E2E_USER_EMAIL\` e \`E2E_USER_PASSWORD\` não estão disponíveis neste contexto (por exemplo, Pull Request de fork). A suíte E2E não foi executada; build, testes unitários e type-check foram executados." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -35,6 +53,28 @@ jobs:
 
       - name: Run unit tests
         run: npm run test:unit
+
+      - name: Type-check Playwright tests
+        run: npm run type-check:playwright
+
+  e2e:
+    name: E2E Tests (Chromium, Firefox, WebKit)
+    needs: verify
+    if: needs.verify.outputs.e2e_enabled == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps

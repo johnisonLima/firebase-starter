@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:unit": "ng test --watch=false",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "type-check:playwright": "tsc -p tsconfig.playwright.json --noEmit"
   },
   "private": true,
   "packageManager": "npm@10.8.2",
