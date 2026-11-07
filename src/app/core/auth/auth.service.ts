@@ -17,6 +17,7 @@ export class AuthService {
   private readonly auth = inject(FIREBASE_AUTH);
 
   private readonly _user = signal<User | null>(null);
+  private readonly _emailVerified = signal(false);
   private readonly _loading = signal(true);
   private readonly _error = signal<string | null>(null);
 
@@ -34,11 +35,12 @@ export class AuthService {
   readonly userName = computed(() => this.user()?.displayName ?? '');
   readonly userEmail = computed(() => this.user()?.email ?? '');
   readonly photoURL = computed(() => this.user()?.photoURL ?? '');
-  readonly emailVerified = computed(() => this.user()?.emailVerified ?? false);
+  readonly emailVerified = this._emailVerified.asReadonly();
 
   constructor() {
     onAuthStateChanged(this.auth, user => {
       this._user.set(user);
+      this._emailVerified.set(user?.emailVerified ?? false);
 
       this._authState.set(
         user
@@ -104,7 +106,13 @@ export class AuthService {
 
     await this.execute(() => user.reload());
 
-    this._user.set(this.auth.currentUser);
+    const currentUser = this.auth.currentUser;
+
+    this._user.set(currentUser);
+
+    // O SDK muta a instância do usuário no reload. Atualizamos o signal
+    // derivado explicitamente para que os guards reajam à nova verificação.
+    this._emailVerified.set(currentUser?.emailVerified ?? false);
 
   }
 

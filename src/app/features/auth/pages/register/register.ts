@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } 
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 // Spartan
 import { HlmCardImports } from '@spartan-ng/helm/card';
@@ -89,6 +89,12 @@ export class Register {
   );
 
     constructor() {
+      this.form.controls.password.valueChanges
+        .pipe(takeUntilDestroyed())
+        .subscribe(() => {
+          this.form.controls.confirmPassword.updateValueAndValidity();
+        });
+
       let initialized = false;
 
       effect(() => {

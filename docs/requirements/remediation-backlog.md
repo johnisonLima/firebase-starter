@@ -17,7 +17,9 @@ O levantamento considera o código e os testes atuais, as Sprints 1 a 5, o plane
 
 ## 3. Resumo quantitativo
 
-Há **20 pendências**: 4 de implementação parcial, 4 de inconsistência documental, 3 limitações técnicas/comportamentais e 9 confirmações ou definições.
+Há **20 pendências** no levantamento original: 4 de implementação parcial, 4 de inconsistência documental, 3 limitações técnicas/comportamentais e 9 confirmações ou definições.
+
+> **Atualização:** a FIX-020 foi concluída na implementação e documentação em 06/11/2026. O resumo quantitativo e a lista abaixo são mantidos como registro do levantamento original, anterior à conclusão dessa correção.
 
 | Categoria | P0 | P1 | P2 | P3 | Total |
 |---|---:|---:|---:|---:|---:|
@@ -318,6 +320,7 @@ Há **20 pendências**: 4 de implementação parcial, 4 de inconsistência docum
 - **Arquivos envolvidos:** `tests/auth/`, páginas de autenticação e configuração E2E.
 - **Critério de conclusão:** escopo de E2E documentado; fluxos priorizados possuem testes observáveis usando ambiente/conta de teste autorizados, ou sua exclusão está justificada.
 - **Dependências/decisões:** decisão de cobertura; coordenação com disponibilidade de ambiente de teste e secrets (FIX-014).
+- **Status:** concluída na implementação e documentação. O escopo está em [`docs/testing/e2e-strategy.md`](../testing/e2e-strategy.md), os fluxos priorizados possuem testes E2E e a CI foi ajustada para executar a suíte quando os secrets estiverem disponíveis. A execução normal do workflow no GitHub Actions foi validada com sucesso. O comportamento em Pull Requests de fork e de Dependabot sem secrets não foi validado diretamente.
 
 ## 5. Dependências entre correções
 

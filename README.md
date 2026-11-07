@@ -85,7 +85,11 @@ docs/
 │   ├── ADR-001-objetivo-do-projeto.md
 │   ├── ADR-002-não-utilizar-enviroments.md
 │   ├── ...
-│   └── ADR-023-playwright-e2e-testing.md
+│   └── ADR-027-execucao-dos-testes-no-github-actions.md
+├── ci/
+│   └── secrets.md
+├── testing/
+│   └── e2e-strategy.md
 ├── sprints/
 │   ├── sprints.md
 │   ├── sprint-planning.md
