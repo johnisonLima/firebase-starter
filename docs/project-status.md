@@ -21,7 +21,7 @@ Componentes standalone e Signals aparecem no código. Para persistência, `BaseR
 ## Funcionalidades implementadas
 
 - **Autenticação:** cadastro, login, logout, recuperação de senha e verificação de e-mail por Firebase Authentication. O `AuthService` atua como fachada única para as operações de autenticação e expõe o estado por meio de Signals.
-- **Firestore:** abstração de dados e repositório de usuários com criação, consulta por ID, listagem, existência, atualização, exclusão e consulta por filtros. O Playground contém interface de demonstração dessas operações.
+- **Firestore:** abstração de dados e repositório de usuários com criação, consulta por ID, listagem, existência, atualização, exclusão e consulta por filtros. Para finalidades exclusivas de desenvolvimento e teste, o componente `FirestoreTest` está integrado à página do Playground, disponibilizando interface para execução das operações CRUD sobre a coleção de testes dedicada `playground_users`. O acesso à rota `/playground` é protegido pelos guards `authGuard` e `emailVerifiedGuard`. Por se tratar de um recurso de apoio ao desenvolvimento, essa interface não constitui funcionalidade de produção nem representa validação ou aprovação definitiva das Security Rules no Firestore.
 - **Recursos compartilhados:** formulário e mensagens de erro, autofocus, botões, inputs, spinner/loading, Toast, Dialog e alternância de tema.
 - **Requisições HTTP:** interceptors funcionais configurados para token Firebase nas requisições autenticadas e controle do loading global, com opção para ignorá-lo.
 - **Acesso a rotas:** guards para visitante, autenticação e verificação de e-mail.
@@ -49,7 +49,8 @@ A validação local da FIX-020 registrou 220 testes unitários e 67 execuções 
 ## Pendências e limitações conhecidas
 
 - **Obrigatório:** não há pendência registrada para as Sprints 1 a 5.
-- **Planejado, ainda não implementado/configurado:** as Sprints 6 a 10 estão planejadas. Firebase Cloud Storage e Firebase Hosting ainda não estão configurados no repositório.
+- **Planejado, ainda não implementado/configurado:** as Sprints 6 a 10 estão planejadas. Firebase Cloud Storage e Firebase Hosting ainda não estão habilitados/configurados no projeto. O Cloud Firestore possui Security Rules configuradas diretamente no Firebase Console, mas sua definição definitiva, auditoria e versionamento no repositório permanecem pendentes, conforme escopo da FIX-021.
+- A interface CRUD disponível no Playground restringe-se ao apoio a desenvolvimento e teste com a coleção `playground_users`; o uso dessa interface não substitui a aprovação e auditoria definitiva das Security Rules do Firestore no servidor, dependendo da conclusão da FIX-021.
 - Não há configuração de ESLint identificada.
 - Os fluxos E2E autenticados dependem de uma conta de teste verificada e dos secrets correspondentes no CI.
 - O comportamento do workflow em Pull Requests de fork e de Dependabot sem secrets ainda não foi validado diretamente.
