@@ -922,6 +922,12 @@ As ADRs registradas no repositório são:
 | ADR-021 | AuthService como Fachada Única de Autenticação                  |
 | ADR-022 | Configuração do Firebase na Camada de Infraestrutura           |
 | ADR-023 | Playwright para Testes End-to-End                               |
+| ADR-024 | Segurança na Autenticação de Requisições à API                  |
+| ADR-025 | Autenticação real e reutilização de sessão nos testes E2E        |
+| ADR-026 | Interceptação fail-closed das operações do Firebase Auth nos testes E2E |
+| ADR-027 | Execução dos testes automatizados no GitHub Actions              |
+
+A estratégia E2E implementada está detalhada em [`testing/e2e-strategy.md`](testing/e2e-strategy.md).
 
 Novas ADRs poderão ser adicionadas sempre que uma decisão arquitetural atender aos seguintes critérios:
 

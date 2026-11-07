@@ -28,17 +28,19 @@ Componentes standalone e Signals aparecem no código. Para persistência, `BaseR
 
 ## Qualidade e testes
 
-- **Vitest:** testes unitários configurados pelo Angular (`npm run test:unit`), com testes existentes para componentes e utilitários.
-- **Playwright:** testes E2E em `tests/`, executados por `npm run test:e2e`. A configuração define Chromium, Firefox e WebKit; os cenários cobrem acesso, login, dashboard e logout. Fluxos autenticados requerem credenciais E2E configuradas.
-- **GitHub Actions:** `.github/workflows/ci.yml` executa em push e pull request: checkout, Node.js 22, `npm ci`, build de produção, testes unitários, instalação dos navegadores Playwright e testes E2E. O workflow injeta credenciais E2E a partir de secrets.
+- **Vitest:** testes unitários configurados pelo Angular (`npm run test:unit`), cobrindo `AuthService`, erros de autenticação, guards, páginas de autenticação, dashboard, Playground e utilitários compartilhados.
+- **Playwright:** testes E2E em `tests/`, executados por `npm run test:e2e`, com Chromium, Firefox e WebKit. A suíte cobre acesso inicial, login, cadastro, recuperação de senha, verificação de e-mail, dashboard, logout, proteção de rotas e redirecionamento de usuários autenticados. O projeto `setup` realiza login real com conta dedicada e gera `storageState`; os fluxos de cadastro, recuperação e verificação usam interceptação fail-closed do Firebase Auth. A estratégia está em [`testing/e2e-strategy.md`](testing/e2e-strategy.md).
+- **GitHub Actions:** `.github/workflows/ci.yml` é acionado por push e pull request. O job `verify` executa verificação de secrets, checkout, Node.js 22 com cache npm, `npm ci`, build, testes unitários e `type-check:playwright`. O job `e2e` depende de `verify` e só executa quando os secrets E2E estão disponíveis; caso contrário, é marcado como skipped e o workflow registra aviso e resumo. Nenhum artefato sensível é publicado.
 - **Prettier:** dependência e configuração `.prettierrc` presentes. ESLint não está configurado.
 
-As configurações e os arquivos de teste confirmam a presença dessas etapas, sem afirmar aqui resultados de execuções recentes.
+A validação local da FIX-020 registrou 220 testes unitários e 67 execuções E2E aprovadas nos três navegadores. A execução normal do workflow no GitHub Actions também foi validada com sucesso na FIX-020.
 
 ## Documentação
 
 - [`Architecture-v1.0.md`](Architecture-v1.0.md) registra a visão arquitetural e os princípios do projeto.
-- `docs/adr/` contém 23 ADRs, da ADR-001 à ADR-023, incluindo decisões de arquitetura, dados, autenticação, interceptors e Playwright.
+- `docs/adr/` contém 27 ADRs, da ADR-001 à ADR-027, incluindo decisões de arquitetura, dados, autenticação, interceptors, Playwright e estratégia de testes E2E e CI.
+- [`testing/e2e-strategy.md`](testing/e2e-strategy.md) documenta a estratégia de testes end-to-end.
+- [`ci/secrets.md`](ci/secrets.md) documenta os secrets necessários ao CI.
 - [`sprints/sprints.md`](sprints/sprints.md) registra o histórico das Sprints 1 a 5 concluídas.
 - [`sprints/sprint-planning.md`](sprints/sprint-planning.md) registra o planejamento das Sprints 6 a 10.
 - [`sprints/backlog.md`](sprints/backlog.md) registra as funcionalidades futuras ainda sem Sprint definida.
@@ -49,7 +51,8 @@ As configurações e os arquivos de teste confirmam a presença dessas etapas, s
 - **Obrigatório:** não há pendência registrada para as Sprints 1 a 5.
 - **Planejado, ainda não implementado/configurado:** as Sprints 6 a 10 estão planejadas. Firebase Cloud Storage e Firebase Hosting ainda não estão configurados no repositório.
 - Não há configuração de ESLint identificada.
-- Os fluxos E2E autenticados dependem de uma conta de teste e dos secrets correspondentes no CI.
+- Os fluxos E2E autenticados dependem de uma conta de teste verificada e dos secrets correspondentes no CI.
+- O comportamento do workflow em Pull Requests de fork e de Dependabot sem secrets ainda não foi validado diretamente.
 
 Lazy loading já é usado nas rotas. Não é uma pendência.
 

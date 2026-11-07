@@ -240,10 +240,10 @@ Os requisitos desta seção possuem implementação total ou parcial no código 
 |---|---|---|---|---|---|
 | RNF-030 | Testes unitários com Vitest | O projeto configura e executa testes unitários com Vitest por meio de `npm run test:unit`. | Testabilidade | Implementado | ADR-014 e Sprint 4 |
 | RNF-031 | Cobertura atual de testes de domínio | A cobertura existente inclui testes de utilitários de CPF/CNPJ; não há evidência de testes para todo o código de domínio. A política normativa de que todo código de domínio deve ter testes Vitest está definida separadamente na ADR-014. | Testabilidade | Parcialmente implementado | ADR-014 |
-| RNF-032 | Testes E2E existentes com Playwright | Os testes E2E existentes cobrem acesso inicial à aplicação, exibição do login, navegação ao cadastro, login/logout e bloqueio do dashboard para usuário não autenticado. Os casos de login/dashboard usam seletores por role e nome acessível; a existência da ADR-023 não comprova que todos os testes ou seletores futuros sigam esse padrão. | Testabilidade | Implementado | ADR-023 e Sprint 5 |
+| RNF-032 | Testes E2E existentes com Playwright | Os testes E2E existentes cobrem acesso inicial, login, cadastro, recuperação de senha, verificação de e-mail, dashboard, logout, proteção de rotas e redirecionamento de usuários autenticados. O fluxo autenticado usa login real no setup e reutiliza `storageState`; os fluxos de cadastro, recuperação e verificação usam interceptação fail-closed do Firebase Auth. Os cenários priorizam roles, labels e nomes acessíveis. | Testabilidade | Implementado | ADR-023, ADR-025, ADR-026 e `docs/testing/e2e-strategy.md` |
 | RNF-033 | Execução E2E em três engines | A configuração do Playwright define Chromium, Firefox e WebKit. | Testabilidade | Implementado | `playwright.config.ts` |
-| RNF-034 | CI de build, testes unitários e E2E | O GitHub Actions executa build, testes unitários e E2E em push e pull request. | Qualidade | Implementado | Sprint 5 |
-| RNF-035 | Credenciais E2E via secrets | O CI injeta `E2E_USER_EMAIL` e `E2E_USER_PASSWORD` a partir de secrets. | Testabilidade | Implementado | `ci.yml` |
+| RNF-034 | CI de build, testes unitários e E2E | O GitHub Actions executa build, testes unitários, type-check dos testes Playwright e E2E em push e pull request. O job E2E é condicional à disponibilidade dos secrets. A execução normal do workflow foi validada com sucesso na FIX-020. | Qualidade | Implementado | ADR-027 e `ci.yml` |
+| RNF-035 | Credenciais E2E via secrets | O CI injeta `E2E_USER_EMAIL` e `E2E_USER_PASSWORD` a partir de secrets quando disponíveis. Em Pull Requests de fork e de Dependabot sem secrets, a E2E é ignorada e build, testes unitários e type-check continuam executando; esse cenário não foi validado diretamente. | Testabilidade | Implementado | ADR-027 e `ci.yml` |
 
 ### 5.7 Desempenho
 
@@ -349,7 +349,9 @@ Os requisitos desta seção constam em planejamento ou backlog, mas não possuem
 
 - `docs/Architecture-v1.0.md`
 - `docs/project-status.md`
-- `docs/adr/ADR-001` a `docs/adr/ADR-023`
+- `docs/adr/ADR-001` a `docs/adr/ADR-027`
+- `docs/testing/e2e-strategy.md`
+- `docs/ci/secrets.md`
 - `docs/sprints/sprints.md`
 - `docs/sprints/sprint-planning.md`
 - `docs/sprints/backlog.md`
