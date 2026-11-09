@@ -12,7 +12,7 @@ test.describe('Dashboard', () => {
     await expect(page).toHaveURL(/\/login$/);
   });
 
-  test.describe('sessão preparada pelo setup', () => {
+  test.describe('sessão preparada pelo setup', { tag: '@authenticated' }, () => {
     test.use({ storageState: AUTH_STATE_PATH });
 
     test('reutiliza a sessão após reload e permite sair da conta', async ({
@@ -41,7 +41,7 @@ test.describe('Dashboard', () => {
     });
   });
 
-  test.describe('login real', () => {
+  test.describe('login real', { tag: '@authenticated' }, () => {
     test('permite acesso após login', async ({ page }) => {
       await login(page);
 

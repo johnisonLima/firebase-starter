@@ -74,7 +74,7 @@ tests/
 - `tests/support/auth.ts`: caminho do estado de autenticação, leitura das credenciais e helper `login(page)`.
 - `tests/support/firebase-auth-routes.ts`: infraestrutura única de interceptação do Firebase Auth.
 
-O `playwright.config.ts` define os projetos `setup`, `chromium`, `firefox` e `webkit`, o `baseURL` em `http://localhost:4200` e o `webServer` que inicia a aplicação.
+O `playwright.config.ts` define um projeto `setup`, três projetos `mock-*` e três projetos `auth-*`, além do `baseURL` em `http://localhost:4200` e do `webServer` que inicia a aplicação.
 
 ## 3.4 Autenticação
 
@@ -102,13 +102,15 @@ O helper `login(page)` em `tests/support/auth.ts` preenche o formulário real de
 
 ### Reutilização da sessão
 
-Chromium, Firefox e WebKit declaram `dependencies: ['setup']` e começam com o estado de autenticação gerado. Cenários autenticados que não precisam validar o login em si usam:
+Os projetos `auth-chromium`, `auth-firefox` e `auth-webkit` declaram `dependencies: ['setup']` e usam o estado de autenticação gerado. Apenas os testes marcados com `@authenticated` entram nesses projetos. Cenários autenticados que não precisam validar o login em si usam:
 
 ```ts
 test.use({ storageState: AUTH_STATE_PATH });
 ```
 
 Isso evita repetir o login em cada teste e mantém o fluxo real validado no setup.
+
+Os projetos `mock-chromium`, `mock-firefox` e `mock-webkit` selecionam os demais testes com `grepInvert: /@authenticated/` e não dependem do setup. Assim, os fluxos simulados podem ser executados sem `E2E_USER_EMAIL` e `E2E_USER_PASSWORD`.
 
 ### Isolamento
 
@@ -167,7 +169,7 @@ A interceptação cobre apenas os hosts do Firebase Authentication. Outros servi
 
 ## 3.6 Navegadores e execução
 
-A configuração executa os mesmos cenários em Chromium, Firefox e WebKit. O projeto `setup` roda antes dos três.
+A configuração executa os cenários mockados e autenticados em Chromium, Firefox e WebKit. O projeto `setup` roda somente como dependência dos projetos `auth-*`; os projetos `mock-*` são independentes de credenciais.
 
 ### Instalação dos navegadores
 
@@ -182,6 +184,20 @@ npm run test:e2e
 ```
 
 Esse comando executa o setup e todos os projetos configurados.
+
+### Execução sem autenticação real
+
+```bash
+npx playwright test --project=mock-chromium --project=mock-firefox --project=mock-webkit
+```
+
+### Execução autenticada
+
+```bash
+npx playwright test --project=auth-chromium --project=auth-firefox --project=auth-webkit
+```
+
+Os projetos autenticados exigem os secrets/variáveis E2E e executam o projeto `setup` antes dos testes.
 
 ### Execução por navegador
 
@@ -260,6 +276,8 @@ O workflow não usa `pull_request_target`.
 - **Parcial:** secrets indisponíveis, `verify` aprovado e `e2e` skipped, com aviso explícito.
 
 A execução normal do workflow no GitHub Actions, com os secrets disponíveis, foi validada com sucesso na FIX-020. As validações locais da Etapa 6 também foram concluídas com sucesso. O comportamento de Pull Requests de fork e de Dependabot sem secrets não foi validado diretamente.
+
+Antes da implementação complementar da separação de projetos, a suíte local tinha 67 testes aprovados. Após a inclusão dos dois cenários E2E e a execução em três navegadores, `npx playwright test --list` lista 73 execuções, incluindo o teste de setup.
 
 ## 3.8 Segurança
 

@@ -4,7 +4,7 @@
 
 Este documento transforma as lacunas e incertezas identificadas no catálogo [`requirements.md`](requirements.md) em itens rastreáveis de correção, confirmação ou definição. Ele não substitui o catálogo, não cria requisitos de produto e não constitui a matriz de rastreabilidade.
 
-O levantamento considera o código e os testes atuais, as Sprints 1 a 5, o planejamento das Sprints 6 a 10, o backlog, as ADRs e a documentação técnica. Nesta etapa, nenhum código, teste ou documento existente foi alterado.
+O levantamento original considerou o código e os testes então existentes, as Sprints 1 a 5, o planejamento das Sprints 6 a 10, o backlog, as ADRs e a documentação técnica. Naquela etapa, nenhum código, teste ou documento existente foi alterado.
 
 ## 2. Critérios do levantamento
 
@@ -15,11 +15,11 @@ O levantamento considera o código e os testes atuais, as Sprints 1 a 5, o plane
 - Prioridade P0 é reservada a impacto concreto e significativo. P1 indica correção importante, P2 qualidade/consistência ou confirmação necessária, e P3 refinamento não essencial.
 - Os FIX IDs são estáveis e não substituem os IDs RF/RNF.
 
-## 3. Resumo quantitativo
+## 3. Resumo do levantamento original
 
-Há **20 pendências** no levantamento original: 4 de implementação parcial, 4 de inconsistência documental, 3 limitações técnicas/comportamentais e 9 confirmações ou definições.
+O levantamento original registrou **20 itens**: 4 de implementação parcial, 4 de inconsistência documental, 3 limitações técnicas/comportamentais e 9 confirmações ou definições. Esses quantitativos são a baseline histórica, não o estado atual das correções.
 
-> **Atualização:** a FIX-020 foi concluída na implementação e documentação em 06/11/2026. O resumo quantitativo e a lista abaixo são mantidos como registro do levantamento original, anterior à conclusão dessa correção.
+> **Situação atual:** as FIX-001 a FIX-020 foram individualmente encerradas, concluídas ou encerradas com uma decisão/limitação aceita, conforme seus checklists. Os problemas e ações abaixo preservam o registro do levantamento original; os resultados atuais aparecem no campo “Encerramento” de cada FIX. Algumas decisões encerradas mantêm trabalho futuro válido, identificado separadamente como planejamento ou definição pendente.
 
 | Categoria | P0 | P1 | P2 | P3 | Total |
 |---|---:|---:|---:|---:|---:|
@@ -29,13 +29,31 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 | D. Confirmação e definição | 0 | 2 | 7 | 0 | 9 |
 | **Total** | **1** | **6** | **13** | **0** | **20** |
 
-## 4. Pendências
+### 3.1 Situação consolidada
+
+As **20 FIXs estão encerradas**. “Encerrada” descreve a conclusão da correção, confirmação ou decisão documentada; não significa que todo trabalho de produto ou planejamento relacionado esteja implementado.
+
+| Grupo da baseline | FIXs | Situação atual |
+|---|---|---|
+| A. Implementação parcial | FIX-001 a FIX-004 | Encerradas com comportamento/testes implementados ou política atendida no escopo inventariado. |
+| B. Documentação e implementação | FIX-005 a FIX-008 | Encerradas com alinhamento do Playground, README, backlog e Architecture v1.0. |
+| C. Limitações conhecidas | FIX-009 a FIX-011 | Encerradas com restrição do token, limitação de produto aceita para o dashboard e teste de acesso inicial fortalecido. |
+| D. Confirmação e definição | FIX-012 a FIX-020 | Encerradas por confirmação externa, decisão de escopo/documentação ou ampliação de cobertura E2E. |
+| **Total** | **FIX-001 a FIX-020** | **20 encerradas; pendências futuras relacionadas permanecem discriminadas abaixo.** |
+
+Permanecem como trabalho futuro ou definição de escopo, não como FIXs abertas: finalidade do dashboard (RF-070), melhorias genéricas sem critérios de aceite, avaliação WCAG 2.2 AA proposta para Sprint 11, critérios/checklist/verificação pós-publicação da Sprint 10, e regras definitivas do Firestore sob responsabilidade da FIX-021. A futura API também deverá validar tokens com Firebase Admin SDK.
+
+## 4. Histórico e encerramento das FIX-001 a FIX-020
+
+As categorias e descrições de problema nesta seção reproduzem o levantamento original. Não representam, por si só, tarefas ainda abertas. Cada item registra abaixo seu encerramento e as pendências futuras que permaneceram válidas.
 
 ### A. Implementação parcial
 
 #### Autenticação e feedback
 
 ##### FIX-001 — Limpeza de erro no formulário de login
+
+- **Encerramento:** concluída. RF-015 foi atendido: editar as credenciais limpa o erro de autenticação; os testes unitários passaram.
 
 - **Categoria:** A. Implementação parcial
 - **Requisito relacionado:** RF-015
@@ -52,6 +70,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-002 — Disponibilizar ou retirar a promessa de CRUD no Playground
 
+- **Encerramento:** concluída. Testes com repositório mockado, `PlaygroundUserRepository` e componente foram adicionados; a rota não autenticada foi coberta por E2E. O build passou, assim como 11 arquivos/75 testes unitários. A validação manual com conta autenticada e verificada executou Create, Find By Id, Find All, Update, Delete e Clear. Testes automatizados não acessam o Firebase remoto. O `permission-denied` da validação manual decorreu da regra temporária expirada, cuja data foi atualizada no Console naquela ocasião.
+
 - **Categoria:** A. Implementação parcial
 - **Requisito relacionado:** RF-037
 - **Problema:** `FirestoreTest` tem operações de criação, consulta, atualização e exclusão, mas não é importado/renderizado pela página principal do Playground.
@@ -67,6 +87,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-003 — Definir e completar o resultado do reenvio de verificação
 
+- **Encerramento:** concluída. O reenvio apresenta feedback de sucesso/erro pelo ToastService, usa carregamento local, desabilita a ação durante a operação, impede duplicatas e permite nova tentativa após falha. Os seis testes do componente e a suíte registrada de 63 testes em oito arquivos passaram.
+
 - **Categoria:** A. Implementação parcial
 - **Requisito relacionado:** RF-007, RNF-029
 - **Problema:** o reenvio chama o serviço, mas a tela não apresenta confirmação de sucesso e não trata a falha. O requisito de feedback do catálogo está marcado parcialmente implementado.
@@ -81,6 +103,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 #### Testabilidade de domínio
 
 ##### FIX-004 — Cumprir a política de testes unitários de domínio
+
+- **Encerramento:** concluída para o escopo inventariado em `src/app/shared/utils/`, conforme ADR-014. Foram cobertos validadores, mensagens de erro e limites de CPF/CNPJ; 13 arquivos de teste e 140 testes passaram. Não houve alteração em código de produção. Isso não afirma cobertura integral de todo o domínio da aplicação.
 
 - **Categoria:** A. Implementação parcial
 - **Requisito relacionado:** RNF-031, ADR-014
@@ -99,6 +123,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-005 — Alinhar o estado do projeto sobre CRUD no Playground
 
+- **Encerramento:** concluída em 06/11/2026. `docs/project-status.md` descreve o `FirestoreTest` integrado à rota protegida do Playground e a coleção `playground_users`, diferenciando uso de desenvolvimento da validação definitiva das Security Rules. A FIX-021 permanece responsável por estas regras.
+
 - **Categoria:** B. Documentação e implementação
 - **Requisito relacionado:** RF-037
 - **Problema:** o estado do projeto diz que o Playground contém interface para operações Firestore, mas a página atual não monta `FirestoreTest`.
@@ -111,6 +137,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 - **Dependências/decisões:** FIX-002.
 
 ##### FIX-006 — Atualizar o README do Playground
+
+- **Encerramento:** concluída em 09/11/2026. O README documenta as cinco categorias, dez demonstrações, autenticação e guards, integração do Firestore CRUD, coleção `playground_users`, limitações e cobertura de testes.
 
 - **Categoria:** B. Documentação e implementação
 - **Requisito relacionado:** RF-036, RF-037
@@ -127,6 +155,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-007 — Corrigir a pendência de lazy loading no backlog
 
+- **Encerramento:** concluída. `docs/sprints/backlog.md` foi atualizado para remover Lazy Loading das pendências e preservar otimizações adicionais e demais itens futuros. A implementação existente em `app.routes.ts` foi confirmada; código e testes não foram alterados.
+
 - **Categoria:** B. Documentação e implementação
 - **Requisito relacionado:** RNF-036
 - **Problema:** o backlog lista “Lazy Loading” como futuro, mas as rotas já usam `loadChildren`/`loadComponent`.
@@ -139,6 +169,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 - **Dependências/decisões:** nenhuma; a alteração do backlog está fora do escopo desta etapa.
 
 ##### FIX-008 — Alinhar a visão arquitetural à estrutura do repositório
+
+- **Encerramento:** concluída. `Architecture-v1.0.md` foi corrigida: referências físicas a `layouts/` e `styles/` foram removidas, `src/styles.scss`, a árvore de diretórios e o diagrama Mermaid foram alinhados ao repositório. Referências conceituais a layouts foram preservadas; nenhum ADR ou código foi alterado.
 
 - **Categoria:** B. Documentação e implementação
 - **Requisito relacionado:** RNF-001, RNF-041
@@ -157,6 +189,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-009 — Restringir destinos que recebem o token Firebase
 
+- **Encerramento:** concluída. O frontend restringe o token a origens confiáveis e o AuthInterceptor conta com 22 testes. A suíte registrada nessa FIX teve 58 testes aprovados. A configuração atual de `API_CONFIG.trustedOrigins` está vazia. A futura validação do token pela API com Firebase Admin SDK permanece responsabilidade do backend e está registrada no backlog futuro.
+
 - **Categoria:** C. Limitação técnica/comportamental
 - **Requisito relacionado:** RF-052, RNF-015
 - **Problema:** o interceptor anexa o ID token a qualquer requisição HTTP processada enquanto houver usuário autenticado, sem validar host/origem.
@@ -172,6 +206,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-010 — Registrar a finalidade de produto ainda indefinida do dashboard
 
+- **Encerramento:** concluída como decisão de escopo/limitação aceita. O dashboard permanece uma página protegida básica; a finalidade de produto continua pendente, sem necessidade de implementação imediata. RF-070 permanece Planejado.
+
 - **Categoria:** C. Limitação conhecida aceita até decisão de produto
 - **Requisito relacionado:** RF-070
 - **Problema:** o dashboard foi criado nas primeiras sprints como uma página protegida básica, utilizada para validar o fluxo de autenticação e o acesso à área autenticada. A escolha foi circunstancial e não houve, naquele momento, definição de produto que estabelecesse o dashboard como tela de indicadores e estatísticas. Sua finalidade definitiva como funcionalidade de produto ainda não foi estabelecida.
@@ -186,6 +222,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 #### Cobertura E2E
 
 ##### FIX-011 — Fortalecer a verificação E2E do acesso inicial
+
+- **Encerramento:** concluída. O teste de `/` valida a URL `/login` e o título acessível “Entrar”, sem depender da URL `localhost:4200`. A suíte E2E passou na validação registrada pela FIX.
 
 - **Categoria:** C. Limitação de testabilidade
 - **Requisito relacionado:** RNF-032
@@ -204,6 +242,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-012 — Confirmar proteção contra enumeração no Firebase Auth
 
+- **Encerramento:** concluída por confirmação externa e testes manuais. O Firebase Console indicou proteção contra enumeração ativa; recuperação com e-mail cadastrado e inexistente mostrou a mesma mensagem de sucesso, sem revelar a existência da conta. Alterações no código não foram necessárias.
+
 - **Categoria:** D. Confirmação externa
 - **Requisito relacionado:** RF-005
 - **Problema:** não é possível confirmar no repositório se o Firebase Auth está configurado para não revelar a existência do e-mail no fluxo de recuperação.
@@ -217,6 +257,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-013 — Confirmar estado de regras e serviços Firebase antes da publicação
 
+- **Encerramento:** concluída como levantamento externo histórico. Authentication e Firestore estavam ativos, proteção contra enumeração habilitada, Storage e Hosting não habilitados; as regras eram mantidas no Firebase Console. A regra temporária verificada então expirava em 05/11/2026; sua vigência posterior não foi reconfirmada. A FIX-021 permanece responsável pelas regras definitivas. Nenhum recurso remoto foi alterado nessa confirmação.
+
 - **Categoria:** D. Confirmação externa
 - **Requisito relacionado:** RNF-042, RF-064, RF-068
 - **Problema:** não foram encontrados `firebase.json`, regras Firestore/Storage ou configuração de Hosting no repositório. Isso não prova que regras/configurações estejam ausentes no console remoto.
@@ -229,6 +271,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 - **Dependências/decisões:** acesso autorizado; nenhuma alteração remota está autorizada por este levantamento.
 
 ##### FIX-014 — Confirmar disponibilidade dos secrets E2E no CI
+
+- **Encerramento:** concluída por confirmação do responsável. Secrets E2E, conta válida/verificada, testes autenticados anteriores no CI, revisão de logs/workflow e inventário documental foram confirmados. Forks e Dependabot sem secrets continuam sujeitos ao skip documentado; esse comportamento não foi validado diretamente.
 
 - **Categoria:** D. Confirmação de ambiente
 - **Requisito relacionado:** RNF-035
@@ -245,6 +289,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-015 — Resolver a divergência documental dos breakpoints
 
+- **Encerramento:** concluída. ADR-028 adotou os cinco breakpoints padrão do Tailwind CSS 4; a ADR-010 recebeu metadados/aviso de substituição e o Design System de responsividade foi alinhado.
+
 - **Categoria:** D. Definição documental
 - **Requisito relacionado:** RNF-023
 - **Problema:** ADR-010 cita `sm`, `md` e `lg`, enquanto o Design System também cita `xl` e `2xl`.
@@ -257,6 +303,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 - **Dependências/decisões:** decisão do responsável; possível nova ADR se houver mudança da decisão aprovada.
 
 ##### FIX-016 — Definir critérios para itens genéricos do backlog
+
+- **Encerramento:** concluída como decisão de escopo. Melhorias genéricas foram separadas dos requisitos e mantidas como não aprovadas para execução até definição de escopo e critérios. RF-070 a RF-073 foram preservados; RF-062 e Lazy Loading não foram reintroduzidos; o histórico das Sprints foi preservado.
 
 - **Categoria:** D. Definição de escopo
 - **Requisito relacionado:** RF-062 removido do catálogo; temas de otimizações e melhorias adicionais também não catalogados como requisitos verificáveis.
@@ -271,6 +319,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-017 — Definir objetivo de conformidade de acessibilidade
 
+- **Encerramento:** concluída como definição de objetivo, não como auditoria. WCAG 2.2 AA, escopo de produção, exclusão do Playground, métodos e registro de evidências foram documentados em `docs/quality/accessibility.md`. Conformidade não foi declarada. Sprint 11 foi proposta, com possibilidade de dividir o trabalho em duas Sprints; Sprint 5 não foi reaberta.
+
 - **Categoria:** D. Critério de qualidade
 - **Requisito relacionado:** RNF-022
 - **Problema:** catálogo registra conformidade WCAG como “A validar”, mas não define nível/versão, telas cobertas ou método de verificação.
@@ -284,6 +334,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 ##### FIX-018 — Registrar evidência do “CRUD validado ponta a ponta” da Sprint 3
 
+- **Encerramento:** concluída como esclarecimento histórico. A expressão refere-se a validação manual realizada na Sprint 3 com `FirestoreTest`. Ela não deve ser apresentada como teste automatizado; os testes automatizados atuais usam mocks. Nenhuma documentação adicional foi necessária nessa FIX.
+
 - **Categoria:** D. Confirmação histórica
 - **Requisito relacionado:** RF-027 a RF-037
 - **Problema:** histórico registra CRUD “validado ponta a ponta”, mas o repositório atual não contém teste automatizado de dados e a interface `FirestoreTest` não está montada. Não é possível concluir se a validação histórica foi manual ou se o código mudou desde então.
@@ -296,6 +348,8 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 - **Dependências/decisões:** confirmação de quem executou a validação e em qual configuração.
 
 ##### FIX-019 — Confirmar checklist e critérios da publicação planejada
+
+- **Encerramento:** concluída como registro da necessidade de planejamento. O bloco desta FIX registra critérios verificáveis, checklist e verificação pós-publicação como trabalho futuro, preserva FIX-013 como evidência histórica e mantém FIX-021 responsável pelas regras definitivas. A expiração em 05/11/2026 não foi reconfirmada depois da data.
 
 - **Categoria:** D. Confirmação de planejamento
 - **Requisito relacionado:** RNF-043, RF-068, RF-069
@@ -311,30 +365,33 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 ##### FIX-020 — Confirmar a cobertura E2E desejada para autenticação
 
 - **Categoria:** D. Definição de cobertura
+- **Prioridade na baseline:** P2.
 - **Requisito relacionado:** RNF-032; RF-001, RF-004, RF-006 a RF-008
-- **Problema:** a suíte E2E cobre login/logout e acesso ao dashboard, mas não cobre cadastro, recuperação de senha, envio/reenvio ou confirmação de e-mail. Não há critério de cobertura definido para esses fluxos.
-- **Evidência:** testes existentes em `tests/auth/login.spec.ts`, `tests/auth/dashboard.spec.ts` e `tests/app/access.spec.ts`; não há arquivos E2E para registro, recuperação ou verificação.
-- **Impacto:** regressões nesses fluxos podem não ser detectadas ponta a ponta, embora existam testes unitários de componentes para algumas páginas.
-- **Prioridade:** P2 — lacuna de cobertura a avaliar; a ausência não prova defeito funcional e requer decisão de escopo.
-- **Ação recomendada:** responsável priorizar quais fluxos de autenticação exigem E2E e definir estratégia segura para contas, e-mails e ambiente Firebase de teste.
-- **Arquivos envolvidos:** `tests/auth/`, páginas de autenticação e configuração E2E.
-- **Critério de conclusão:** escopo de E2E documentado; fluxos priorizados possuem testes observáveis usando ambiente/conta de teste autorizados, ou sua exclusão está justificada.
-- **Dependências/decisões:** decisão de cobertura; coordenação com disponibilidade de ambiente de teste e secrets (FIX-014).
-- **Status:** concluída na implementação e documentação. O escopo está em [`docs/testing/e2e-strategy.md`](../testing/e2e-strategy.md), os fluxos priorizados possuem testes E2E e a CI foi ajustada para executar a suíte quando os secrets estiverem disponíveis. A execução normal do workflow no GitHub Actions foi validada com sucesso. O comportamento em Pull Requests de fork e de Dependabot sem secrets não foi validado diretamente.
+- **Encerramento original:** 06/11/2026, com estratégia de cobertura e CI condicionada a secrets. A implementação complementar foi validada em 09/11/2026.
+- **Baseline do problema:** a suíte inicial não cobria cadastro, recuperação e verificação por E2E, e não havia escopo documentado para esses fluxos.
+- **Encerramento:** concluída em duas etapas. A estratégia e a CI condicionada aos secrets foram implementadas na FIX-020 original; em complemento, os testes mockados foram separados dos autenticados por projetos Playwright e tags `@authenticated`. Os projetos `mock-*` independem de credenciais; os `auth-*` continuam usando setup real e `storageState`.
+- **Cobertura atual:** Chromium, Firefox e WebKit executam os projetos mockados e autenticados. Há cenários de login válido e inválido, cadastro, recuperação, envio/reenvio e reverificação de e-mail, acesso e proteção do dashboard, logout e redirecionamentos.
+- **Arquivos/evidências:** `playwright.config.ts`, `tests/auth/`, `tests/app/`, `tests/support/`, [`docs/testing/e2e-strategy.md`](../testing/e2e-strategy.md), ADR-025, ADR-026, ADR-027 e ADR-029.
+- **Validações complementares locais:** 63/63 execuções mockadas passaram sem variáveis E2E e sem carregar `.env`; 10/10 execuções autenticadas passaram (incluindo setup); 73/73 execuções passaram na suíte completa. O type-check Playwright e `git diff --check` passaram. O histórico informado pelo responsável registra 67 execuções E2E aprovadas antes da implementação complementar e execuções anteriores bem-sucedidas no GitHub Actions.
+- **CI e secrets:** o workflow não foi alterado na implementação complementar e não houve nova execução do GitHub Actions nessa rodada. Secrets e conta E2E foram confirmados historicamente; Pull Requests de forks e Dependabot sem secrets continuam com a E2E ignorada e essa condição não foi validada diretamente.
+- **Ressalva:** testes com mocks não validam o Firebase remoto; os testes autenticados usam a conta E2E dedicada. Execuções locais, execuções históricas no GitHub Actions e ausência de validação de forks/Dependabot permanecem evidências distintas.
 
-## 5. Dependências entre correções
+## 5. Dependências identificadas no levantamento original (histórico)
 
-- **FIX-002 → FIX-005 e FIX-006:** primeiro decidir se CRUD deve estar disponível no Playground; depois alinhar estado do projeto e README.
-- **FIX-009 → verificação de segurança do interceptor:** definir destinos confiáveis antes de concluir a restrição e seus testes. É a prioridade imediata por envolver envio observável do token a host externo.
-- **FIX-012 → RF-005:** confirmar a configuração externa antes de afirmar não enumeração de e-mail.
-- **FIX-013 → FIX-019:** conhecer serviços e regras efetivas antes de fechar critérios de publicação.
-- **FIX-014 → FIX-020:** confirmar ambiente e conta de teste antes de ampliar os fluxos E2E autenticados.
-- **FIX-015 → revisão responsiva:** alinhar documentação antes de usar a lista de breakpoints como critério de aceite.
-- **FIX-016 → requisitos futuros de listagem/performance/interface:** escopo e aceitação devem preceder planejamento de implementação.
-- **FIX-017 → validação de acessibilidade:** definir padrão e escopo antes da auditoria.
-- **FIX-018:** confirmar a evidência histórica separadamente; testes futuros de dados não devem ser descritos como validação passada.
+- **FIX-002 → FIX-005 e FIX-006:** dependência histórica encerrada; CRUD integrado e estado/README atualizados.
+- **FIX-009 → verificação de segurança do interceptor:** restrição frontend concluída e testada. A validação futura do token pela API com Firebase Admin SDK permanece como responsabilidade do backend.
+- **FIX-012 → RF-005:** confirmação externa e testes manuais concluídos; não enumeração validada no Firebase Auth.
+- **FIX-013 → FIX-019:** resultados da FIX-013 foram usados como evidência histórica na FIX-019; a vigência pós-05/11/2026 da regra temporária não foi confirmada.
+- **FIX-014 → FIX-020:** conta e secrets confirmados historicamente e usados nas execuções autenticadas; a limitação de forks/Dependabot permanece documentada.
+- **FIX-015 → revisão responsiva:** divergência documental encerrada pela ADR-028 e atualização do Design System.
+- **FIX-016 → requisitos futuros de listagem/performance/interface:** itens continuam como pendências de escopo, sem serem requisitos aprovados.
+- **FIX-017 → validação de acessibilidade:** definição concluída; avaliação WCAG 2.2 AA continua planejada, sem declaração de conformidade.
+- **FIX-018:** validação histórica da Sprint 3 esclarecida como manual, com `FirestoreTest`; testes automatizados atuais usam mocks.
+- **FIX-021:** permanece responsável pelas regras definitivas do Firestore.
 
-## 6. Ordem recomendada de execução
+## 6. Ordem recomendada no levantamento original (histórico)
+
+A lista abaixo preserva a sequência recomendada na baseline do levantamento. Ela não é um plano atual de execução das FIX-001 a FIX-020, que foram encerradas conforme registrado acima.
 
 1. **Conter risco de token (FIX-009):** decidir hosts confiáveis, limitar o interceptor e acrescentar teste específico para destino externo.
 2. **Confirmar estado Firebase e autenticação (FIX-012 e FIX-013):** verificar não enumeração, regras e serviços ativos, sem alterar recursos remotos sem autorização.

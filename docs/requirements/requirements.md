@@ -75,6 +75,7 @@ A coluna **Referência** indica a origem ou o planejamento identificável:
 - `Sprint 6` a `Sprint 10`: planejamento em `docs/sprints/sprint-planning.md`;
 - `Backlog`: itens sem Sprint definida em `docs/sprints/backlog.md`;
 - `ADR-xxx`: decisão arquitetural relacionada;
+- `FIX-xxx`: correção e evidência de encerramento em `docs/requirements/remediation-backlog.md` e nos checklists de FIX;
 - `Architecture`: `docs/Architecture-v1.0.md`;
 - `Design System`: `docs/ui/design-system/`;
 - `—`: sem referência documental específica identificável.
@@ -83,8 +84,8 @@ A coluna **Referência** indica a origem ou o planejamento identificável:
 
 | Status | Requisitos funcionais | Requisitos não funcionais | Total |
 |---|---:|---:|---:|
-| Implementado | 52 | 38 | 90 |
-| Parcialmente implementado | 2 | 2 | 4 |
+| Implementado | 54 | 39 | 93 |
+| Parcialmente implementado | 0 | 1 | 1 |
 | Planejado | 18 | 2 | 20 |
 | A validar | 0 | 1 | 1 |
 | **Total** | **72** | **43** | **115** |
@@ -111,7 +112,7 @@ Os requisitos desta seção possuem implementação total ou parcial no código 
 | RF-012 | Validação do formulário de login | Exige e-mail válido e senha com pelo menos seis caracteres antes de permitir o envio. | Autenticação | Implementado | Sprint 2 |
 | RF-013 | Confirmação de senha no cadastro | Exige que a confirmação seja igual à senha informada. | Autenticação | Implementado | Sprint 2 |
 | RF-014 | Mensagens de erro de autenticação | Converte códigos do Firebase Auth em mensagens em português e as exibe no formulário. | Autenticação | Implementado | Sprint 2 |
-| RF-015 | Limpeza de erro ao editar formulário | Remove a mensagem de erro de autenticação quando o usuário altera os dados do formulário. | Autenticação | Parcialmente implementado | Sprint 2 |
+| RF-015 | Limpeza de erro ao editar formulário | Remove a mensagem de erro de autenticação quando o usuário altera os dados do formulário de login. | Autenticação | Implementado | Sprint 2 e FIX-001 |
 | RF-016 | Alternância de visibilidade da senha | Permite mostrar e ocultar o conteúdo dos campos de senha. | Autenticação | Implementado | Sprint 2 |
 | RF-017 | Autofoco no primeiro campo | Posiciona o foco no primeiro campo do formulário ao abrir a tela. | Usabilidade | Implementado | Sprint 2 |
 | RF-018 | Carregamento nos formulários de autenticação | Nos formulários de login, cadastro e recuperação de senha, exibe o estado de carregamento da operação e desabilita o envio enquanto ela está em andamento. O reenvio e a reverificação do e-mail não estão cobertos por este requisito. | Autenticação | Implementado | Sprint 4 |
@@ -144,10 +145,8 @@ Os requisitos desta seção possuem implementação total ou parcial no código 
 | RF-033 | Consulta com filtros | Consulta a coleção aplicando um ou mais filtros compostos por campo, operador e valor. | Dados | Implementado | Sprint 3 |
 | RF-034 | Repositório de usuários | Disponibiliza as operações de dados da coleção `users` por meio do `UserRepository`. | Dados | Implementado | Sprint 3 |
 | RF-035 | Conversão de timestamps | Converte valores `Timestamp` do Firestore em `Date` ao ler registros. | Dados | Implementado | Sprint 3 |
-| RF-036 | Página Playground de desenvolvimento | Disponibiliza uma página pública de demonstração manual de recursos compartilhados e integrações de desenvolvimento presentes na página, incluindo tema, Toast, Dialog, loading, botões, inputs, estado/logout de autenticação e requisições HTTP. Não representa cobertura de testes automatizados. | Desenvolvimento | Implementado | Sprint 3 e 4 |
-| RF-037 | CRUD Firestore no Playground | O componente `FirestoreTest` implementa ações de criação, consulta, atualização e exclusão de usuários, mas não é importado nem renderizado pela página principal do Playground e, portanto, não está disponível por essa interface. | Desenvolvimento | Parcialmente implementado | Sprint 3 |
-
-**Observação sobre RF-037:** o componente `FirestoreTest` existe, mas não está importado nem renderizado pela página do Playground.
+| RF-036 | Página Playground de desenvolvimento | Disponibiliza uma página protegida de demonstração manual de recursos compartilhados e integrações de desenvolvimento presentes na página, incluindo tema, Toast, Dialog, loading, botões, inputs, estado/logout de autenticação e requisições HTTP. O acesso exige usuário autenticado e e-mail verificado. A página não representa cobertura de testes automatizados nem funcionalidade de produção. | Desenvolvimento | Implementado | Sprint 3 e 4; FIX-005 e FIX-006 |
+| RF-037 | CRUD Firestore no Playground | Disponibiliza no Playground, para desenvolvimento e teste manual, o componente `FirestoreTest` com ações de criação, consulta, atualização e exclusão na coleção dedicada `playground_users`. A presença da interface não comprova acesso ao Firestore remoto nem valida as Security Rules. | Desenvolvimento | Implementado | Sprint 3; FIX-002 e FIX-005 |
 
 ### 4.4 Componentes e recursos compartilhados
 
@@ -172,9 +171,11 @@ Os requisitos desta seção possuem implementação total ou parcial no código 
 
 | ID | Título | Descrição verificável | Categoria | Status | Referência |
 |---|---|---|---|---|---|
-| RF-052 | Token Firebase em requisições HTTP | Quando há usuário autenticado, o interceptor obtém o ID token pelo Firebase Auth e adiciona `Authorization: Bearer <token>` às requisições HTTP processadas, sem verificar ou restringir o destino pela origem/host da URL. | Integração | Implementado | Sprint 4 |
+| RF-052 | Token Firebase em requisições HTTP | Quando há usuário autenticado, o interceptor obtém o ID token pelo Firebase Auth e adiciona `Authorization: Bearer <token>` somente às requisições HTTP cuja origem consta em `API_CONFIG.trustedOrigins`. A lógica de restrição está implementada, mas a lista está vazia na configuração atual; portanto, não há origem autorizada nem envio do token a uma API própria neste estado. | Integração | Implementado | Sprint 4; FIX-009; ADR-024 |
 | RF-053 | Loading global em HTTP | Inicia e finaliza o loading global automaticamente no ciclo das requisições HTTP. | Integração | Implementado | Sprint 4 |
 | RF-054 | Exceção de loading por requisição | Permite ignorar o loading global em requisições marcadas com `SKIP_LOADING`. | Integração | Implementado | Sprint 4 |
+
+**Status de RF-052:** Implementado descreve a lógica do interceptor, coberta por testes para origens confiáveis e não confiáveis. A lista vazia significa que nenhuma origem está autorizada na configuração atual; não indica ausência da lógica de restrição nem integração ativa com uma API própria.
 
 ## 5. Requisitos não funcionais
 
@@ -203,7 +204,7 @@ Os requisitos desta seção possuem implementação total ou parcial no código 
 | ID | Título | Descrição verificável | Categoria | Status | Referência |
 |---|---|---|---|---|---|
 | RNF-014 | Persistência local da sessão | A sessão utiliza `browserLocalPersistence` do Firebase Auth. | Segurança | Implementado | ADR-022 e Sprint 4 |
-| RNF-015 | Obtenção do token pelo Firebase SDK | O interceptor obtém o ID token por meio do Firebase Auth e não mantém armazenamento manual do token na interface. O interceptor atual o anexa às requisições HTTP processadas sem restrição de destino; uma restrição por origem não está implementada. | Integração | Implementado | ADR-020 |
+| RNF-015 | Obtenção e envio restrito do token pelo Firebase SDK | O interceptor obtém o ID token por meio do Firebase Auth, sem armazenamento manual na interface, e só o envia a origens HTTP/HTTPS explicitamente listadas em `API_CONFIG.trustedOrigins`. A lógica de restrição está implementada; a lista está vazia no estado atual do repositório, portanto nenhuma origem está autorizada. A validação do token recebido pela futura API é responsabilidade do backend. | Integração | Implementado | ADR-020, ADR-024 e FIX-009 |
 | RNF-016 | Proteção de navegação no cliente | Guards Angular controlam a navegação para rotas conforme o estado da sessão e a verificação de e-mail. Este requisito cobre a proteção de rotas no cliente e não substitui regras de segurança do Firebase. | Navegação | Implementado | Sprint 4 |
 | RNF-017 | Exclusão de arquivos sensíveis do Git | O `.gitignore` exclui `.env`, `.env.*` e `/docs_firebase` do versionamento. | Segurança | Implementado | `.gitignore` |
 
@@ -215,13 +216,13 @@ Os requisitos desta seção possuem implementação total ou parcial no código 
 | RNF-019 | Papéis e nomes acessíveis nos controles compartilhados | Os componentes compartilhados expõem roles e nomes/rótulos acessíveis quando aplicável, incluindo Dialog, Toast, loading/overlay, alternância de tema e botões de ícone. A conformidade global de acessibilidade é tratada separadamente em RNF-022. | Acessibilidade | Implementado | Sprint 4 |
 | RNF-020 | Indicador de foco visível | Componentes interativos exibem foco visível com contraste, usando `focus-visible`. | Acessibilidade | Implementado | Design System |
 | RNF-021 | Foco preso no diálogo | O Dialog usa `cdkTrapFocus`, foco inicial automático e fechamento por `Esc`. | Acessibilidade | Implementado | Sprint 4 |
-| RNF-022 | Conformidade WCAG verificada | A conformidade das telas com critérios WCAG é verificada por auditoria ou testes automatizados. | Acessibilidade | A validar | — |
+| RNF-022 | Objetivo de acessibilidade WCAG 2.2 AA | O objetivo é avaliar as telas e componentes de produção conforme WCAG 2.2 nível AA. O Playground está fora do escopo de conformidade do produto. A conformidade não foi declarada e permanece sujeita a avaliação e registro de evidências. | Acessibilidade | A validar | FIX-017 e `docs/quality/accessibility.md` |
 
 ### 5.4 Responsividade e compatibilidade
 
 | ID | Título | Descrição verificável | Categoria | Status | Referência |
 |---|---|---|---|---|---|
-| RNF-023 | Abordagem mobile first | A documentação arquitetural define abordagem mobile first e os estilos utilizam classes responsivas do Tailwind. A lista exata de breakpoints adotada permanece pendente de alinhamento entre ADR-010 e o Design System. | Responsividade | Implementado | ADR-010 e Design System |
+| RNF-023 | Abordagem mobile first e breakpoints padrão | A documentação define abordagem mobile first e o projeto adota os cinco breakpoints padrão do Tailwind CSS 4 (`sm`, `md`, `lg`, `xl` e `2xl`), utilizando somente os necessários ao layout. | Responsividade | Implementado | ADR-028 e Design System |
 | RNF-024 | Layout adaptável das telas de autenticação | As telas usam largura máxima, padding e centralização que se adaptam a diferentes viewports. | Responsividade | Implementado | Sprint 2 |
 | RNF-025 | Uso de unidades flexíveis | Os layouts priorizam Flexbox, Grid e classes utilitárias do Tailwind. | Responsividade | Implementado | ADR-010 |
 | RNF-026 | Metadados de viewport e idioma | O documento define `lang="pt-br"`, viewport e título. | Compatibilidade | Implementado | `src/index.html` |
@@ -232,18 +233,18 @@ Os requisitos desta seção possuem implementação total ou parcial no código 
 |---|---|---|---|---|---|
 | RNF-027 | Idioma das mensagens da interface | Mensagens de erro de autenticação, validação e estados abrangidos pela aplicação são apresentadas em português. | Usabilidade | Implementado | Sprint 2 |
 | RNF-028 | Indicação de operações em andamento | Formulários e componentes que implementam estado de carregamento indicam visualmente a operação em andamento e, quando aplicável, desabilitam a ação correspondente. | Usabilidade | Implementado | Sprint 4 |
-| RNF-029 | Feedback de resultado das operações | Formulários e componentes apresentam feedback visual de erro ou confirmação nos fluxos em que esse feedback está implementado. Não implica cobertura de todos os fluxos; o reenvio de verificação de e-mail permanece pendente. | Usabilidade | Parcialmente implementado | Sprint 2 e 4 |
+| RNF-029 | Feedback de resultado das operações | Formulários e componentes apresentam feedback visual de erro ou confirmação nos fluxos implementados. No reenvio de verificação, há feedback de sucesso e erro, estado de carregamento local, bloqueio de chamadas duplicadas e possibilidade de nova tentativa após falha. | Usabilidade | Implementado | Sprint 2 e 4; FIX-003 |
 
 ### 5.6 Testabilidade e qualidade
 
 | ID | Título | Descrição verificável | Categoria | Status | Referência |
 |---|---|---|---|---|---|
 | RNF-030 | Testes unitários com Vitest | O projeto configura e executa testes unitários com Vitest por meio de `npm run test:unit`. | Testabilidade | Implementado | ADR-014 e Sprint 4 |
-| RNF-031 | Cobertura atual de testes de domínio | A cobertura existente inclui testes de utilitários de CPF/CNPJ; não há evidência de testes para todo o código de domínio. A política normativa de que todo código de domínio deve ter testes Vitest está definida separadamente na ADR-014. | Testabilidade | Parcialmente implementado | ADR-014 |
-| RNF-032 | Testes E2E existentes com Playwright | Os testes E2E existentes cobrem acesso inicial, login, cadastro, recuperação de senha, verificação de e-mail, dashboard, logout, proteção de rotas e redirecionamento de usuários autenticados. O fluxo autenticado usa login real no setup e reutiliza `storageState`; os fluxos de cadastro, recuperação e verificação usam interceptação fail-closed do Firebase Auth. Os cenários priorizam roles, labels e nomes acessíveis. | Testabilidade | Implementado | ADR-023, ADR-025, ADR-026 e `docs/testing/e2e-strategy.md` |
+| RNF-031 | Cobertura de testes de domínio no escopo inventariado | A política de testes da ADR-014 está atendida para o escopo inventariado em `src/app/shared/utils/`: validadores, mensagens de erro e limites de CPF/CNPJ. A validação da FIX-004 registrou 13 arquivos de teste e 140 testes aprovados. Esta evidência não declara cobertura integral de todo o domínio da aplicação. | Testabilidade | Parcialmente implementado | ADR-014 e FIX-004 |
+| RNF-032 | Testes E2E existentes com Playwright | Os testes E2E cobrem acesso inicial, login válido e inválido, cadastro, recuperação de senha, verificação de e-mail, dashboard, logout, proteção de rotas e redirecionamento de usuários autenticados. Os projetos `mock-*` executam sem credenciais reais; os projetos `auth-*` usam login real no setup e reutilizam `storageState`. Os fluxos simulados usam interceptação fail-closed do Firebase Auth e os cenários priorizam roles, labels e nomes acessíveis. | Testabilidade | Implementado | ADR-023, ADR-025, ADR-026, ADR-029 e `docs/testing/e2e-strategy.md` |
 | RNF-033 | Execução E2E em três engines | A configuração do Playwright define Chromium, Firefox e WebKit. | Testabilidade | Implementado | `playwright.config.ts` |
-| RNF-034 | CI de build, testes unitários e E2E | O GitHub Actions executa build, testes unitários, type-check dos testes Playwright e E2E em push e pull request. O job E2E é condicional à disponibilidade dos secrets. A execução normal do workflow foi validada com sucesso na FIX-020. | Qualidade | Implementado | ADR-027 e `ci.yml` |
-| RNF-035 | Credenciais E2E via secrets | O CI injeta `E2E_USER_EMAIL` e `E2E_USER_PASSWORD` a partir de secrets quando disponíveis. Em Pull Requests de fork e de Dependabot sem secrets, a E2E é ignorada e build, testes unitários e type-check continuam executando; esse cenário não foi validado diretamente. | Testabilidade | Implementado | ADR-027 e `ci.yml` |
+| RNF-034 | CI de build, testes unitários e E2E | O GitHub Actions executa build, testes unitários, type-check dos testes Playwright e E2E em `push` e `pull_request`. O job E2E é condicional à disponibilidade dos secrets. A execução normal do workflow foi validada em execuções históricas na FIX-020; não houve nova execução do GitHub Actions na implementação complementar local. | Qualidade | Implementado | ADR-027 e `ci.yml` |
+| RNF-035 | Credenciais E2E via secrets | O CI injeta `E2E_USER_EMAIL` e `E2E_USER_PASSWORD` a partir de secrets quando disponíveis. Em Pull Requests de forks e de Dependabot sem secrets, a E2E é ignorada e build, testes unitários e type-check continuam executando. A configuração dos secrets e a conta foram confirmadas historicamente; o comportamento em forks/Dependabot não foi validado diretamente. | Testabilidade | Implementado | ADR-027 e `ci.yml` |
 
 ### 5.7 Desempenho
 
@@ -301,42 +302,32 @@ Os requisitos desta seção constam em planejamento ou backlog, mas não possuem
 
 | Item | Descrição | Evidência |
 |---|---|---|
-| 1 | O backlog lista “Lazy Loading e otimizações de performance” como trabalho futuro, mas as rotas já usam `loadChildren` e `loadComponent`. Permanecem apenas otimizações adicionais. | `docs/sprints/backlog.md`; `src/app/app.routes.ts` |
-| 2 | O README do Playground marca Authentication, Notifications e Dialogs como não implementados, mas a página contém Auth Playground com estado e logout, Toast e Dialog. | `src/app/features/dev/playground/README.md`; `playground.html` |
-| 3 | O README do Playground marca as operações Firestore como concluídas, mas o componente `FirestoreTest` não está importado nem renderizado pela página. | `firestore-test.ts`; `playground.ts`; `playground.html` |
-| 4 | A Architecture v1.0 cita diretórios `layouts/` e `styles/` que não existem no projeto; os estilos globais estão em `src/styles.scss`. | `docs/Architecture-v1.0.md`; `src/` |
-| 5 | A ADR-010 limita os breakpoints a `sm`, `md` e `lg`, enquanto o Design System de responsividade lista também `xl` e `2xl`. | `docs/adr/ADR-010-interface-mobile-first.md`; `docs/ui/design-system/07-Responsvidade.md` |
-| 6 | A Sprint 3 registra “CRUD validado ponta a ponta”, mas não há testes automatizados da camada de dados e o componente de CRUD do Playground não está montado. A validação aparenta ter sido manual. | `docs/sprints/sprints.md`; `src/app/core/data/`; `firestore-test.ts` |
-| 7 | O botão de envio da recuperação de senha está rotulado como “Entrar”, embora a ação seja solicitar a redefinição. | `forgot-password.html` |
-| 8 | O login usa o atributo nativo `autofocus` em vez da diretiva `appAutofocus` usada nas demais telas, e não limpa o erro ao editar o formulário. | `login.html`; `login.ts`; `register.ts`; `forgot-password.ts` |
-| 9 | O reenvio do e-mail de verificação não apresenta confirmação visual de sucesso, embora exista o serviço de Toast. | `verify-email.html`; `verify-email.ts` |
-| 10 | A Sprint 10 lista “Build de Produção” como entrega planejada, mas o CI já executa `npm run build`, que usa a configuração de produção do Angular. O item planejado parece abranger a preparação para publicação, não a existência do build. | `docs/sprints/sprint-planning.md`; `.github/workflows/ci.yml`; `angular.json` |
-| 11 | O `Login` mantém um método privado de mapeamento de erro não utilizado, duplicando parte da lógica centralizada em `auth.errors.ts`. | `login.ts`; `auth.errors.ts` |
-| 12 | Os campos de nova senha e confirmação no cadastro usam `autocomplete="current-password"` em vez de `new-password`. | `register.html` |
+| 1 | A Sprint 10 lista “Build de Produção”, enquanto a CI já executa `npm run build`. A CI comprova o build, mas não a preparação completa, configuração de Hosting, publicação, checklist ou verificação pós-publicação. | `docs/sprints/sprint-planning.md`; `.github/workflows/ci.yml`; `angular.json`; FIX-019 |
+| 2 | `Login` usa o atributo nativo `autofocus` e mantém um método privado `getLoginErrorMessage()` aparentemente sem uso; o tratamento atual de erros está centralizado em `auth.errors.ts`. São observações técnicas, não defeitos de requisito confirmados pelas FIXs. | `src/app/features/auth/pages/login/login.html`; `login.ts`; `src/app/core/auth/auth.errors.ts` |
+| 3 | Os campos de senha e confirmação no cadastro usam `autocomplete="current-password"`. Preservado como observação técnica; não constitui conclusão de uma FIX nem cria requisito novo. | `src/app/features/auth/pages/register/register.html` |
+
+As divergências históricas sobre Lazy Loading, Playground, estrutura arquitetural, breakpoints, validação manual da Sprint 3, rótulo de recuperação, limpeza de erro e feedback de reenvio foram tratadas pelas FIX-001 a FIX-009 e pela ADR-028. Permanecem registradas no histórico do `remediation-backlog.md`, não como inconsistências atuais.
 
 ### 7.2 Limitações conhecidas
 
-- A suíte E2E autenticada depende de `E2E_USER_EMAIL` e `E2E_USER_PASSWORD`; sem essas variáveis, os testes de login e dashboard lançam erro.
-- Não há testes unitários para `Login`, `AuthService`, guards, interceptors, camada de dados ou componentes compartilhados. Os testes unitários existentes cobrem criação de componentes e utilitários de CPF/CNPJ.
-- Não há auditoria de acessibilidade nem testes automatizados de conformidade WCAG.
+- Somente os projetos E2E `auth-*` dependem de `E2E_USER_EMAIL` e `E2E_USER_PASSWORD`; os projetos `mock-*` podem ser executados sem essas credenciais. Em forks/Dependabot sem secrets, a E2E continua sendo ignorada pelo workflow.
+- A política de testes da ADR-014 está demonstravelmente atendida para o escopo inventariado em `src/app/shared/utils/` (13 arquivos e 140 testes aprovados na FIX-004). Essa evidência não declara cobertura integral de todo o domínio da aplicação; a cobertura de componentes e infraestrutura tem escopo próprio.
+- Não há auditoria de acessibilidade concluída nem declaração de conformidade WCAG. O objetivo WCAG 2.2 AA e o escopo de produção estão definidos em `docs/quality/accessibility.md`; o Playground está fora do escopo de conformidade do produto.
 - O dashboard é um placeholder e não apresenta indicadores ou estatísticas.
-- Firebase Storage, Firebase Hosting e regras de segurança do Firebase não estão configurados no repositório.
+- Firebase Storage e Firebase Hosting foram confirmados como não habilitados no levantamento externo da FIX-013. A regra temporária do Firestore verificada naquele momento expirava em 05/11/2026; sua vigência posterior não foi reconfirmada. Não há configuração ou regras Firebase versionadas no repositório.
 - O Toast e o Dialog são utilizados no Playground, mas não integram os fluxos de autenticação.
 - A redefinição de senha envia o e-mail do Firebase; a definição da nova senha ocorre fora da aplicação, na página hospedada pelo Firebase.
-- O CRUD do Firestore está disponível pela camada de dados e pelo componente `FirestoreTest`, mas este não é acessível pela interface atual do Playground.
+- O CRUD manual está disponível na interface do Playground pela coleção `playground_users`. Os testes automatizados usam mocks e não validam o Firestore remoto nem as Security Rules.
 - Não há ESLint configurado; o projeto adota Prettier para formatação.
 - A configuração do Firebase está versionada em `src/app/core/config/firebase.config.ts`, conforme a ADR-002, sem separação por environments.
 
 ### 7.3 Pendências de confirmação e definição
 
-- **Destino do AuthInterceptor:** o interceptor anexa o ID token às requisições HTTP processadas sem restringir a origem/host. A definição de destinos permitidos e eventual implementação de restrição permanecem pendentes; não são requisitos implementados neste catálogo.
-- **Reenvio de verificação de e-mail:** a chamada não apresenta feedback de sucesso e não trata a falha na tela. A decisão de comportamento esperado e sua implementação ficam pendentes.
-- **Configurações externas do Firebase:** a proteção contra enumeração de e-mails e outras configurações remotas não podem ser confirmadas pelos arquivos versionados. A garantia de não revelar se o e-mail está cadastrado permanece a validar.
-- **Playground:** `docs/project-status.md` descreve a interface CRUD como parte do Playground, embora `FirestoreTest` não esteja montado na página principal. O README do Playground também contém marcações desatualizadas. Ambos aguardam atualização documental fora do escopo deste catálogo.
-- **Breakpoints:** ADR-010 e Design System divergem sobre a lista de breakpoints. A lista exata permanece pendente de alinhamento documental.
+- **Validação do token pela API:** o AuthInterceptor restringe o envio do token às origens configuradas em `API_CONFIG.trustedOrigins`, cuja lista está vazia atualmente. Quando uma API própria for desenvolvida, o backend deverá validar o token com Firebase Admin SDK; esse trabalho permanece no backlog futuro.
+- **Configurações externas do Firebase:** a proteção contra enumeração foi confirmada no Firebase Console e validada manualmente na FIX-012; contas existentes e inexistentes receberam a mesma mensagem. A FIX-013 confirmou Authentication e Firestore ativos e registrou historicamente as regras temporárias; a validade da regra com expiração em 05/11/2026 não foi reconfirmada depois dessa data. A FIX-021 permanece responsável pelas regras definitivas.
 - **Melhorias de listagem (Sprint 8):** o planejamento cita melhorias além de pesquisa, paginação, ordenação e estados vazios, mas não define critérios. Mantido como ponto de escopo, não como requisito catalogado.
 - **Otimizações adicionais de performance e melhorias adicionais de interface:** itens genéricos do backlog sem critérios verificáveis. Não estão catalogados como requisitos até que o escopo seja definido. O lazy loading existente permanece em RNF-036.
-- **Execução do checklist de publicação:** Sprint 10 prevê checklist, mas o documento e a execução são resultados distintos; a existência do checklist ainda precisa ser confirmada quando a Sprint for realizada.
+- **Publicação:** critérios verificáveis, checklist e verificação pós-publicação permanecem vinculados ao planejamento futuro da Sprint 10. A validação de build pela CI não comprova a execução dessas etapas. As regras definitivas do Firestore permanecem sob responsabilidade da FIX-021.
 
 ### 7.4 Considerações para a matriz de rastreabilidade
 
@@ -349,7 +340,7 @@ Os requisitos desta seção constam em planejamento ou backlog, mas não possuem
 
 - `docs/Architecture-v1.0.md`
 - `docs/project-status.md`
-- `docs/adr/ADR-001` a `docs/adr/ADR-027`
+- `docs/adr/ADR-001` a `docs/adr/ADR-029`
 - `docs/testing/e2e-strategy.md`
 - `docs/ci/secrets.md`
 - `docs/sprints/sprints.md`

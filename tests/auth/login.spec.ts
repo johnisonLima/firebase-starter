@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 
 import { AUTH_STATE_PATH } from '../support/auth';
+import {
+  firebaseAuthError,
+  mockFirebaseAuth,
+} from '../support/firebase-auth-routes';
 
 // Evita capturar o estado de autenticação real em traces de retry.
 test.use({ trace: 'off' });
@@ -38,7 +42,29 @@ test.describe('Login', () => {
     await expect(page).toHaveURL(/\/register$/);
   });
 
-  test.describe('usuário autenticado', () => {
+  test('exibe erro para credenciais inválidas e permanece no login', async ({
+    page,
+  }) => {
+    const mock = await mockFirebaseAuth(page, {
+      allow: ['signInWithPassword'],
+      responses: {
+        signInWithPassword: firebaseAuthError('INVALID_LOGIN_CREDENTIALS'),
+      },
+    });
+
+    await page.goto('/login');
+    await page.getByLabel('E-mail', { exact: true }).fill('e2e@example.com');
+    await page.getByLabel('Senha', { exact: true }).fill('senha-incorreta');
+    await page.getByRole('button', { name: 'Entrar' }).click();
+
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.getByText('E-mail ou senha inválidos.')).toBeVisible();
+
+    expect(mock.handledOperations).toEqual(['signInWithPassword']);
+    mock.expectNoUnexpectedRequests();
+  });
+
+  test.describe('usuário autenticado', { tag: '@authenticated' }, () => {
     test.use({ storageState: AUTH_STATE_PATH });
 
     test('redireciona login e cadastro para o dashboard', async ({ page }) => {
