@@ -1,5 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const browserProjects = [
+  { name: 'chromium', device: devices['Desktop Chrome'] },
+  { name: 'firefox', device: devices['Desktop Firefox'] },
+  { name: 'webkit', device: devices['Desktop Safari'] },
+];
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -24,23 +30,18 @@ export default defineConfig({
       },
     },
 
-    {
-      name: 'chromium',
-      dependencies: ['setup'],
-      use: { ...devices['Desktop Chrome'] },
-    },
+    ...browserProjects.map(({ name, device }) => ({
+      name: `mock-${name}`,
+      grepInvert: /@authenticated/,
+      use: { ...device },
+    })),
 
-    {
-      name: 'firefox',
+    ...browserProjects.map(({ name, device }) => ({
+      name: `auth-${name}`,
+      grep: /@authenticated/,
       dependencies: ['setup'],
-      use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit',
-      dependencies: ['setup'],
-      use: { ...devices['Desktop Safari'] },
-    },
+      use: { ...device, trace: 'off' as const },
+    })),
   ],
 
   webServer: {

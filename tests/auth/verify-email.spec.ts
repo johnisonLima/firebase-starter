@@ -148,6 +148,29 @@ test.describe('Verificação de e-mail', () => {
     mock.expectNoUnexpectedRequests();
   });
 
+  test('impede usuário não verificado de acessar o dashboard diretamente', async ({
+    page,
+  }) => {
+    const mock = await signInWithUnverifiedUser(page);
+
+    await page.goto('/dashboard');
+
+    await expect(page).toHaveURL(/\/verify-email$/);
+    await expect(
+      page.getByRole('heading', { name: 'Verifique seu e-mail' }),
+    ).toBeVisible();
+    await expect(
+      page.getByText('dashboard works!', { exact: true }),
+    ).toBeHidden();
+
+    expect(mock.handledOperations).toEqual([
+      'signInWithPassword',
+      'lookup',
+      'lookup',
+    ]);
+    mock.expectNoUnexpectedRequests();
+  });
+
   test('mantém a página e libera o botão quando a consulta falha', async ({
     page,
   }) => {
