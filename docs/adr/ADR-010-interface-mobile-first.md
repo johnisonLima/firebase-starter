@@ -1,5 +1,15 @@
 # ADR-010 — Interface mobile first
 
+## Status
+
+Substituída pela ADR-028 — Adoção dos breakpoints padrão do Tailwind CSS 4.
+
+> Esta decisão foi substituída pela ADR-028 — Adoção dos breakpoints padrão do Tailwind CSS 4, em 09/11/2026.
+>
+> A ADR-028 passa a ser a referência vigente para a definição dos breakpoints do projeto.
+>
+> O conteúdo original permanece disponível para consulta histórica.
+
 ## Contexto
 
 O software utilizará Angular, Tailwind CSS e Spartan UI para construção da interface.
@@ -73,4 +83,6 @@ Rejeitada por aumentar desnecessariamente a complexidade do projeto.
 
 ## Data
 
-28/07/2026
+Criação: 28/07/2026
+
+Atualização: 09/11/2026
