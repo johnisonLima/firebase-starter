@@ -1,10 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 // Teste Theme
 import { ThemeToggle } from '@shared/components/theme-toggle/theme-toggle';
 
 // Teste Lucide
-import { LucideHouse, LucideSettings, LucideTrash2, LucideUser, LucideArrowRight, LucideSave, LucideLock, LucideMail, LucideEye, LucideEyeOff} from '@lucide/angular';
+import { LucideHouse, LucideSettings, LucideTrash2, LucideUser, LucideArrowRight, LucideSave, LucideLock, LucideMail, LucideEye, LucideEyeOff, LucideRefreshCw} from '@lucide/angular';
 
 // Teste Toast
 import { ToastService } from '@shared/services/toast.service';
@@ -35,20 +37,22 @@ import { SKIP_LOADING } from '@core/interceptors/loading.interceptor';
   selector: 'app-playground',
   imports: [
     ThemeToggle,
+    FormsModule,
+    RouterLink,
     // Lucide
     LucideMail,
     LucideLock,
     LucideEye,
     LucideEyeOff,
-    LucideHouse, 
-    LucideUser, 
+    LucideHouse,
+    LucideUser,
     LucideSettings,
     LucideSave,
     LucideArrowRight,
     LucideTrash2,
+    LucideRefreshCw,
 
     Dialog,
-    LucideTrash2,
     DialogIconDirective,
     DialogFooterDirective,
     Loading,
@@ -90,6 +94,10 @@ export class Playground {
   }
 
   showDialog = signal(false);
+
+  inputEmail = '';
+  inputPassword = '';
+  inputUsername = '';
 
   openDialog(): void {
     this.showDialog.set(true);
