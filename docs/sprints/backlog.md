@@ -3,7 +3,7 @@
 Os itens abaixo permanecem disponíveis para avaliação em futuras sprints.
 
 - Dashboard com indicadores e estatísticas.
-- Lazy Loading e otimizações de performance.
+- Otimizações de performance.
 - Melhorias adicionais de interface.
 - Compressão de imagens.
 - Upload com progresso.
