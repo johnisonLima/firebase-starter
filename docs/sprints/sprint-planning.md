@@ -55,7 +55,6 @@ Ampliar os recursos de consulta e organização dos registros.
 - Pesquisa.
 - Paginação.
 - Ordenação.
-- Melhorias na listagem.
 - Estados vazios.
 
 ---
@@ -88,7 +87,6 @@ Preparar e publicar a aplicação.
 - Configuração do Firebase Hosting.
 - Regras de Segurança.
 - Deploy.
-- Ajustes finais.
 - Checklist de publicação.
 
 ---
