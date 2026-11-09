@@ -238,9 +238,15 @@ src/
 │   ├── features/
 │   ├── shared/
 │   ├── app.config.ts
+│   ├── app.html
 │   ├── app.routes.ts
+│   ├── app.scss
+│   ├── app.spec.ts
 │   └── app.ts
-└── styles.scss
+├── index.html
+├── main.ts
+├── styles.scss
+└── test-setup.ts
 ```
 
 Cada diretório possui uma responsabilidade específica dentro da arquitetura.
@@ -250,8 +256,8 @@ Cada diretório possui uma responsabilidade específica dentro da arquitetura.
 | **core/**         | Recursos globais da aplicação, como serviços de infraestrutura, autenticação, configurações, interceptadores, guards e integrações utilizadas em toda a aplicação. |
 | **shared/**       | Componentes reutilizáveis, diretivas, pipes, utilitários, modelos e demais recursos compartilhados entre diferentes funcionalidades.                               |
 | **features/**     | Funcionalidades da aplicação organizadas por domínio de negócio. Cada feature mantém seus próprios componentes, páginas, serviços e recursos internos.             |
-| **layouts/**      | Estruturas visuais responsáveis pela composição das páginas, como layouts públicos e autenticados.                                                                                                |
-| **styles/**       | Arquivos globais de estilos e personalizações da aplicação.                                                                                                        |
+
+O arquivo `src/styles.scss`, localizado na raiz de `src/`, concentra os estilos globais e as personalizações da aplicação.
 
 A relação entre esses diretórios pode ser representada pela seguinte visão arquitetural:
 
@@ -263,7 +269,6 @@ flowchart TD
     App --> Core["core"]
     App --> Shared["shared"]
     App --> Features["features"]
-    App --> Layouts["layouts"]
 
     Features --> FeatureA["Feature A"]
     Features --> FeatureB["Feature B"]
