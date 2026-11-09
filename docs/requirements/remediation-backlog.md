@@ -170,18 +170,18 @@ Há **20 pendências** no levantamento original: 4 de implementação parcial, 4
 
 #### Disponibilidade de funcionalidades
 
-##### FIX-010 — Manter explícito o estado de placeholder do dashboard
+##### FIX-010 — Registrar a finalidade de produto ainda indefinida do dashboard
 
 - **Categoria:** C. Limitação conhecida aceita até decisão de produto
 - **Requisito relacionado:** RF-070
-- **Problema:** dashboard existe como página protegida, mas não apresenta os indicadores/estatísticas descritos no backlog.
-- **Evidência:** `src/app/features/dashboard/dashboard.html` e item “Dashboard com indicadores e estatísticas” em `docs/sprints/backlog.md`.
-- **Impacto:** funcionalidade de análise não está disponível, mas está registrada como backlog e não contradiz o requisito atual planejado.
-- **Prioridade:** P2 — limitação conhecida; não exige implementação imediata sem priorização do backlog.
-- **Ação recomendada:** manter como limitação aceita até decisão de priorizar o item e definir quais indicadores e fontes de dados são necessários.
-- **Arquivos envolvidos:** `src/app/features/dashboard/`, `docs/sprints/backlog.md`.
-- **Critério de conclusão:** backlog priorizado e critérios definidos antes de qualquer implementação, ou limitação explicitamente mantida como aceita.
-- **Dependências/decisões:** escopo funcional e fonte dos dados do dashboard.
+- **Problema:** o dashboard foi criado nas primeiras sprints como uma página protegida básica, utilizada para validar o fluxo de autenticação e o acesso à área autenticada. A escolha foi circunstancial e não houve, naquele momento, definição de produto que estabelecesse o dashboard como tela de indicadores e estatísticas. Sua finalidade definitiva como funcionalidade de produto ainda não foi estabelecida.
+- **Evidência:** `src/app/features/dashboard/dashboard.html` contém apenas o botão de logout e a alternância de tema; o item “Dashboard com indicadores e estatísticas — RF-070” permanece no backlog como possibilidade futura; `docs/requirements/requirements.md` mantém o RF-070 como Planejado.
+- **Impacto:** a ausência de indicadores e estatísticas não representa uma deficiência em relação ao objetivo original das primeiras sprints, que era validar a autenticação e o acesso protegido. O dashboard cumpre esse papel como página básica; a lacuna é de definição de produto, não de implementação de uma funcionalidade já acordada.
+- **Prioridade:** P2 — decisão de produto pendente; não exige implementação imediata.
+- **Ação recomendada:** manter o dashboard como página protegida básica e registrar que sua finalidade definitiva será definida pelo responsável pelo produto. Caso a decisão seja implementar indicadores e estatísticas, priorizar o RF-070 no backlog e definir escopo, fontes de dados e critérios de aceite antes de qualquer implementação. Não há necessidade de implementar funcionalidades adicionais no dashboard nesta correção.
+- **Arquivos envolvidos:** `src/app/features/dashboard/`, `docs/sprints/backlog.md` e RF-070 em `docs/requirements/requirements.md` (somente referência).
+- **Critério de conclusão:** estado atual do dashboard documentado como página protegida básica, com finalidade definitiva de produto ainda pendente de decisão. Essa pendência é explicitamente aceita nesta etapa, não sendo necessário definir a finalidade definitiva, priorizar o RF-070 ou implementar funcionalidades adicionais para concluir esta correção.
+- **Dependências/decisões:** definição de produto sobre a finalidade do dashboard e, se aplicável, priorização do RF-070, fontes de dados e critérios de aceite.
 
 #### Cobertura E2E
 
