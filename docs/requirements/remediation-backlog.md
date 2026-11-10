@@ -19,7 +19,7 @@ O levantamento original considerou o código e os testes então existentes, as S
 
 O levantamento original registrou **20 itens**: 4 de implementação parcial, 4 de inconsistência documental, 3 limitações técnicas/comportamentais e 9 confirmações ou definições. Esses quantitativos são a baseline histórica, não o estado atual das correções.
 
-> **Situação atual:** as FIX-001 a FIX-020 foram individualmente encerradas, concluídas ou encerradas com uma decisão/limitação aceita, conforme seus checklists. As FIX-022 e FIX-023, registradas posteriormente à baseline, também estão concluídas. Os problemas e ações abaixo preservam o registro do levantamento original; os resultados atuais aparecem no campo “Encerramento” de cada FIX. Algumas decisões encerradas mantêm trabalho futuro válido, identificado separadamente como planejamento ou definição pendente.
+> **Situação atual:** as FIX-001 a FIX-020 foram individualmente encerradas, concluídas ou encerradas com uma decisão/limitação aceita, conforme seus checklists. As FIX-022, FIX-023 e FIX-024, registradas posteriormente à baseline, também estão concluídas. Os problemas e ações abaixo preservam o registro do levantamento original; os resultados atuais aparecem no campo “Encerramento” de cada FIX. Algumas decisões encerradas mantêm trabalho futuro válido, identificado separadamente como planejamento ou definição pendente.
 
 | Categoria | P0 | P1 | P2 | P3 | Total |
 |---|---:|---:|---:|---:|---:|
@@ -31,7 +31,7 @@ O levantamento original registrou **20 itens**: 4 de implementação parcial, 4 
 
 ### 3.1 Situação consolidada
 
-As **20 FIXs da baseline estão encerradas**. As **FIX-022 e FIX-023**, incluídas posteriormente, também estão concluídas. “Encerrada” descreve a conclusão da correção, confirmação ou decisão documentada; não significa que todo trabalho de produto ou planejamento relacionado esteja implementado.
+As **20 FIXs da baseline estão encerradas**. As **FIX-022, FIX-023 e FIX-024**, incluídas posteriormente, também estão concluídas. “Encerrada” descreve a conclusão da correção, confirmação ou decisão documentada; não significa que todo trabalho de produto ou planejamento relacionado esteja implementado.
 
 | Grupo da baseline | FIXs | Situação atual |
 |---|---|---|
@@ -49,13 +49,13 @@ Permanecem como trabalho futuro ou definição de escopo, não como FIXs abertas
 |---|---|---|
 | FIX-022 | A. Implementação parcial | Concluída em 10/11/2026. |
 | FIX-023 | D. Definição de comportamento | Concluída em 10/11/2026. |
-| FIX-024 | A definir | Pendente — não iniciada; permanece como item independente. |
+| FIX-024 | A. Implementação parcial | Concluída em 10/11/2026. |
 
-As FIX-022 e FIX-023 não integram os quantitativos históricos da tabela da seção 3.1. A FIX-022 foi registrada após a análise documental dos validadores de CPF, CNPJ e CPF ou CNPJ; a FIX-023 formalizou a política de controles desabilitados nos validadores compartilhados. Ambas estão detalhadas na seção 4. A FIX-024 permanece pendente e não foi iniciada.
+As FIX-022, FIX-023 e FIX-024 não integram os quantitativos históricos da tabela da seção 3.1. A FIX-022 foi registrada após a análise documental dos validadores de CPF, CNPJ e CPF ou CNPJ; a FIX-023 formalizou a política de controles desabilitados nos validadores compartilhados; a FIX-024 alinhou o `equalsToValidator` a essa política. Todas estão detalhadas na seção 4.
 
-## 4. Histórico e encerramento das FIX-001 a FIX-020, da FIX-022 e da FIX-023
+## 4. Histórico e encerramento das FIX-001 a FIX-020, da FIX-022, da FIX-023 e da FIX-024
 
-As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção reproduzem o levantamento original. A FIX-022 foi registrada posteriormente à baseline, a partir da análise documental e da correção dos validadores documentais; a FIX-023 formalizou a política de controles desabilitados nos validadores compartilhados. Nenhum registro histórico anterior foi alterado. Os itens não representam, por si só, tarefas ainda abertas. Cada item registra abaixo seu encerramento e as pendências futuras que permaneceram válidas.
+As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção reproduzem o levantamento original. A FIX-022 foi registrada posteriormente à baseline, a partir da análise documental e da correção dos validadores documentais; a FIX-023 formalizou a política de controles desabilitados nos validadores compartilhados; a FIX-024 alinhou o `equalsToValidator` a essa política. Nenhum registro histórico anterior foi alterado. Os itens não representam, por si só, tarefas ainda abertas. Cada item registra abaixo seu encerramento e as pendências futuras que permaneceram válidas.
 
 ### A. Implementação parcial
 
@@ -407,6 +407,31 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 - **Critério de conclusão:** os valores ausentes devem ser tratados conforme o contrato documentado. Valores falsy diferentes de `null`, `undefined` e `''` devem ser submetidos à validação documental e rejeitados quando inválidos.
 - **Arquivos envolvidos:** `src/app/shared/utils/forms/validators.ts`, `src/app/shared/utils/forms/validators.spec.ts` e `docs/requirements/requirements.md`.
 
+#### Validadores compartilhados
+
+##### FIX-024 — Alinhar o equalsToValidator à política de controles desabilitados
+
+- **Encerramento:** concluída em 10/11/2026. O `equalsToValidator` passou a retornar `null` quando o controle validado ou o controle comparado estiver desabilitado, aplicando a política formalizada na FIX-023.
+
+- **Categoria:** A. Implementação parcial
+- **Requisitos relacionados:** RF-050, RF-013, RNF-031 e ADR-014.
+- **Problema:** o `equalsToValidator` comparava os valores dos controles sem verificar se algum deles estava desabilitado. Isso permitia que controles fora do processo de validação participassem da comparação, contrariando a política formalizada na FIX-023.
+- **Correção realizada:** adicionada a guarda `if (control.disabled || otherControl.disabled) { return null; }` em `src/app/shared/utils/forms/validators.ts`, antes da comparação dos valores. Foram preservados o retorno `null` na ausência de `parent`, o retorno `null` quando o controle comparado não existe, a comparação estrita com `===` e o formato do erro `{ equalsTo: true }`.
+- **Testes atualizados:**
+  - Atualizado o teste que esperava erro para controle validado desabilitado, que passou a esperar `null`.
+  - Adicionado teste para controle comparado desabilitado.
+  - Adicionado teste para ambos os controles desabilitados.
+  - Preservados os testes de valores iguais, valores diferentes, ausência de `parent`, ausência do controle comparado, comparação de `0` e dois campos vazios.
+- **Validações executadas:**
+  - Testes específicos de `validators.spec.ts`: 40/40 aprovados.
+  - Suíte unitária: 231/231 aprovados em 19 arquivos.
+  - TypeScript da aplicação (`tsconfig.app.json`): OK.
+  - TypeScript dos testes (`tsconfig.spec.json`): OK.
+  - `git diff --check`: sem erros.
+- **Critério de conclusão:** os cenários com qualquer controle desabilitado devem retornar `null`; com ambos habilitados, a comparação deve manter o comportamento anterior. `register.ts` deve permanecer inalterado, preservando a revalidação por `password.valueChanges`.
+- **Arquivos envolvidos:** `src/app/shared/utils/forms/validators.ts` e `src/app/shared/utils/forms/validators.spec.ts`.
+- **Fundamento:** política de controles desabilitados formalizada na FIX-023 e registrada em `docs/requirements/requirements.md`.
+
 ### F. Definição posterior à baseline
 
 #### Validadores compartilhados
@@ -430,7 +455,7 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
   - Escopo da FIX-024 claramente delimitado.
   - Nenhuma alteração de implementação ou testes nesta FIX.
 - **Arquivos envolvidos:** `docs/requirements/requirements.md` e `docs/requirements/remediation-backlog.md`.
-- **Pendência relacionada:** a FIX-024 permanece independente e não foi iniciada. Ela deverá alinhar o `equalsToValidator` à política formalizada, incluindo o estado desabilitado do controle comparado, e ajustar os testes correspondentes.
+- **Relação com a FIX-024:** a pendência foi concluída em 10/11/2026, com o alinhamento do `equalsToValidator` à política formalizada nesta FIX, incluindo o estado desabilitado do controle comparado e os testes correspondentes. O registro da correção está na FIX-024.
 
 ## 5. Dependências identificadas no levantamento original (histórico)
 
