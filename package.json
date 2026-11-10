@@ -9,7 +9,9 @@
     "test": "ng test",
     "test:unit": "ng test --watch=false",
     "test:e2e": "playwright test",
-    "type-check:playwright": "tsc -p tsconfig.playwright.json --noEmit"
+    "type-check:playwright": "tsc -p tsconfig.playwright.json --noEmit",
+    "emulators:start": "firebase emulators:start --import=./emulator-data --export-on-exit",
+    "emulators:start:fresh": "firebase emulators:start"
   },
   "private": true,
   "packageManager": "npm@10.8.2",

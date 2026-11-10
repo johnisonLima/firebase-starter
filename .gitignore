@@ -66,3 +66,6 @@ node_modules/
 
 # Agents
 .agents/
+
+# Firebase emulators
+emulator-data/
