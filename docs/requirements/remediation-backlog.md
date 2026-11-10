@@ -455,7 +455,16 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
   - Escopo da FIX-024 claramente delimitado.
   - Nenhuma alteração de implementação ou testes nesta FIX.
 - **Arquivos envolvidos:** `docs/requirements/requirements.md` e `docs/requirements/remediation-backlog.md`.
+
 - **Relação com a FIX-024:** a pendência foi concluída em 10/11/2026, com o alinhamento do `equalsToValidator` à política formalizada nesta FIX, incluindo o estado desabilitado do controle comparado e os testes correspondentes. O registro da correção está na FIX-024.
+
+### FIX-021 — Revisar as Firestore Security Rules (em andamento)
+
+- **Andamento documental:** contrato proposto do perfil `users/{uid}` e matriz de autorização com as Custom Claims `canEditAllProfiles` e `canDeleteAllProfiles` formalizados em [`docs/data/user-profile.md`](../data/user-profile.md) e [`docs/security/firestore-authorization.md`](../security/firestore-authorization.md).
+- **Andamento arquitetural:** política de autorização registrada na [ADR-030 — Autorização de perfis por Custom Claims do Firebase Authentication](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md).
+- **Pendente:** implementar e revisar as Firestore Security Rules; preparar e executar testes com Firebase Emulator Suite; confirmar o estado remoto necessário sem alterar recursos Firebase sem autorização.
+- **Status:** FIX-021 permanece aberta. A formalização documental não representa implementação, publicação nem validação das regras.
+- **Relação com requisitos:** RNF-042.
 
 ## 5. Dependências identificadas no levantamento original (histórico)
 

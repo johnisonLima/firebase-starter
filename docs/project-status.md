@@ -22,6 +22,7 @@ Componentes standalone e Signals aparecem no código. Para persistência, `BaseR
 
 - **Autenticação:** cadastro, login, logout, recuperação de senha e verificação de e-mail por Firebase Authentication. O `AuthService` atua como fachada única para as operações de autenticação e expõe o estado por meio de Signals.
 - **Firestore:** abstração de dados e repositório de usuários com criação, consulta por ID, listagem, existência, atualização, exclusão e consulta por filtros. Para finalidades exclusivas de desenvolvimento e teste, o componente `FirestoreTest` está integrado à página do Playground, disponibilizando interface para execução das operações CRUD sobre a coleção de testes dedicada `playground_users`. O acesso à rota `/playground` é protegido pelos guards `authGuard` e `emailVerifiedGuard`. Por se tratar de um recurso de apoio ao desenvolvimento, essa interface não constitui funcionalidade de produção nem representa validação ou aprovação definitiva das Security Rules no Firestore.
+- **FIX-021 — especificação documental:** contrato proposto de `users/{uid}`, matriz de autorização por duas Custom Claims e decisão arquitetural formalizados em [`data/user-profile.md`](data/user-profile.md), [`security/firestore-authorization.md`](security/firestore-authorization.md) e [ADR-030](adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md). A implementação das regras e os testes no Emulator Suite permanecem pendentes; a FIX-021 não está concluída.
 - **Recursos compartilhados:** formulário e mensagens de erro, autofocus, botões, inputs, spinner/loading, Toast, Dialog e alternância de tema.
 - **Requisições HTTP:** interceptors funcionais configurados para token Firebase nas requisições autenticadas e controle do loading global, com opção para ignorá-lo.
 - **Acesso a rotas:** guards para visitante, autenticação e verificação de e-mail.
@@ -38,7 +39,7 @@ A validação local da FIX-020 registrou 220 testes unitários e 67 execuções 
 ## Documentação
 
 - [`Architecture-v1.0.md`](Architecture-v1.0.md) registra a visão arquitetural e os princípios do projeto.
-- `docs/adr/` contém 27 ADRs, da ADR-001 à ADR-027, incluindo decisões de arquitetura, dados, autenticação, interceptors, Playwright e estratégia de testes E2E e CI.
+- `docs/adr/` contém 30 ADRs, da ADR-001 à ADR-030, incluindo decisões de arquitetura, dados, autenticação, autorização, interceptors, Playwright e estratégia de testes E2E e CI.
 - [`testing/e2e-strategy.md`](testing/e2e-strategy.md) documenta a estratégia de testes end-to-end.
 - [`ci/secrets.md`](ci/secrets.md) documenta os secrets necessários ao CI.
 - [`sprints/sprints.md`](sprints/sprints.md) registra o histórico das Sprints 1 a 5 concluídas.
