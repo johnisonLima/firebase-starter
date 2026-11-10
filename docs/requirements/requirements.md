@@ -171,6 +171,10 @@ Os requisitos desta seção possuem implementação total ou parcial no código 
 
 Os validadores de CPF, CNPJ e CPF ou CNPJ devem considerar ausentes exclusivamente os valores `null`, `undefined` e string vazia (`''`). Os demais valores recebidos, incluindo `0`, `false` e `NaN`, devem ser convertidos para string e submetidos à validação documental. Controles desabilitados devem continuar sendo ignorados pelos validadores.
 
+**Critério complementar — Política de controles desabilitados nos validadores compartilhados:**
+
+Controles desabilitados ficam fora do processo de validação. Os validadores compartilhados devem retornar `null` quando o controle validado estiver desabilitado. Quando um validador depender de outros controles, também deve retornar `null` enquanto qualquer controle necessário à validação estiver desabilitado.
+
 ### 4.5 Integração HTTP
 
 | ID | Título | Descrição verificável | Categoria | Status | Referência |

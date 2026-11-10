@@ -119,6 +119,10 @@ export function equalsToValidator(
       return null;
     }
 
+    if (control.disabled || otherControl.disabled) {
+      return null;
+    }
+
     if (control.value === otherControl.value) {
       return null;
     }
