@@ -19,7 +19,7 @@ O levantamento original considerou o código e os testes então existentes, as S
 
 O levantamento original registrou **20 itens**: 4 de implementação parcial, 4 de inconsistência documental, 3 limitações técnicas/comportamentais e 9 confirmações ou definições. Esses quantitativos são a baseline histórica, não o estado atual das correções.
 
-> **Situação atual:** as FIX-001 a FIX-020 foram individualmente encerradas, concluídas ou encerradas com uma decisão/limitação aceita, conforme seus checklists. Os problemas e ações abaixo preservam o registro do levantamento original; os resultados atuais aparecem no campo “Encerramento” de cada FIX. Algumas decisões encerradas mantêm trabalho futuro válido, identificado separadamente como planejamento ou definição pendente.
+> **Situação atual:** as FIX-001 a FIX-020 foram individualmente encerradas, concluídas ou encerradas com uma decisão/limitação aceita, conforme seus checklists. A FIX-022, registrada posteriormente à baseline, também está concluída. Os problemas e ações abaixo preservam o registro do levantamento original; os resultados atuais aparecem no campo “Encerramento” de cada FIX. Algumas decisões encerradas mantêm trabalho futuro válido, identificado separadamente como planejamento ou definição pendente.
 
 | Categoria | P0 | P1 | P2 | P3 | Total |
 |---|---:|---:|---:|---:|---:|
@@ -31,7 +31,7 @@ O levantamento original registrou **20 itens**: 4 de implementação parcial, 4 
 
 ### 3.1 Situação consolidada
 
-As **20 FIXs estão encerradas**. “Encerrada” descreve a conclusão da correção, confirmação ou decisão documentada; não significa que todo trabalho de produto ou planejamento relacionado esteja implementado.
+As **20 FIXs da baseline estão encerradas**. A **FIX-022**, incluída posteriormente, também está concluída. “Encerrada” descreve a conclusão da correção, confirmação ou decisão documentada; não significa que todo trabalho de produto ou planejamento relacionado esteja implementado.
 
 | Grupo da baseline | FIXs | Situação atual |
 |---|---|---|
@@ -43,9 +43,17 @@ As **20 FIXs estão encerradas**. “Encerrada” descreve a conclusão da corre
 
 Permanecem como trabalho futuro ou definição de escopo, não como FIXs abertas: finalidade do dashboard (RF-070), melhorias genéricas sem critérios de aceite, avaliação WCAG 2.2 AA proposta para Sprint 11, critérios/checklist/verificação pós-publicação da Sprint 10, e regras definitivas do Firestore sob responsabilidade da FIX-021. A futura API também deverá validar tokens com Firebase Admin SDK.
 
-## 4. Histórico e encerramento das FIX-001 a FIX-020
+### 3.2 FIX posterior à baseline
 
-As categorias e descrições de problema nesta seção reproduzem o levantamento original. Não representam, por si só, tarefas ainda abertas. Cada item registra abaixo seu encerramento e as pendências futuras que permaneceram válidas.
+| FIX | Categoria | Situação |
+|---|---|---|
+| FIX-022 | A. Implementação parcial | Concluída em 10/11/2026. |
+
+A FIX-022 não integra os quantitativos históricos da tabela da seção 3.1. Ela foi registrada após a análise documental dos validadores de CPF, CNPJ e CPF ou CNPJ e está detalhada na seção 4.
+
+## 4. Histórico e encerramento das FIX-001 a FIX-020 e da FIX-022
+
+As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção reproduzem o levantamento original. A FIX-022 foi registrada posteriormente à baseline, a partir da análise documental e da correção dos validadores documentais. Nenhum registro histórico anterior foi alterado. Os itens não representam, por si só, tarefas ainda abertas. Cada item registra abaixo seu encerramento e as pendências futuras que permaneceram válidas.
 
 ### A. Implementação parcial
 
@@ -375,6 +383,27 @@ As categorias e descrições de problema nesta seção reproduzem o levantamento
 - **Validações complementares locais:** 63/63 execuções mockadas passaram sem variáveis E2E e sem carregar `.env`; 10/10 execuções autenticadas passaram (incluindo setup); 73/73 execuções passaram na suíte completa. O type-check Playwright e `git diff --check` passaram. O histórico informado pelo responsável registra 67 execuções E2E aprovadas antes da implementação complementar e execuções anteriores bem-sucedidas no GitHub Actions.
 - **CI e secrets:** o workflow não foi alterado na implementação complementar e não houve nova execução do GitHub Actions nessa rodada. Secrets e conta E2E foram confirmados historicamente; Pull Requests de forks e Dependabot sem secrets continuam com a E2E ignorada e essa condição não foi validada diretamente.
 - **Ressalva:** testes com mocks não validam o Firebase remoto; os testes autenticados usam a conta E2E dedicada. Execuções locais, execuções históricas no GitHub Actions e ausência de validação de forks/Dependabot permanecem evidências distintas.
+
+### E. Correção posterior à baseline
+
+#### Validação documental
+
+##### FIX-022 — Rejeitar valores numéricos falsy nos validadores documentais
+
+- **Encerramento:** concluída em 10/11/2026. A implementação passou a usar verificação explícita de valores ausentes em `src/app/shared/utils/forms/validators.ts`; os testes de `src/app/shared/utils/forms/validators.spec.ts` foram atualizados para rejeitar `0`, `false` e `NaN` e manter `null`, `undefined` e `''` como ausentes. O contrato funcional foi formalizado em `docs/requirements/requirements.md` como critério complementar aos RF-047, RF-048 e RF-049.
+
+- **Categoria:** A. Implementação parcial
+- **Requisitos relacionados:** RF-047, RF-048, RF-049, RNF-031 e ADR-014.
+- **Problema:** os validadores documentais utilizavam `!control.value` para identificar valores ausentes. Com isso, valores como `0`, `false` e `NaN` eram tratados como vazios, embora não representem ausência de informação.
+- **Correção realizada:** implementada verificação explícita de valores vazios; criado helper privado compartilhado `isEmptyValue`; mantida a conversão `String(value)` para os demais valores; preservado o comportamento dos controles desabilitados.
+- **Testes atualizados:**
+  - CPF: rejeita `0`, `false` e `NaN`.
+  - CNPJ: rejeita `0`, `false` e `NaN`.
+  - CPF ou CNPJ: rejeita `0`, `false` e `NaN`.
+  - Os três validadores continuam ignorando `null`, `undefined` e `''`.
+  - Os testes de controles desabilitados permanecem válidos.
+- **Critério de conclusão:** os valores ausentes devem ser tratados conforme o contrato documentado. Valores falsy diferentes de `null`, `undefined` e `''` devem ser submetidos à validação documental e rejeitados quando inválidos.
+- **Arquivos envolvidos:** `src/app/shared/utils/forms/validators.ts`, `src/app/shared/utils/forms/validators.spec.ts` e `docs/requirements/requirements.md`.
 
 ## 5. Dependências identificadas no levantamento original (histórico)
 
