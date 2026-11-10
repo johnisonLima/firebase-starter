@@ -287,16 +287,35 @@ describe('validators', () => {
       expect(equalsToValidator('password')(group.controls.confirmPassword)).toBeNull();
     });
 
-    it('deve caracterizar a comparação de controle desabilitado com valor diferente', () => {
+    it('deve ignorar controle validado desabilitado com valor diferente', () => {
       const group = new FormGroup({
         password: new FormControl('secret'),
         confirmPassword: new FormControl('different'),
       });
       group.controls.confirmPassword.disable();
 
-      expect(equalsToValidator('password')(group.controls.confirmPassword)).toEqual({
-        [VALIDATION_ERRORS.EQUALS_TO]: true,
+      expect(equalsToValidator('password')(group.controls.confirmPassword)).toBeNull();
+    });
+
+    it('deve ignorar controle comparado desabilitado com valor diferente', () => {
+      const group = new FormGroup({
+        password: new FormControl('secret'),
+        confirmPassword: new FormControl('different'),
       });
+      group.controls.password.disable();
+
+      expect(equalsToValidator('password')(group.controls.confirmPassword)).toBeNull();
+    });
+
+    it('deve ignorar quando ambos os controles estão desabilitados', () => {
+      const group = new FormGroup({
+        password: new FormControl('secret'),
+        confirmPassword: new FormControl('different'),
+      });
+      group.controls.password.disable();
+      group.controls.confirmPassword.disable();
+
+      expect(equalsToValidator('password')(group.controls.confirmPassword)).toBeNull();
     });
   });
 });
