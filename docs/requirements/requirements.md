@@ -167,6 +167,10 @@ Os requisitos desta seção possuem implementação total ou parcial no código 
 | RF-050 | Validador de igualdade | Compara o valor de um campo com outro para validações como confirmação de senha. | Validação | Implementado | Sprint 1 e 2 |
 | RF-051 | Mensagens padronizadas de validação | Traduz erros de validação em mensagens em português, incluindo obrigatoriedade, formato, tamanho, CPF, CNPJ e igualdade. | Validação | Implementado | Sprint 1 |
 
+**Critério complementar — Tratamento de valores ausentes nos validadores documentais:**
+
+Os validadores de CPF, CNPJ e CPF ou CNPJ devem considerar ausentes exclusivamente os valores `null`, `undefined` e string vazia (`''`). Os demais valores recebidos, incluindo `0`, `false` e `NaN`, devem ser convertidos para string e submetidos à validação documental. Controles desabilitados devem continuar sendo ignorados pelos validadores.
+
 ### 4.5 Integração HTTP
 
 | ID | Título | Descrição verificável | Categoria | Status | Referência |

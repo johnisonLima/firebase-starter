@@ -12,6 +12,15 @@ import {
 import { VALIDATION_ERRORS } from './validator-errors';
 
 /**
+ * Verifica se um valor deve ser considerado vazio.
+ */
+function isEmptyValue(value: unknown): boolean {
+  return value === null ||
+    value === undefined ||
+    value === '';
+}
+
+/**
  * Valida um CPF.
  */
 export function cpfValidator(): ValidatorFn {
@@ -20,7 +29,7 @@ export function cpfValidator(): ValidatorFn {
     control: AbstractControl,
   ): ValidationErrors | null => {
 
-    if (control.disabled || !control.value) {
+    if (control.disabled || isEmptyValue(control.value)) {
       return null;
     }
 
@@ -45,7 +54,7 @@ export function cnpjValidator(): ValidatorFn {
     control: AbstractControl,
   ): ValidationErrors | null => {
 
-    if (control.disabled || !control.value) {
+    if (control.disabled || isEmptyValue(control.value)) {
       return null;
     }
 
@@ -70,7 +79,7 @@ export function cpfOrCnpjValidator(): ValidatorFn {
     control: AbstractControl,
   ): ValidationErrors | null => {
 
-    if (control.disabled || !control.value) {
+    if (control.disabled || isEmptyValue(control.value)) {
       return null;
     }
 

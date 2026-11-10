@@ -61,10 +61,28 @@ describe('validators', () => {
       expect(cpfValidator()(control)).toBeNull();
     });
 
-    it('deve caracterizar o valor numérico zero como ausente', () => {
+    it('deve rejeitar o valor numérico zero', () => {
       const control = new FormControl(0);
 
-      expect(cpfValidator()(control)).toBeNull();
+      expect(cpfValidator()(control)).toEqual({
+        [VALIDATION_ERRORS.CPF]: true,
+      });
+    });
+
+    it('deve rejeitar o valor booleano false', () => {
+      const control = new FormControl(false);
+
+      expect(cpfValidator()(control)).toEqual({
+        [VALIDATION_ERRORS.CPF]: true,
+      });
+    });
+
+    it('deve rejeitar NaN', () => {
+      const control = new FormControl(NaN);
+
+      expect(cpfValidator()(control)).toEqual({
+        [VALIDATION_ERRORS.CPF]: true,
+      });
     });
   });
 
@@ -114,10 +132,28 @@ describe('validators', () => {
       expect(cnpjValidator()(control)).toBeNull();
     });
 
-    it('deve caracterizar o valor numérico zero como ausente', () => {
+    it('deve rejeitar o valor numérico zero', () => {
       const control = new FormControl(0);
 
-      expect(cnpjValidator()(control)).toBeNull();
+      expect(cnpjValidator()(control)).toEqual({
+        [VALIDATION_ERRORS.CNPJ]: true,
+      });
+    });
+
+    it('deve rejeitar o valor booleano false', () => {
+      const control = new FormControl(false);
+
+      expect(cnpjValidator()(control)).toEqual({
+        [VALIDATION_ERRORS.CNPJ]: true,
+      });
+    });
+
+    it('deve rejeitar NaN', () => {
+      const control = new FormControl(NaN);
+
+      expect(cnpjValidator()(control)).toEqual({
+        [VALIDATION_ERRORS.CNPJ]: true,
+      });
     });
   });
 
@@ -173,10 +209,28 @@ describe('validators', () => {
       expect(cpfOrCnpjValidator()(control)).toBeNull();
     });
 
-    it('deve caracterizar o valor numérico zero como ausente', () => {
+    it('deve rejeitar o valor numérico zero', () => {
       const control = new FormControl(0);
 
-      expect(cpfOrCnpjValidator()(control)).toBeNull();
+      expect(cpfOrCnpjValidator()(control)).toEqual({
+        [VALIDATION_ERRORS.CPF_OR_CNPJ]: true,
+      });
+    });
+
+    it('deve rejeitar o valor booleano false', () => {
+      const control = new FormControl(false);
+
+      expect(cpfOrCnpjValidator()(control)).toEqual({
+        [VALIDATION_ERRORS.CPF_OR_CNPJ]: true,
+      });
+    });
+
+    it('deve rejeitar NaN', () => {
+      const control = new FormControl(NaN);
+
+      expect(cpfOrCnpjValidator()(control)).toEqual({
+        [VALIDATION_ERRORS.CPF_OR_CNPJ]: true,
+      });
     });
   });
 
