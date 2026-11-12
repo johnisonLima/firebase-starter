@@ -2,7 +2,7 @@
 
 ## Estado
 
-Esta especificação formaliza a matriz proposta para a FIX-021. As Custom Claims, regras e testes descritos ainda não estão implementados nem validados. As regras futuras deverão aplicar o princípio do menor privilégio definido em [Architecture v1.0](../Architecture-v1.0.md#151-seguranca) e proteger o Firestore independentemente dos guards Angular.
+Esta especificação formaliza a matriz proposta para a FIX-021. A configuração independente para testes com Vitest e Firestore Emulator está preparada em `tests/firestore/`; os cenários das regras ainda não foram implementados nem validados. As regras deverão aplicar o princípio do menor privilégio definido em [Architecture v1.0](../Architecture-v1.0.md#151-seguranca) e proteger o Firestore independentemente dos guards Angular.
 
 O contrato de documento de perfil está em [User Profile](../data/user-profile.md).
 
@@ -62,7 +62,7 @@ Os nomes dos perfis são rótulos derivados das combinações das claims; não s
 
 ## Testes futuros
 
-As permissões deverão ser cobertas por testes de integração usando Firebase Emulator Suite, incluindo combinações de claims, operações próprias e sobre terceiros, tentativas de alterar `email`, campos não permitidos e operações negadas. Os testes deverão executar contra o emulador; a configuração e os testes ainda estão pendentes.
+As permissões deverão ser cobertas por testes usando `@firebase/rules-unit-testing` e Firebase Emulator Suite, incluindo combinações de claims, operações próprias e sobre terceiros, tentativas de alterar `email`, campos não permitidos e operações negadas. A infraestrutura executa somente o Firestore Emulator, usa um project ID `demo-*` e simula os contextos autenticados pela biblioteca; os cenários permanecem pendentes. Use `npm run test:firestore-rules` para executar a suíte e `npm run type-check:firestore-tests` para verificar seus tipos. Na validação atual, o smoke check não inicializou porque o Emulator rejeitou `rules_version = '3'` presente em `firestore.rules` (`Unsupported rules version 3`).
 
 ## Decisão arquitetural
 

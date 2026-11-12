@@ -10,6 +10,8 @@
     "test:unit": "ng test --watch=false",
     "test:e2e": "playwright test",
     "type-check:playwright": "tsc -p tsconfig.playwright.json --noEmit",
+    "test:firestore-rules": "firebase emulators:exec --only firestore --project demo-firebase-starter-rules \"vitest run --config vitest.firestore.config.ts\"",
+    "type-check:firestore-tests": "tsc -p tsconfig.firestore-tests.json --noEmit",
     "emulators:start": "firebase emulators:start --import=./emulator-data --export-on-exit",
     "emulators:start:fresh": "firebase emulators:start"
   },
@@ -36,6 +38,7 @@
     "@angular/build": "^21.2.19",
     "@angular/cli": "^21.2.19",
     "@angular/compiler-cli": "^21.2.0",
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@playwright/test": "^1.64.1",
     "@spartan-ng/cli": "^1.1.1",
     "@tailwindcss/postcss": "^4.3.3",

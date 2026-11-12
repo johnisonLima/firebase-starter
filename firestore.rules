@@ -3,17 +3,133 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // This rule allows anyone with your Firestore database reference to view, edit,
-    // and delete all data in your Firestore database. It is useful for getting
-    // started, but it is configured to expire after 30 days because it
-    // leaves your app open to attackers. At that time, all client
-    // requests to your Firestore database will be denied.
-    //
-    // Make sure to write security rules for your app before that time, or else
-    // all client requests to your Firestore database will be denied until you Update
-    // your rules
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2026, 11, 5);
+    // Authentication
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isAuthenticated()
+        && request.auth.token.email_verified == true;
+    }
+
+    // Ownership
+
+    function isOwner(uid) {
+      return isAuthenticated()
+        && request.auth.uid == uid;
+    }
+
+    // Custom Claims
+
+    function canEditAllProfiles() {
+      return isAuthenticated()
+        && request.auth.token.get('canEditAllProfiles', false) == true;
+    }
+
+    function canDeleteAllProfiles() {
+      return isAuthenticated()
+        && request.auth.token.get('canDeleteAllProfiles', false) == true;
+    }
+
+    // Profile validation
+
+    function hasValidProfileFields(data) {
+      return data.keys().hasAll(['email'])
+        && data.keys().hasOnly([
+          'email',
+          'name',
+          'phone',
+          'birthDate',
+          'gender',
+          'neighborhood',
+          'city',
+          'state',
+          'photoURL'
+        ])
+        && data.email is string
+
+        && (!('name' in data) || data.name is string)
+        && (!('phone' in data) || data.phone is string)
+        && (
+          !('birthDate' in data)
+          || (
+            data.birthDate is string
+            && data.birthDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          )
+        )
+        && (
+          !('gender' in data)
+          || data.gender == null
+          || data.gender is string
+        )
+        && (!('neighborhood' in data) || data.neighborhood is string)
+        && (!('city' in data) || data.city is string)
+        && (
+          !('state' in data)
+          || (
+            data.state is string
+            && data.state.matches('^[A-Z]{2}$')
+          )
+        )
+        && (
+          !('photoURL' in data)
+          || data.photoURL == null
+          || data.photoURL is string
+        );
+    }
+
+    // User profiles
+
+    match /users/{uid} {
+
+      // Read own profile or profiles as editor/administrator.
+      allow get: if isEmailVerified()
+        && (
+          isOwner(uid)
+          || canEditAllProfiles()
+        );
+
+      // Listing profiles requires editor permission.
+      allow list: if isEmailVerified()
+        && canEditAllProfiles();
+
+      // Create only the authenticated user's initial profile.
+      allow create: if isEmailVerified()
+        && isOwner(uid)
+        && request.resource.data.keys().hasOnly(['email'])
+        && request.resource.data.keys().hasAll(['email'])
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.email is string;
+
+      // Update own profile or another profile as editor.
+      allow update: if isEmailVerified()
+        && (
+          isOwner(uid)
+          || canEditAllProfiles()
+        )
+        && hasValidProfileFields(request.resource.data)
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.diff(resource.data)
+          .affectedKeys()
+          .hasOnly([
+            'name',
+            'phone',
+            'birthDate',
+            'gender',
+            'neighborhood',
+            'city',
+            'state',
+            'photoURL'
+          ]);
+
+      // Delete own profile or any profile as deleter/administrator.
+      allow delete: if isEmailVerified()
+        && (
+          isOwner(uid)
+          || canDeleteAllProfiles()
+        );
     }
   }
 }

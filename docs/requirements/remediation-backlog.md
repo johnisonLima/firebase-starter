@@ -238,11 +238,11 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 - **Categoria:** C. Limitação de testabilidade
 - **Requisito relacionado:** RNF-032
 - **Problema:** o teste de acesso inicial verifica apenas se a URL contém `localhost:4200`, o que não comprova que a aplicação abriu ou redirecionou corretamente.
-- **Evidência:** `tests/app/access.spec.ts` contém somente `expect(page).toHaveURL(/localhost:4200/)` após `goto('/')`.
+- **Evidência:** `tests/playwright/app/access.spec.ts` contém somente `expect(page).toHaveURL(/localhost:4200/)` após `goto('/')`.
 - **Impacto:** falhas de carregamento ou conteúdo podem passar por esse teste.
 - **Prioridade:** P2 — reduz a confiança de um cenário básico, mas os fluxos de login/dashboard têm asserções adicionais.
 - **Ação recomendada:** definir o resultado esperado para `/` e assertar URL de destino e/ou conteúdo acessível correspondente.
-- **Arquivos envolvidos:** `tests/app/access.spec.ts`.
+- **Arquivos envolvidos:** `tests/playwright/app/access.spec.ts`.
 - **Critério de conclusão:** teste falha quando a aplicação não carrega ou não chega ao resultado esperado, sem depender de seletores CSS.
 - **Dependências/decisões:** confirmar se o resultado esperado da raiz continua sendo `/login`, conforme RF-021.
 
@@ -291,7 +291,7 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 - **Impacto:** pipeline pode falhar nos cenários autenticados caso os secrets não estejam configurados ou a conta não seja válida/verificada.
 - **Prioridade:** P2 — dependência operacional que pode impedir CI, sem evidência local de ausência.
 - **Ação recomendada:** responsável verificar existência e validade dos secrets e da conta de teste sem imprimir valores ou credenciais.
-- **Arquivos envolvidos:** `.github/workflows/ci.yml`, `tests/auth/login.spec.ts`, `tests/auth/dashboard.spec.ts`, configurações do repositório GitHub.
+- **Arquivos envolvidos:** `.github/workflows/ci.yml`, `tests/playwright/auth/login.spec.ts`, `tests/playwright/auth/dashboard.spec.ts`, configurações do repositório GitHub.
 - **Critério de conclusão:** execução autenticada do CI passa com secrets válidos; nenhum valor secreto é exposto em logs.
 - **Dependências/decisões:** acesso autorizado às configurações e execução de CI.
 
@@ -381,7 +381,7 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 - **Baseline do problema:** a suíte inicial não cobria cadastro, recuperação e verificação por E2E, e não havia escopo documentado para esses fluxos.
 - **Encerramento:** concluída em duas etapas. A estratégia e a CI condicionada aos secrets foram implementadas na FIX-020 original; em complemento, os testes mockados foram separados dos autenticados por projetos Playwright e tags `@authenticated`. Os projetos `mock-*` independem de credenciais; os `auth-*` continuam usando setup real e `storageState`.
 - **Cobertura atual:** Chromium, Firefox e WebKit executam os projetos mockados e autenticados. Há cenários de login válido e inválido, cadastro, recuperação, envio/reenvio e reverificação de e-mail, acesso e proteção do dashboard, logout e redirecionamentos.
-- **Arquivos/evidências:** `playwright.config.ts`, `tests/auth/`, `tests/app/`, `tests/support/`, [`docs/testing/e2e-strategy.md`](../testing/e2e-strategy.md), ADR-025, ADR-026, ADR-027 e ADR-029.
+- **Arquivos/evidências:** `playwright.config.ts`, `tests/playwright/auth/`, `tests/playwright/app/`, `tests/playwright/support/`, [`docs/testing/e2e-strategy.md`](../testing/e2e-strategy.md), ADR-025, ADR-026, ADR-027 e ADR-029.
 - **Validações complementares locais:** 63/63 execuções mockadas passaram sem variáveis E2E e sem carregar `.env`; 10/10 execuções autenticadas passaram (incluindo setup); 73/73 execuções passaram na suíte completa. O type-check Playwright e `git diff --check` passaram. O histórico informado pelo responsável registra 67 execuções E2E aprovadas antes da implementação complementar e execuções anteriores bem-sucedidas no GitHub Actions.
 - **CI e secrets:** o workflow não foi alterado na implementação complementar e não houve nova execução do GitHub Actions nessa rodada. Secrets e conta E2E foram confirmados historicamente; Pull Requests de forks e Dependabot sem secrets continuam com a E2E ignorada e essa condição não foi validada diretamente.
 - **Ressalva:** testes com mocks não validam o Firebase remoto; os testes autenticados usam a conta E2E dedicada. Execuções locais, execuções históricas no GitHub Actions e ausência de validação de forks/Dependabot permanecem evidências distintas.
@@ -462,7 +462,8 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 
 - **Andamento documental:** contrato proposto do perfil `users/{uid}` e matriz de autorização com as Custom Claims `canEditAllProfiles` e `canDeleteAllProfiles` formalizados em [`docs/data/user-profile.md`](../data/user-profile.md) e [`docs/security/firestore-authorization.md`](../security/firestore-authorization.md).
 - **Andamento arquitetural:** política de autorização registrada na [ADR-030 — Autorização de perfis por Custom Claims do Firebase Authentication](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md).
-- **Pendente:** implementar e revisar as Firestore Security Rules; preparar e executar testes com Firebase Emulator Suite; confirmar o estado remoto necessário sem alterar recursos Firebase sem autorização.
+- **Concluído nesta etapa:** reorganizar os testes por ferramenta; preparar configuração independente de Vitest, `@firebase/rules-unit-testing` e Firestore Emulator com project ID `demo-*`; criar utilitários iniciais e comandos separados de execução e type-check. Esta etapa não implementa cenários nem altera as regras.
+- **Pendente:** implementar e revisar as Firestore Security Rules; adicionar e executar cenários de autorização e validação no Firestore Emulator; confirmar o estado remoto necessário sem alterar recursos Firebase sem autorização.
 - **Status:** FIX-021 permanece aberta. A formalização documental não representa implementação, publicação nem validação das regras.
 - **Relação com requisitos:** RNF-042.
 

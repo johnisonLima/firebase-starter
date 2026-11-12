@@ -249,6 +249,20 @@ src/
 └── test-setup.ts
 ```
 
+Os testes automatizados ficam em `tests/` e são organizados por ferramenta. Os testes de navegador do Playwright ficam em `tests/playwright/`; os testes das Firestore Security Rules ficam em `tests/firestore/`, com configuração Vitest independente e execução pelo Firestore Emulator.
+
+```text
+tests/
+├── playwright/
+│   ├── app/
+│   ├── auth/
+│   ├── support/
+│   └── auth.setup.ts
+└── firestore/
+    ├── firestore.rules.test-utils.ts
+    └── firestore.rules.spec.ts
+```
+
 Cada diretório possui uma responsabilidade específica dentro da arquitetura.
 
 | Diretório         | Responsabilidade                                                                                                                                                   |
