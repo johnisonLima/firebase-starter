@@ -16,6 +16,8 @@ Os perfis residem em `users/{uid}`, usando como identificador do documento o UID
 
 É necessário distinguir as permissões administrativas de edição e exclusão, sem confiar em dados de autorização que o próprio cliente possa modificar e sem acoplar permissões administrativas ao perfil pessoal.
 
+Uma decisão complementar da FIX-021 estabeleceu que o titular pode excluir seu próprio documento de perfil sem receber permissão administrativa. A exclusão de documentos de terceiros continua sendo uma operação administrativa.
+
 ### Alternativas consideradas
 
 **1. Armazenar um atributo `role` no documento do perfil**
@@ -61,16 +63,29 @@ Claims ausentes são interpretadas como `false`. Não será utilizado um atribut
 | Excluidor | ausente ou `false` | `true` |
 | Administrador | `true` | `true` |
 
-As Firestore Security Rules utilizarão as claims do token autenticado para autorizar operações em `users/{uid}`. A política funcional é:
+As Firestore Security Rules utilizarão as claims do token autenticado para operações administrativas. A exclusão do próprio documento exige usuário autenticado e com e-mail verificado, mas não depende de Custom Claims. A política funcional é:
 
 - Usuários comuns podem consultar, criar e atualizar somente o próprio perfil.
 - Editores podem consultar e atualizar perfis de terceiros.
-- Excluidores podem excluir perfis, mas não recebem por isso autorização para consultar ou editar documentos de terceiros.
+- Qualquer usuário autenticado e com e-mail verificado pode excluir o próprio perfil, independentemente de suas Custom Claims.
+- Excluidores (`canDeleteAllProfiles: true`) podem excluir perfis de terceiros, mas não recebem por isso autorização para consultar ou editar documentos de terceiros.
 - Usuários com ambas as claims podem executar as operações administrativas de edição e exclusão.
 - A edição do perfil não pode modificar o campo `email`.
 - A criação de perfil usa o UID autenticado como ID do documento. A associação Authentication–Firestore é feita por esse UID.
 - O Firebase Authentication é a fonte oficial do e-mail; o `email` persistido no perfil é uma cópia sincronizada.
 - Excluir o documento Firestore não exclui a conta correspondente no Firebase Authentication.
+
+| Operação | Comum | Editor | Excluidor | Administrador |
+| --- | --- | --- | --- | --- |
+| Consultar próprio perfil | Sim | Sim | Sim | Sim |
+| Consultar outros perfis | Não | Sim | Não | Sim |
+| Criar próprio perfil | Sim | Sim | Sim | Sim |
+| Editar próprio perfil | Sim | Sim | Sim | Sim |
+| Editar outros perfis | Não | Sim | Não | Sim |
+| Excluir próprio perfil | Sim | Sim | Sim | Sim |
+| Excluir outros perfis | Não | Não | Sim | Sim |
+
+Para `Excluir próprio perfil`, a autorização exige usuário autenticado e com e-mail verificado e não depende das claims. Para `Excluir outros perfis`, `canDeleteAllProfiles: true` é obrigatório.
 
 ### Confiança e responsabilidades
 
@@ -96,6 +111,8 @@ Esta ADR formaliza a política, mas não implementa nem publica Security Rules, 
 - Usa o UID como chave única de relacionamento entre Authentication e Firestore.
 - Mantém a autoridade de concessão das permissões em ambiente confiável, fora do frontend.
 - Define que alterações comuns não podem trocar o e-mail sincronizado.
+- Permite que o titular autenticado e verificado exclua seu perfil sem concessão de privilégio administrativo.
+- Mantém a exclusão de perfis de terceiros sob a permissão administrativa `canDeleteAllProfiles`.
 
 #### Negativas
 
@@ -104,6 +121,7 @@ Esta ADR formaliza a política, mas não implementa nem publica Security Rules, 
 - A política precisa ser implementada tanto nas Firestore Security Rules quanto, futuramente, no backend que utilize Admin SDK.
 - A matriz precisa de testes de permissão e negação no Firebase Emulator Suite e manutenção quando novos campos ou operações forem introduzidos.
 - O mecanismo de sincronização do e-mail permanece uma responsabilidade futura ainda sem implementação.
+- Excluir o próprio documento remove os dados do perfil, mas não encerra nem exclui a conta Authentication; a exclusão coordenada continua fora do escopo.
 
 ### ADRs relacionadas
 
