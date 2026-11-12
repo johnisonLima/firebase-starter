@@ -323,7 +323,7 @@ npm run test:firestore-rules
 npm run type-check:firestore-tests
 ```
 
-A configuração e a infraestrutura estão preparadas, mas os cenários de autorização e validação ainda não foram implementados. Na execução de validação atual, a inicialização falhou porque o Emulator rejeitou o cabeçalho `rules_version = '3'` de `firestore.rules` (`Unsupported rules version 3`); essa regra não foi modificada. Acompanhe a FIX-021 em `docs/requirements/remediation-backlog.md`.
+A suíte tem 18 testes distribuídos em sete arquivos; em 12/11/2026 passaram a suíte e o type-check. Ela cobre autenticação, combinações de claims, operações e validação dos documentos, usando somente o Emulator demo. A cobertura, comandos e limites identificados estão registrados em [`firestore-authorization.md`](../security/firestore-authorization.md); acompanhe o andamento na FIX-021 em `docs/requirements/remediation-backlog.md`.
 
 ## Referências
 

@@ -2,7 +2,7 @@
 
 ## Estado
 
-Esta especificação formaliza a matriz proposta para a FIX-021. A configuração independente para testes com Vitest e Firestore Emulator está preparada em `tests/firestore/`; os cenários das regras ainda não foram implementados nem validados. As regras deverão aplicar o princípio do menor privilégio definido em [Architecture v1.0](../Architecture-v1.0.md#151-seguranca) e proteger o Firestore independentemente dos guards Angular.
+Esta especificação formaliza a matriz da FIX-021. Os cenários automatizados estão em `tests/firestore/` e exercitam as regras locais no Firestore Emulator. As regras aplicam o princípio do menor privilégio definido em [Architecture v1.0](../Architecture-v1.0.md#151-seguranca) e protegem o Firestore independentemente dos guards Angular.
 
 O contrato de documento de perfil está em [User Profile](../data/user-profile.md).
 
@@ -60,9 +60,13 @@ Os nomes dos perfis são rótulos derivados das combinações das claims; não s
 - Security Rules protegem operações diretas no Firestore. Um backend futuro deverá validar explicitamente as mesmas permissões antes de executar operações administrativas com Firebase Admin SDK, pois Admin SDK não é limitado pelas Firestore Security Rules.
 - O Firebase ID Token e suas claims são avaliados pelas regras do servidor; estado de interface, guards e dados manipuláveis pelo cliente não são fonte confiável para autorização.
 
-## Testes futuros
+## Testes automatizados
 
-As permissões deverão ser cobertas por testes usando `@firebase/rules-unit-testing` e Firebase Emulator Suite, incluindo combinações de claims, operações próprias e sobre terceiros, tentativas de alterar `email`, campos não permitidos e operações negadas. A infraestrutura executa somente o Firestore Emulator, usa um project ID `demo-*` e simula os contextos autenticados pela biblioteca; os cenários permanecem pendentes. Use `npm run test:firestore-rules` para executar a suíte e `npm run type-check:firestore-tests` para verificar seus tipos. Na validação atual, o smoke check não inicializou porque o Emulator rejeitou `rules_version = '3'` presente em `firestore.rules` (`Unsupported rules version 3`).
+A suíte em `tests/firestore/` contém 18 testes em sete arquivos: autenticação (2), permissões comum (3), editor (3), excluidor (2), administrador (2), validação de perfil (5) e smoke test da infraestrutura (1). Ela cobre leituras pontuais, consultas/listagem, criação, atualização, exclusão, claims independentes, campos e tipos permitidos, formatos de `birthDate` e `state`, e-mail imutável e operações negadas. Consultas são testadas como consultas Firestore reais, sem pressupor filtragem pelas Rules.
+
+Execute com `npm run test:firestore-rules` e verifique os tipos com `npm run type-check:firestore-tests`. A suíte inicia exclusivamente o Firestore Emulator, usa `demo-firebase-starter-rules`, carrega `firestore.rules` local e cria contextos de autenticação simulados sem iniciar o Auth Emulator, fazer deploy ou acessar projeto real. Na validação de 12/11/2026, os 18 testes e o type-check passaram.
+
+**Divergências e limites observados:** as regras atuais não impõem limite de 254 caracteres ao e-mail nem limites máximos de tamanho aos campos opcionais; um teste comprova que e-mail acima de 254 caracteres é aceito quando corresponde ao token. Também não há limite de tamanho definido para `gender` ou `photoURL`. Os testes registram o comportamento vigente, sem criar validações novas. A regex de `birthDate` verifica somente `AAAA-MM-DD`, portanto uma data impossível no calendário é aceita. Essas limitações permanecem para avaliação e não foram corrigidas nesta etapa.
 
 ## Decisão arquitetural
 

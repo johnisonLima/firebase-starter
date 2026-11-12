@@ -460,11 +460,12 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 
 ### FIX-021 — Revisar as Firestore Security Rules (em andamento)
 
-- **Andamento documental:** contrato proposto do perfil `users/{uid}` e matriz de autorização com as Custom Claims `canEditAllProfiles` e `canDeleteAllProfiles` formalizados em [`docs/data/user-profile.md`](../data/user-profile.md) e [`docs/security/firestore-authorization.md`](../security/firestore-authorization.md).
-- **Andamento arquitetural:** política de autorização registrada na [ADR-030 — Autorização de perfis por Custom Claims do Firebase Authentication](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md).
-- **Concluído nesta etapa:** reorganizar os testes por ferramenta; preparar configuração independente de Vitest, `@firebase/rules-unit-testing` e Firestore Emulator com project ID `demo-*`; criar utilitários iniciais e comandos separados de execução e type-check. Esta etapa não implementa cenários nem altera as regras.
-- **Pendente:** implementar e revisar as Firestore Security Rules; adicionar e executar cenários de autorização e validação no Firestore Emulator; confirmar o estado remoto necessário sem alterar recursos Firebase sem autorização.
-- **Status:** FIX-021 permanece aberta. A formalização documental não representa implementação, publicação nem validação das regras.
+- **Andamento documental e arquitetural:** contrato de `users/{uid}`, matriz de autorização pelas Custom Claims `canEditAllProfiles` e `canDeleteAllProfiles` e política formalizados em [`docs/data/user-profile.md`](../data/user-profile.md), [`docs/security/firestore-authorization.md`](../security/firestore-authorization.md) e [ADR-030](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md).
+- **Implementado nesta etapa:** 18 testes em `tests/firestore/`, organizados por autenticação, perfil e validação, aproveitando o utilitário de inicialização existente. Há cobertura para usuários não autenticados/não verificados, comum, editor, excluidor e administrador; operações get/list/create/update/delete; campos permitidos, formatos e dados inválidos.
+- **Validação de 12/11/2026:** `npm run type-check:firestore-tests` passou; `npm run test:firestore-rules` passou com 7 arquivos e 18 testes; `git diff --check` registrado na conclusão da etapa. A suíte iniciou apenas o Firestore Emulator com project ID `demo-firebase-starter-rules`; não acessou nem alterou Firebase remoto.
+- **Divergência documentada:** `firestore.rules` não contém limites máximos de tamanho dos campos nem o limite de 254 caracteres de e-mail; o teste demonstra que e-mail maior é aceito se coincidir com o token. Sem alterar regras nem documentação funcional de autorização, os testes caracterizam esse comportamento vigente. `birthDate` valida formato, não calendário.
+- **Pendente:** revisar e decidir sobre as validações de tamanho ausentes; revisão final e eventual auditoria das regras; confirmar o estado remoto necessário sem alterar recursos Firebase sem autorização. Esta etapa não publicou regras.
+- **Status:** FIX-021 permanece aberta até a avaliação das divergências e conclusão da revisão/publicação previstas no escopo maior.
 - **Relação com requisitos:** RNF-042.
 
 ## 5. Dependências identificadas no levantamento original (histórico)
