@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   verify:
-    name: Build, Unit and Type-check
+    name: Build, Unit, Firestore Rules and Type-check
     runs-on: ubuntu-latest
     outputs:
       e2e_enabled: ${{ steps.e2e_secrets.outputs.enabled }}
@@ -33,7 +33,7 @@ jobs:
             echo "enabled=false" >> "$GITHUB_OUTPUT"
             echo "::warning title=E2E ignorado::Os secrets E2E_USER_EMAIL e E2E_USER_PASSWORD não estão disponíveis. A suíte E2E não será executada."
             echo "### E2E ignorado" >> "$GITHUB_STEP_SUMMARY"
-            echo "Os secrets \`E2E_USER_EMAIL\` e \`E2E_USER_PASSWORD\` não estão disponíveis neste contexto (por exemplo, Pull Request de fork). A suíte E2E não foi executada; build, testes unitários e type-check foram executados." >> "$GITHUB_STEP_SUMMARY"
+            echo "Os secrets \`E2E_USER_EMAIL\` e \`E2E_USER_PASSWORD\` não estão disponíveis neste contexto (por exemplo, Pull Request de fork). A suíte E2E não foi executada; build, testes unitários, testes das Firestore Rules e type-checks foram executados." >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Checkout repository
@@ -47,6 +47,18 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Setup Java for Firestore Emulator
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Type-check Firestore tests
+        run: npm run type-check:firestore-tests
+
+      - name: Run Firestore Security Rules tests
+        run: npm run test:firestore-rules
 
       - name: Build production
         run: npm run build

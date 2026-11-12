@@ -235,13 +235,18 @@ O workflow está em `.github/workflows/ci.yml` e é acionado por `push` e `pull_
 
 **`verify`** — sempre executa:
 
-1. verificação de disponibilidade dos secrets;
+1. verificação de disponibilidade dos secrets E2E;
 2. checkout;
 3. Node.js 22 com cache npm;
-4. `npm ci`;
-5. `npm run build`;
-6. `npm run test:unit`;
-7. `npm run type-check:playwright`.
+4. `npm ci` (inclui `firebase-tools` 15.35.0 como dependência local);
+5. Configuração do Java 21 (Temurin) para o Firestore Emulator;
+6. `npm run type-check:firestore-tests`;
+7. `npm run test:firestore-rules`;
+8. `npm run build`;
+9. `npm run test:unit`;
+10. `npm run type-check:playwright`.
+
+Os testes das regras iniciam somente o Firestore Emulator usando `demo-firebase-starter-rules`; não recebem os secrets E2E nem acessam projetos Firebase reais. O Vitest usa `vitest.firestore.config.ts` e inclui apenas `tests/firestore/**/*.spec.ts`, separado da raiz Playwright `tests/playwright/`.
 
 **`e2e`** — depende de `verify` e só executa quando os secrets estão disponíveis:
 

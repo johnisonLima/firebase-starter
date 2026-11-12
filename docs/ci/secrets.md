@@ -6,7 +6,7 @@ Os valores dos secrets nunca devem ser armazenados neste documento, enviados ao 
 
 ## 1. Visão geral
 
-O pipeline de CI utiliza GitHub Actions para executar o build da aplicação, os testes unitários, o type-check dos testes Playwright e os testes end-to-end (E2E).
+O pipeline de CI utiliza GitHub Actions para executar o build da aplicação, os testes unitários, o type-check dos testes Playwright, os testes das Firestore Security Rules no Emulator e os testes end-to-end (E2E). Os testes Firestore usam o project ID demo `demo-firebase-starter-rules`, não usam secrets E2E e não acessam projeto Firebase real.
 
 Alguns cenários E2E exigem autenticação com uma conta de teste dedicada. As credenciais correspondentes são armazenadas como secrets do GitHub Actions.
 
@@ -54,7 +54,7 @@ Quando `E2E_USER_EMAIL` ou `E2E_USER_PASSWORD` não estão disponíveis, o workf
 
 - emite um warning;
 - registra no `$GITHUB_STEP_SUMMARY` que a suíte E2E foi ignorada;
-- mantém a execução de build, testes unitários e type-check;
+- mantém a execução de build, testes unitários, testes Firestore e type-checks;
 - marca o job `e2e` como `skipped`.
 
 Esse é o comportamento esperado em Pull Requests de fork e de Dependabot, que não recebem secrets do repositório. O workflow não utiliza `pull_request_target`.
