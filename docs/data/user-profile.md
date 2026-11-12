@@ -2,7 +2,7 @@
 
 ## Estado
 
-Esta especificação formaliza o contrato proposto para o perfil de usuário no escopo da FIX-021. Ela orienta uma implementação futura; não afirma que o modelo já esteja implementado no frontend, no Firestore ou em Security Rules.
+Esta especificação registra o contrato de dados do perfil no escopo da FIX-021. As Firestore Security Rules locais validam os limites e formatos documentados; isso não implica que o modelo esteja integralmente implementado no frontend.
 
 ## Identidade e localização
 
@@ -30,19 +30,19 @@ Esta especificação formaliza o contrato proposto para o perfil de usuário no 
 
 ## Atributos
 
-| Campo | Tipo | Obrigatório | Descrição |
-| --- | --- | --- | --- |
-| `name` | `string` | Sim | Nome do usuário. |
-| `email` | `string` | Sim | Cópia sincronizada do e-mail oficial mantido pelo Firebase Authentication. |
-| `phone` | `string` | Não | Telefone com DDD. |
-| `birthDate` | `string` | Não | Data no formato `YYYY-MM-DD`. |
-| `gender` | `string \| null` | Não | Enumeração ainda pendente de definição. Não há valores permitidos definidos nesta especificação. |
-| `neighborhood` | `string` | Não | Bairro. |
-| `city` | `string` | Não | Cidade. |
-| `state` | `string` | Não | Unidade federativa brasileira. |
-| `photoURL` | `string \| null` | Não | URL da foto, reservada para futura integração com Firebase Storage. |
+| Campo | Tipo | Obrigatório no modelo | Limite | Validação |
+| --- | --- | --- | ---: | --- |
+| `name` | `string` | Sim no modelo | 120 caracteres | Texto; campo opcional no documento de acordo com as regras atuais. |
+| `email` | `string` | Sim | 254 caracteres | Deve corresponder ao e-mail do token na criação; imutável em atualizações comuns. |
+| `phone` | `string` | Não | 20 caracteres | Texto; não exige formato E.164. |
+| `birthDate` | `string` | Não | 10 caracteres | Data existente no calendário gregoriano, no formato `YYYY-MM-DD`. |
+| `gender` | `string \| null` | Não | 40 caracteres | Sem enumeração; `null` é permitido. |
+| `neighborhood` | `string` | Não | 100 caracteres | Texto. |
+| `city` | `string` | Não | 100 caracteres | Texto. |
+| `state` | `string` | Não | 2 caracteres | Duas letras maiúsculas (`A`–`Z`). |
+| `photoURL` | `string \| null` | Não | 2048 caracteres | Texto sem validação de URL; `null` é permitido. |
 
-Campos ausentes são permitidos somente para os atributos opcionais. Campos fora deste contrato deverão ser rejeitados pelas futuras Firestore Security Rules.
+Campos opcionais podem ser omitidos. Campos fora deste contrato são rejeitados pelas Firestore Security Rules. Os limites são contados em caracteres pela função `String.size()` das Rules.
 
 ## Regras de negócio
 
@@ -56,17 +56,19 @@ Campos ausentes são permitidos somente para os atributos opcionais. Campos fora
 8. Excluir o documento do perfil não exclui a conta no Firebase Authentication.
 9. `photoURL` fica reservado para possível integração futura com Firebase Storage; essa integração não faz parte do escopo implementado.
 10. A enumeração de `gender` permanece pendente; nenhum conjunto de valores é presumido.
+11. As Rules verificam os limites de caracteres em criações e atualizações permitidas. A criação inicial aceita somente `email`.
+12. `birthDate` deve ser uma data existente no calendário gregoriano, entre `0001-01-01` e `9999-12-31`, sem restrições de idade ou data futura.
 
 ## Relação com a implementação atual
 
-O modelo TypeScript atual `User` contém somente `email`, e `Entity` define `id`. A implementação futura deverá alinhar esses tipos a este contrato sem persistir um campo `id` duplicado. A configuração e os repositórios existentes não implementam, por si só, as regras de UID, validação de campos ou sincronização descritas aqui.
+O modelo TypeScript atual `User` contém somente `email`, e `Entity` define `id`. A implementação futura deverá alinhar esses tipos a este contrato sem persistir um campo `id` duplicado. As regras locais em `firestore.rules` aplicam a associação por UID e as validações de tamanho e calendário; isso não implementa por si só a sincronização de e-mail descrita aqui.
 
 ## Pendências
 
 - Definir e registrar os valores permitidos para `gender`, se o campo for mantido.
-- Definir validações de formato e limites para os campos antes de escrever as regras.
+- Alinhar o modelo TypeScript e validações de formulário ao contrato quando a funcionalidade de perfil correspondente for implementada.
 - Definir o mecanismo confiável de sincronização do e-mail no backend.
-- Implementar o modelo, o comportamento de persistência e as Security Rules em etapas próprias.
+- Alinhar o modelo e o comportamento de persistência no frontend em etapas próprias.
 
 A política de autorização associada ao perfil está formalizada na [ADR-030](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md) e na [matriz de autorização do Firestore](../security/firestore-authorization.md).
 

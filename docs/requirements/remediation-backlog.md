@@ -461,11 +461,12 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 ### FIX-021 — Revisar as Firestore Security Rules (em andamento)
 
 - **Andamento documental e arquitetural:** contrato de `users/{uid}`, matriz de autorização pelas Custom Claims `canEditAllProfiles` e `canDeleteAllProfiles` e política formalizados em [`docs/data/user-profile.md`](../data/user-profile.md), [`docs/security/firestore-authorization.md`](../security/firestore-authorization.md) e [ADR-030](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md).
-- **Implementado nesta etapa:** 18 testes em `tests/firestore/`, organizados por autenticação, perfil e validação, aproveitando o utilitário de inicialização existente. Há cobertura para usuários não autenticados/não verificados, comum, editor, excluidor e administrador; operações get/list/create/update/delete; campos permitidos, formatos e dados inválidos.
-- **Validação de 12/11/2026:** `npm run type-check:firestore-tests` passou; `npm run test:firestore-rules` passou com 7 arquivos e 18 testes; `git diff --check` registrado na conclusão da etapa. A suíte iniciou apenas o Firestore Emulator com project ID `demo-firebase-starter-rules`; não acessou nem alterou Firebase remoto.
-- **Divergência documentada:** `firestore.rules` não contém limites máximos de tamanho dos campos nem o limite de 254 caracteres de e-mail; o teste demonstra que e-mail maior é aceito se coincidir com o token. Sem alterar regras nem documentação funcional de autorização, os testes caracterizam esse comportamento vigente. `birthDate` valida formato, não calendário.
-- **Pendente:** revisar e decidir sobre as validações de tamanho ausentes; revisão final e eventual auditoria das regras; confirmar o estado remoto necessário sem alterar recursos Firebase sem autorização. Esta etapa não publicou regras.
-- **Status:** FIX-021 permanece aberta até a avaliação das divergências e conclusão da revisão/publicação previstas no escopo maior.
+- **Implementado:** 35 testes em sete arquivos, incluindo cenários anteriores de autorização e testes de limites de campos e datas do calendário gregoriano. As regras locais aplicam os limites aprovados sem alterar a matriz de acesso.
+- **Limites aplicados:** email 254, name 120, phone 20, birthDate 10, gender 40, neighborhood 100, city 100, state 2 e photoURL 2048 caracteres. Criação inicial permanece restrita a somente email; campos opcionais seguem opcionais.
+- **Validação:** `npm run type-check:firestore-tests` passou e `npm run test:firestore-rules` passou com 7 arquivos e 35 testes no Firestore Emulator, projeto `demo-firebase-starter-rules`. `git diff --check` executado. Não houve deploy nem acesso ao Firebase remoto.
+- **Calendário:** a validação RE2 cobre dias e meses válidos e anos bissextos, incluindo exceções dos séculos divisíveis por 100 e 400. Não há validação de idade ou data futura.
+- **Pendente:** revisão final e eventual auditoria das regras; confirmar o estado remoto necessário sem alterar recursos Firebase sem autorização. Esta etapa não publicou regras.
+- **Status:** FIX-021 permanece aberta até a conclusão da revisão/publicação previstas no escopo maior.
 - **Relação com requisitos:** RNF-042.
 
 ## 5. Dependências identificadas no levantamento original (histórico)

@@ -35,6 +35,11 @@ service cloud.firestore {
 
     // Profile validation
 
+    function isValidBirthDate(value) {
+      return value.matches('^([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]|[0-9][1-9][0-9]{2}|[1-9][0-9]{3})-((01|03|05|07|08|10|12)-(0[1-9]|[12][0-9]|3[01])|(04|06|09|11)-(0[1-9]|[12][0-9]|30)|02-(0[1-9]|1[0-9]|2[0-8]))$')
+        || value.matches('^([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29$');
+    }
+
     function hasValidProfileFields(data) {
       return data.keys().hasAll(['email'])
         && data.keys().hasOnly([
@@ -49,34 +54,37 @@ service cloud.firestore {
           'photoURL'
         ])
         && data.email is string
+        && data.email.size() <= 254
 
-        && (!('name' in data) || data.name is string)
-        && (!('phone' in data) || data.phone is string)
+        && (!('name' in data) || (data.name is string && data.name.size() <= 120))
+        && (!('phone' in data) || (data.phone is string && data.phone.size() <= 20))
         && (
           !('birthDate' in data)
           || (
             data.birthDate is string
-            && data.birthDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+            && data.birthDate.size() <= 10
+            && isValidBirthDate(data.birthDate)
           )
         )
         && (
           !('gender' in data)
           || data.gender == null
-          || data.gender is string
+          || (data.gender is string && data.gender.size() <= 40)
         )
-        && (!('neighborhood' in data) || data.neighborhood is string)
-        && (!('city' in data) || data.city is string)
+        && (!('neighborhood' in data) || (data.neighborhood is string && data.neighborhood.size() <= 100))
+        && (!('city' in data) || (data.city is string && data.city.size() <= 100))
         && (
           !('state' in data)
           || (
             data.state is string
+            && data.state.size() <= 2
             && data.state.matches('^[A-Z]{2}$')
           )
         )
         && (
           !('photoURL' in data)
           || data.photoURL == null
-          || data.photoURL is string
+          || (data.photoURL is string && data.photoURL.size() <= 2048)
         );
     }
 
@@ -101,7 +109,8 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['email'])
         && request.resource.data.keys().hasAll(['email'])
         && request.resource.data.email == request.auth.token.email
-        && request.resource.data.email is string;
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 254;
 
       // Update own profile or another profile as editor.
       allow update: if isEmailVerified()

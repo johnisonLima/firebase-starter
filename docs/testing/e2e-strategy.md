@@ -328,7 +328,7 @@ npm run test:firestore-rules
 npm run type-check:firestore-tests
 ```
 
-A suíte tem 18 testes distribuídos em sete arquivos; em 12/11/2026 passaram a suíte e o type-check. Ela cobre autenticação, combinações de claims, operações e validação dos documentos, usando somente o Emulator demo. A cobertura, comandos e limites identificados estão registrados em [`firestore-authorization.md`](../security/firestore-authorization.md); acompanhe o andamento na FIX-021 em `docs/requirements/remediation-backlog.md`.
+A suíte tem 35 testes distribuídos em sete arquivos; a suíte e o type-check passaram na validação desta atualização. Ela cobre autenticação, combinações de claims, operações e validação dos documentos, usando somente o Emulator demo. A cobertura, comandos e limites identificados estão registrados em [`firestore-authorization.md`](../security/firestore-authorization.md); acompanhe o andamento na FIX-021 em `docs/requirements/remediation-backlog.md`.
 
 ## Referências
 
