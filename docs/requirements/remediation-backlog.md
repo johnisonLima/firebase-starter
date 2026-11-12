@@ -19,7 +19,7 @@ O levantamento original considerou o código e os testes então existentes, as S
 
 O levantamento original registrou **20 itens**: 4 de implementação parcial, 4 de inconsistência documental, 3 limitações técnicas/comportamentais e 9 confirmações ou definições. Esses quantitativos são a baseline histórica, não o estado atual das correções.
 
-> **Situação atual:** as FIX-001 a FIX-020 foram individualmente encerradas, concluídas ou encerradas com uma decisão/limitação aceita, conforme seus checklists. As FIX-022, FIX-023 e FIX-024, registradas posteriormente à baseline, também estão concluídas. Os problemas e ações abaixo preservam o registro do levantamento original; os resultados atuais aparecem no campo “Encerramento” de cada FIX. Algumas decisões encerradas mantêm trabalho futuro válido, identificado separadamente como planejamento ou definição pendente.
+> **Situação atual:** as FIX-001 a FIX-021 e FIX-022 a FIX-024 estão concluídas no escopo registrado. As FIX-025 (integração do perfil Angular) e FIX-026 (investigação E2E) estão abertas e documentadas abaixo. O trabalho local de regras da FIX-021 está encerrado; publicação/verificação no Firebase remoto não ocorreu e depende de autorização específica. Os itens históricos preservam a baseline e suas pendências futuras aparecem separadamente.
 
 | Categoria | P0 | P1 | P2 | P3 | Total |
 |---|---:|---:|---:|---:|---:|
@@ -31,7 +31,7 @@ O levantamento original registrou **20 itens**: 4 de implementação parcial, 4 
 
 ### 3.1 Situação consolidada
 
-As **20 FIXs da baseline estão encerradas**. As **FIX-022, FIX-023 e FIX-024**, incluídas posteriormente, também estão concluídas. “Encerrada” descreve a conclusão da correção, confirmação ou decisão documentada; não significa que todo trabalho de produto ou planejamento relacionado esteja implementado.
+As **20 FIXs da baseline estão encerradas**. A FIX-021 e as FIX-022, FIX-023 e FIX-024, registradas posteriormente, também estão concluídas no escopo próprio. “Encerrada” descreve a conclusão da correção, confirmação ou decisão documentada; não significa que todo trabalho de produto, integração ou publicação remota relacionada esteja implementado.
 
 | Grupo da baseline | FIXs | Situação atual |
 |---|---|---|
@@ -41,21 +41,24 @@ As **20 FIXs da baseline estão encerradas**. As **FIX-022, FIX-023 e FIX-024**,
 | D. Confirmação e definição | FIX-012 a FIX-020 | Encerradas por confirmação externa, decisão de escopo/documentação ou ampliação de cobertura E2E. |
 | **Total** | **FIX-001 a FIX-020** | **20 encerradas; pendências futuras relacionadas permanecem discriminadas abaixo.** |
 
-Permanecem como trabalho futuro ou definição de escopo, não como FIXs abertas: finalidade do dashboard (RF-070), melhorias genéricas sem critérios de aceite, avaliação WCAG 2.2 AA proposta para Sprint 11, critérios/checklist/verificação pós-publicação da Sprint 10, e regras definitivas do Firestore sob responsabilidade da FIX-021. A futura API também deverá validar tokens com Firebase Admin SDK.
+Permanecem como trabalho futuro ou definição de escopo, não como FIXs abertas: finalidade do dashboard (RF-070), melhorias genéricas sem critérios de aceite, avaliação WCAG 2.2 AA proposta para Sprint 11, checklist e verificação pós-publicação da Sprint 10, além da publicação/verificação das regras locais no Firebase remoto, sujeita a autorização específica. A futura API também deverá validar tokens com Firebase Admin SDK. A integração Angular do perfil e a investigação das falhas E2E estão rastreadas nas FIX-025 e FIX-026.
 
 ### 3.2 FIXs posteriores à baseline
 
 | FIX | Categoria | Situação |
 |---|---|---|
+| FIX-021 | A. Implementação parcial | Concluída tecnicamente em 12/11/2026: regras locais auditadas, 35 testes e type-check aprovados; publicação remota não realizada. |
 | FIX-022 | A. Implementação parcial | Concluída em 10/11/2026. |
 | FIX-023 | D. Definição de comportamento | Concluída em 10/11/2026. |
 | FIX-024 | A. Implementação parcial | Concluída em 10/11/2026. |
+| FIX-025 | A. Implementação parcial | Aberta; ciclo de vida do perfil Angular ainda não implementado. |
+| FIX-026 | A. Implementação parcial | Aberta; investigação/correção E2E ainda não iniciada. |
 
-As FIX-022, FIX-023 e FIX-024 não integram os quantitativos históricos da tabela da seção 3.1. A FIX-022 foi registrada após a análise documental dos validadores de CPF, CNPJ e CPF ou CNPJ; a FIX-023 formalizou a política de controles desabilitados nos validadores compartilhados; a FIX-024 alinhou o `equalsToValidator` a essa política. Todas estão detalhadas na seção 4.
+As FIX-021 a FIX-026 não integram os quantitativos históricos da tabela da seção 3.1. A FIX-021 concluiu Rules e testes locais; a FIX-022 tratou validadores documentais, a FIX-023 formalizou a política de controles desabilitados, a FIX-024 alinhou o `equalsToValidator`, e as FIX-025/026 mantêm pendentes a integração do perfil e a investigação E2E. Os detalhes da FIX-021 e das novas FIXs 025/026 estão na seção 4.
 
-## 4. Histórico e encerramento das FIX-001 a FIX-020, da FIX-022, da FIX-023 e da FIX-024
+## 4. Histórico e status das FIX-001 a FIX-026
 
-As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção reproduzem o levantamento original. A FIX-022 foi registrada posteriormente à baseline, a partir da análise documental e da correção dos validadores documentais; a FIX-023 formalizou a política de controles desabilitados nos validadores compartilhados; a FIX-024 alinhou o `equalsToValidator` a essa política. Nenhum registro histórico anterior foi alterado. Os itens não representam, por si só, tarefas ainda abertas. Cada item registra abaixo seu encerramento e as pendências futuras que permaneceram válidas.
+As categorias e descrições das FIX-001 a FIX-020 preservam o levantamento original. As FIX-021 a FIX-024 foram concluídas em etapas posteriores; as FIX-025 e FIX-026 estão abertas. Nenhum registro histórico anterior foi removido. Cada item registra seu encerramento ou status e as pendências futuras relacionadas.
 
 ### A. Implementação parcial
 
@@ -133,7 +136,7 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 
 ##### FIX-005 — Alinhar o estado do projeto sobre CRUD no Playground
 
-- **Encerramento:** concluída em 06/11/2026. `docs/project-status.md` descreve o `FirestoreTest` integrado à rota protegida do Playground e a coleção `playground_users`, diferenciando uso de desenvolvimento da validação definitiva das Security Rules. A FIX-021 permanece responsável por estas regras.
+- **Encerramento:** concluída em 06/11/2026. `docs/project-status.md` descreve o `FirestoreTest` integrado à rota protegida do Playground e a coleção `playground_users`, diferenciando uso de desenvolvimento das regras locais de `users/{uid}`. A FIX-021 concluiu as regras locais; `playground_users` permanece fora desse escopo.
 
 - **Categoria:** B. Documentação e implementação
 - **Requisito relacionado:** RF-037
@@ -267,7 +270,7 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 
 ##### FIX-013 — Confirmar estado de regras e serviços Firebase antes da publicação
 
-- **Encerramento:** concluída como levantamento externo histórico. Authentication e Firestore estavam ativos, proteção contra enumeração habilitada, Storage e Hosting não habilitados; as regras eram mantidas no Firebase Console. A regra temporária verificada então expirava em 05/11/2026; sua vigência posterior não foi reconfirmada. A FIX-021 permanece responsável pelas regras definitivas. Nenhum recurso remoto foi alterado nessa confirmação.
+- **Encerramento:** concluída como levantamento externo histórico. Authentication e Firestore estavam ativos, proteção contra enumeração habilitada, Storage e Hosting não habilitados; as regras eram mantidas no Firebase Console. A regra temporária verificada então expirava em 05/11/2026; sua vigência posterior não foi reconfirmada. A FIX-021 concluiu as regras locais, mas não publicou nem reconfirmou o estado remoto. Nenhum recurso remoto foi alterado nessa confirmação.
 
 - **Categoria:** D. Confirmação externa
 - **Requisito relacionado:** RNF-042, RF-064, RF-068
@@ -359,18 +362,18 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 
 ##### FIX-019 — Confirmar checklist e critérios da publicação planejada
 
-- **Encerramento:** concluída como registro da necessidade de planejamento. O bloco desta FIX registra critérios verificáveis, checklist e verificação pós-publicação como trabalho futuro, preserva FIX-013 como evidência histórica e mantém FIX-021 responsável pelas regras definitivas. A expiração em 05/11/2026 não foi reconfirmada depois da data.
+- **Encerramento:** concluída como registro da necessidade de planejamento. O bloco desta FIX registra critérios verificáveis, checklist e verificação pós-publicação como trabalho futuro, preserva FIX-013 como evidência histórica; as regras locais foram concluídas na FIX-021 e sua publicação remota depende de autorização específica. A expiração em 05/11/2026 não foi reconfirmada depois da data.
 
 - **Categoria:** D. Confirmação de planejamento
 - **Requisito relacionado:** RNF-043, RF-068, RF-069
 - **Problema:** a Sprint 10 planeja preparação, Hosting, regras, deploy e checklist, mas não define critérios de conclusão próprios nem o conteúdo verificável do checklist. O build de produção já é gerado e verificado pela CI, o que não comprova preparação/publicação completa. A confirmação externa da FIX-013 esclareceu o estado dos serviços Firebase, mas não definiu o processo de publicação nem os critérios de conclusão da Sprint 10.
-- **Evidência:** `docs/sprints/sprint-planning.md` (Sprint 10); `angular.json`; `.github/workflows/ci.yml`; ausência de `firebase.json`, `.firebaserc` e regras versionadas no repositório; confirmação externa da FIX-013 (concluída), que registrou Firebase Authentication ativo e verificado no Console, proteção contra enumeração de e-mails habilitada, Cloud Firestore ativo com regras verificadas diretamente no Console, regra temporária com expiração em 05/11/2026, regras mantidas no Console, Cloud Storage e Firebase Hosting ainda não habilitados e confirmação realizada sem alterações remotas. Essas informações refletem o estado verificado na ocasião da FIX-013; o estado atual da regra temporária após 05/11/2026 não foi reconfirmado nesta etapa.
+- **Evidência:** `docs/sprints/sprint-planning.md` (Sprint 10); `angular.json`; `.github/workflows/ci.yml`; à época da FIX-019, ausência de `firebase.json`, `.firebaserc` e regras versionadas no repositório (situação posteriormente alterada pela FIX-021); confirmação externa da FIX-013 (concluída), que registrou Firebase Authentication ativo e verificado no Console, proteção contra enumeração de e-mails habilitada, Cloud Firestore ativo com regras verificadas diretamente no Console, regra temporária com expiração em 05/11/2026, regras mantidas no Console, Cloud Storage e Firebase Hosting ainda não habilitados e confirmação realizada sem alterações remotas. Essas informações refletem o estado verificado na ocasião da FIX-013; o estado atual da regra temporária após 05/11/2026 não foi reconfirmado nesta etapa.
 - **Impacto:** não se pode afirmar que publicação ou checklist estejam concluídos; sem critérios delimitados, a Sprint 10 pode ser encerrada sem evidência verificável de preparação, configuração, deploy e verificação pós-publicação.
 - **Prioridade:** P2 — item de sprint futura, requer definição antes de sua execução.
-- **Ação recomendada:** ao planejar a Sprint 10, definir o escopo e os critérios de conclusão de cada etapa — preparação para publicação, configuração do Firebase Hosting, entrega de regras conforme a FIX-021, execução do deploy e verificação pós-publicação —, além do conteúdo, responsável e aprovação do checklist. Usar os resultados da FIX-013 como baseline do estado dos serviços, sem repetir a confirmação externa. Referenciar a FIX-021 para as regras definitivas do Firestore, sem antecipar decisões. Não duplicar verificações já cobertas pela CI ou pela Sprint 11.
+- **Ação recomendada:** ao planejar a Sprint 10, definir o escopo e os critérios de conclusão de cada etapa — preparação para publicação, configuração do Firebase Hosting, eventual publicação/verificação remota das regras locais concluídas na FIX-021 (mediante autorização específica), execução do deploy e verificação pós-publicação —, além do conteúdo, responsável e aprovação do checklist. Usar os resultados da FIX-013 como baseline do estado dos serviços, sem repetir a confirmação externa. Referenciar a FIX-021 para as regras definitivas do Firestore, sem antecipar decisões. Não duplicar verificações já cobertas pela CI ou pela Sprint 11.
 - **Arquivos envolvidos:** planejamento da Sprint 10, futura configuração de Hosting (`firebase.json`/`.firebaserc`), checklist de publicação e documentação de verificação pós-publicação.
 - **Critério de conclusão:** escopo e critérios de conclusão da Sprint 10 definidos e aprovados, distinguindo preparação para publicação, configuração do Hosting, entrega de regras conforme a FIX-021, execução do deploy e verificação pós-publicação; checklist documentado, aprovado e com execução registrada separadamente; resultados da FIX-013 registrados como evidência de base; dependência da FIX-021 para as regras definitivas explicitada, sem antecipação de decisões; verificações já cobertas pela CI e pela Sprint 11 referenciadas sem duplicação.
-- **Dependências/decisões:** FIX-013 concluída; seus resultados são evidência disponível e não constituem dependência pendente. FIX-021 permanece responsável pela definição das regras definitivas do Firestore. A configuração de Hosting e Storage segue o planejamento das Sprints 10 e 9, respectivamente. O escopo, a aprovação do checklist e os critérios de cada etapa dependem de decisão do responsável.
+- **Dependências/decisões:** FIX-013 concluída; seus resultados são evidência disponível e não constituem dependência pendente. FIX-021 concluiu a implementação e revisão local das regras; publicação/verificação remota requer autorização específica. A configuração de Hosting e Storage segue o planejamento das Sprints 10 e 9, respectivamente. O escopo, a aprovação do checklist e os critérios de cada etapa dependem de decisão do responsável.
 
 ##### FIX-020 — Confirmar a cobertura E2E desejada para autenticação
 
@@ -458,16 +461,28 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 
 - **Relação com a FIX-024:** a pendência foi concluída em 10/11/2026, com o alinhamento do `equalsToValidator` à política formalizada nesta FIX, incluindo o estado desabilitado do controle comparado e os testes correspondentes. O registro da correção está na FIX-024.
 
-### FIX-021 — Revisar as Firestore Security Rules (em andamento)
+### FIX-021 — Implementar e revisar as Firestore Security Rules (concluída tecnicamente)
 
-- **Andamento documental e arquitetural:** contrato de `users/{uid}`, matriz de autorização pelas Custom Claims `canEditAllProfiles` e `canDeleteAllProfiles` e política formalizados em [`docs/data/user-profile.md`](../data/user-profile.md), [`docs/security/firestore-authorization.md`](../security/firestore-authorization.md) e [ADR-030](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md).
-- **Implementado:** 35 testes em sete arquivos, incluindo cenários anteriores de autorização e testes de limites de campos e datas do calendário gregoriano. As regras locais aplicam os limites aprovados sem alterar a matriz de acesso.
-- **Limites aplicados:** email 254, name 120, phone 20, birthDate 10, gender 40, neighborhood 100, city 100, state 2 e photoURL 2048 caracteres. Criação inicial permanece restrita a somente email; campos opcionais seguem opcionais.
-- **Validação:** `npm run type-check:firestore-tests` passou e `npm run test:firestore-rules` passou com 7 arquivos e 35 testes no Firestore Emulator, projeto `demo-firebase-starter-rules`. `git diff --check` executado. Não houve deploy nem acesso ao Firebase remoto.
-- **Calendário:** a validação RE2 cobre dias e meses válidos e anos bissextos, incluindo exceções dos séculos divisíveis por 100 e 400. Não há validação de idade ou data futura.
-- **Pendente:** revisão final e eventual auditoria das regras; confirmar o estado remoto necessário sem alterar recursos Firebase sem autorização. Esta etapa não publicou regras.
-- **Status:** FIX-021 permanece aberta até a conclusão da revisão/publicação previstas no escopo maior.
+- **Escopo concluído em 12/11/2026:** regras locais de `users/{uid}` implementadas, versionadas e auditadas conforme ADR-030; matriz de autorização preservada.
+- **Validação local:** 35 testes em 7 arquivos passaram no Firestore Emulator `demo-firebase-starter-rules`; `npm run type-check:firestore-tests` e `git diff --check` passaram. Nenhum acesso ao Firebase real ou deploy foi realizado.
+- **Integração CI:** os testes Firestore estão no job `verify`. No run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549), o `verify` foi aprovado, mas aquela execução usou uma revisão anterior às regras/testes locais atuais. A revisão atual ainda precisa de uma execução bem-sucedida no GitHub Actions. O job E2E falhou nesse run e a investigação foi transferida para a FIX-026.
+- **Transferências:** o ciclo de vida do perfil Angular (UID, criação após verificação e idempotência) foi separado na FIX-025. Não faz parte da conclusão local das Security Rules.
+- **Estado remoto:** regras não publicadas nesta FIX; o estado atual do Firebase remoto permanece desconhecido. Publicação/verificação depende de autorização específica e do planejamento de publicação.
+- **Status:** concluída tecnicamente para implementação, testes e auditoria das regras locais; sem declaração de publicação em produção.
 - **Relação com requisitos:** RNF-042.
+
+### FIX-025 — Integração do perfil de usuário com Firebase Authentication e Cloud Firestore (aberta)
+
+- **Objetivo:** implementar o ciclo de vida do perfil, respeitando o contrato de [`docs/data/user-profile.md`](../data/user-profile.md), a matriz de [`docs/security/firestore-authorization.md`](../security/firestore-authorization.md), a [ADR-030](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md) e as regras locais em `firestore.rules`.
+- **Escopo:** usar o UID do Firebase Authentication como ID de `users/{uid}`; corrigir a incompatibilidade do `UserRepository`/`addDoc`; criar somente após verificação de e-mail; persistir inicialmente apenas o e-mail; criar idempotentemente o perfil quando ausente, sem depender exclusivamente do botão “Já verifiquei”; manter Authentication como fonte oficial do e-mail; não implementar alteração de e-mail; excluir somente o documento Firestore, sem excluir a conta Authentication; preservar as Security Rules existentes.
+- **Status:** aberta, especificada; implementação não iniciada nesta etapa.
+
+### FIX-026 — Investigar e corrigir falhas nos testes E2E com Playwright (aberta)
+
+- **Objetivo:** identificar as causas das falhas observadas no GitHub Actions e corrigi-las sem reduzir a cobertura.
+- **Escopo:** reproduzir falhas localmente quando possível; analisar logs/relatórios do Actions; avaliar projetos mock e auth e Chromium, Firefox e WebKit; corrigir causas reais; preservar a separação entre projetos mockados e autenticados e a execução dos mocks sem credenciais reais; validar novamente a suíte completa.
+- **Evidência inicial:** o run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549) teve `verify` aprovado e job E2E com falha. A falha não foi investigada nesta etapa.
+- **Status:** aberta; investigação e implementação não iniciadas nesta etapa.
 
 ## 5. Dependências identificadas no levantamento original (histórico)
 
@@ -480,7 +495,7 @@ As categorias e descrições de problema das FIX-001 a FIX-020 nesta seção rep
 - **FIX-016 → requisitos futuros de listagem/performance/interface:** itens continuam como pendências de escopo, sem serem requisitos aprovados.
 - **FIX-017 → validação de acessibilidade:** definição concluída; avaliação WCAG 2.2 AA continua planejada, sem declaração de conformidade.
 - **FIX-018:** validação histórica da Sprint 3 esclarecida como manual, com `FirestoreTest`; testes automatizados atuais usam mocks.
-- **FIX-021:** permanece responsável pelas regras definitivas do Firestore.
+- **FIX-021:** concluída tecnicamente para regras locais, testes e revisão; estado/publicação remotos não foram verificados e exigem autorização específica.
 
 ## 6. Ordem recomendada no levantamento original (histórico)
 

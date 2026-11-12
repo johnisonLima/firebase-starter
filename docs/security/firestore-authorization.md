@@ -2,7 +2,7 @@
 
 ## Estado
 
-Esta especificação formaliza a matriz da FIX-021. Os cenários automatizados estão em `tests/firestore/` e exercitam as regras locais no Firestore Emulator. As regras aplicam o princípio do menor privilégio definido em [Architecture v1.0](../Architecture-v1.0.md#151-seguranca) e protegem o Firestore independentemente dos guards Angular.
+Esta especificação formaliza a matriz da FIX-021. As regras locais de `users/{uid}` foram implementadas, versionadas e auditadas; não houve publicação ou verificação do projeto Firebase remoto. Os cenários automatizados em `tests/firestore/` exercitam as regras locais no Firestore Emulator. As regras aplicam o princípio do menor privilégio definido em [Architecture v1.0](../Architecture-v1.0.md#151-seguranca) e protegem o Firestore independentemente dos guards Angular.
 
 O contrato de documento de perfil está em [User Profile](../data/user-profile.md).
 
@@ -64,7 +64,7 @@ Os nomes dos perfis são rótulos derivados das combinações das claims; não s
 
 A suíte em `tests/firestore/` contém 35 testes em sete arquivos: autenticação (2), permissões comum (3), editor (3), excluidor (2), administrador (2), validação de perfil (22) e smoke test da infraestrutura (1). Ela cobre leituras pontuais, consultas/listagem, criação, atualização, exclusão, claims independentes, campos e tipos permitidos, limites inclusivos, e-mail imutável e datas do calendário gregoriano. Consultas são testadas como consultas Firestore reais, sem pressupor filtragem pelas Rules.
 
-Execute com `npm run test:firestore-rules` e verifique os tipos com `npm run type-check:firestore-tests`. A suíte inicia exclusivamente o Firestore Emulator, usa `demo-firebase-starter-rules`, carrega `firestore.rules` local e cria contextos de autenticação simulados sem iniciar o Auth Emulator, fazer deploy ou acessar projeto real. Na validação desta atualização, os 35 testes e o type-check passaram no Firestore Emulator.
+Execute com `npm run test:firestore-rules` e verifique os tipos com `npm run type-check:firestore-tests`. A suíte inicia exclusivamente o Firestore Emulator, usa `demo-firebase-starter-rules`, carrega `firestore.rules` local e cria contextos de autenticação simulados sem iniciar o Auth Emulator, fazer deploy ou acessar projeto real. Na validação local de 12/11/2026, os 35 testes e o type-check passaram no Firestore Emulator. O `git diff --check` também passou. No GitHub Actions, o run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549) teve `verify` aprovado, mas usou uma revisão anterior às regras/testes atuais; a revisão atual ainda precisa de execução bem-sucedida. O E2E desse run falhou e será investigado na FIX-026.
 
 **Validação dos campos:** limites inclusivos por documento: `email` 254, `name` 120, `phone` 20, `birthDate` 10, `gender` 40, `neighborhood` 100, `city` 100, `state` 2 e `photoURL` 2048 caracteres. Os limites são aplicados aos documentos resultantes de atualização; criação inicial continua aceitando apenas `email`, que também deve coincidir com o token. `gender` e `photoURL` continuam aceitando `null`; campos opcionais podem ser omitidos.
 
@@ -72,5 +72,5 @@ Execute com `npm run test:firestore-rules` e verifique os tipos com `npm run typ
 
 ## Decisão arquitetural
 
-A adoção das duas Custom Claims independentes, a atribuição confiável e os limites de autorização estão registrados na [ADR-030 — Autorização de perfis por Custom Claims do Firebase Authentication](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md). As regras e os testes estão implementados localmente e validados no Emulator; esta documentação não registra deploy ou alteração do Firebase remoto.
+A adoção das duas Custom Claims independentes, a atribuição confiável e os limites de autorização estão registrados na [ADR-030 — Autorização de perfis por Custom Claims do Firebase Authentication](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md). As regras e os testes estão implementados localmente e validados no Emulator. As regras não foram publicadas no Firebase remoto; o estado remoto não foi confirmado e qualquer publicação depende de autorização específica. A integração Angular do perfil está transferida para a FIX-025.
 

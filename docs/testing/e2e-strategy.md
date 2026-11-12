@@ -276,7 +276,7 @@ O workflow não usa `pull_request_target`.
 - **Completa:** secrets disponíveis, `verify` aprovado e `e2e` executado nos três navegadores.
 - **Parcial:** secrets indisponíveis, `verify` aprovado e `e2e` skipped, com aviso explícito.
 
-A execução normal do workflow no GitHub Actions, com os secrets disponíveis, foi validada com sucesso na FIX-020. As validações locais da Etapa 6 também foram concluídas com sucesso. O comportamento de Pull Requests de fork e de Dependabot sem secrets não foi validado diretamente.
+A execução da FIX-020 é evidência histórica e não valida a revisão atual. No run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549), o job `verify` passou e o job E2E falhou; a investigação foi transferida para a FIX-026. Esse run antecede as regras/testes locais atuais, que ainda precisam de uma execução bem-sucedida no GitHub Actions. O comportamento de Pull Requests de fork e de Dependabot sem secrets não foi validado diretamente.
 
 Antes da implementação complementar da separação de projetos, a suíte local tinha 67 testes aprovados. Após a inclusão dos dois cenários E2E e a execução em três navegadores, `npx playwright test --list` lista 73 execuções, incluindo o teste de setup.
 
@@ -328,7 +328,7 @@ npm run test:firestore-rules
 npm run type-check:firestore-tests
 ```
 
-A suíte tem 35 testes distribuídos em sete arquivos; a suíte e o type-check passaram na validação desta atualização. Ela cobre autenticação, combinações de claims, operações e validação dos documentos, usando somente o Emulator demo. A cobertura, comandos e limites identificados estão registrados em [`firestore-authorization.md`](../security/firestore-authorization.md); acompanhe o andamento na FIX-021 em `docs/requirements/remediation-backlog.md`.
+A suíte tem 35 testes distribuídos em sete arquivos; testes e type-check passaram localmente na FIX-021. Ela cobre autenticação, combinações de claims, operações e validação dos documentos, usando somente o Emulator demo. A cobertura, comandos e limites identificados estão registrados em [`firestore-authorization.md`](../security/firestore-authorization.md); acompanhe o andamento na FIX-021 em `docs/requirements/remediation-backlog.md`.
 
 ## Referências
 

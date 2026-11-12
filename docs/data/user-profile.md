@@ -2,7 +2,7 @@
 
 ## Estado
 
-Esta especificação registra o contrato de dados do perfil no escopo da FIX-021. As Firestore Security Rules locais validam os limites e formatos documentados; isso não implica que o modelo esteja integralmente implementado no frontend.
+Esta especificação registra o contrato de dados do perfil. As Firestore Security Rules locais da FIX-021 validam os limites e formatos documentados; o ciclo de vida do perfil no frontend permanece pendente e está registrado na FIX-025 do [`remediation-backlog.md`](../requirements/remediation-backlog.md).
 
 ## Identidade e localização
 
@@ -68,7 +68,7 @@ O modelo TypeScript atual `User` contém somente `email`, e `Entity` define `id`
 - Definir e registrar os valores permitidos para `gender`, se o campo for mantido.
 - Alinhar o modelo TypeScript e validações de formulário ao contrato quando a funcionalidade de perfil correspondente for implementada.
 - Definir o mecanismo confiável de sincronização do e-mail no backend.
-- Alinhar o modelo e o comportamento de persistência no frontend em etapas próprias.
+- Implementar o ciclo de vida do perfil no frontend conforme a FIX-025, sem alterar as Security Rules concluídas na FIX-021.
 
 A política de autorização associada ao perfil está formalizada na [ADR-030](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md) e na [matriz de autorização do Firestore](../security/firestore-authorization.md).
 
