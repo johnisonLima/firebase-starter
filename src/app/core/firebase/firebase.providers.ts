@@ -1,4 +1,4 @@
-import { isDevMode, Provider } from '@angular/core';
+import { Provider } from '@angular/core';
 
 import { firebaseConfig } from '../config/firebase.config';
 
@@ -6,6 +6,11 @@ import { FirebaseApp, initializeApp } from 'firebase/app';
 import { FIREBASE_APP, FIREBASE_AUTH, FIRESTORE } from './firebase.tokens';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { Auth, browserLocalPersistence, connectAuthEmulator, initializeAuth } from 'firebase/auth';
+
+declare const FIREBASE_USE_EMULATORS: boolean;
+
+const useFirebaseEmulators =
+  typeof FIREBASE_USE_EMULATORS !== 'undefined' && FIREBASE_USE_EMULATORS;
 
 export function provideFirebase(): Provider[] {
   return [
@@ -22,7 +27,7 @@ export function provideFirebase(): Provider[] {
           persistence: browserLocalPersistence,
         });
 
-        if (isDevMode()) {
+        if (useFirebaseEmulators) {
           connectAuthEmulator(auth, 'http://localhost:9099');
         }
 
@@ -37,7 +42,7 @@ export function provideFirebase(): Provider[] {
 
         const firestore = getFirestore(app);
 
-        if (isDevMode()) {
+        if (useFirebaseEmulators) {
           connectFirestoreEmulator(firestore, 'localhost', 8180);
         }
 

@@ -28,12 +28,12 @@ jobs:
           if [ -n "$E2E_USER_EMAIL" ] && [ -n "$E2E_USER_PASSWORD" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
             echo "### E2E: credenciais disponíveis" >> "$GITHUB_STEP_SUMMARY"
-            echo "A suíte E2E será executada no job \`e2e\`." >> "$GITHUB_STEP_SUMMARY"
+            echo "Os testes mockados serão executados sem credenciais; os autenticados serão executados no job \`e2e-auth\`." >> "$GITHUB_STEP_SUMMARY"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "::warning title=E2E ignorado::Os secrets E2E_USER_EMAIL e E2E_USER_PASSWORD não estão disponíveis. A suíte E2E não será executada."
-            echo "### E2E ignorado" >> "$GITHUB_STEP_SUMMARY"
-            echo "Os secrets \`E2E_USER_EMAIL\` e \`E2E_USER_PASSWORD\` não estão disponíveis neste contexto (por exemplo, Pull Request de fork). A suíte E2E não foi executada; build, testes unitários, testes das Firestore Rules e type-checks foram executados." >> "$GITHUB_STEP_SUMMARY"
+            echo "::warning title=E2E autenticado ignorado::Os secrets E2E_USER_EMAIL e E2E_USER_PASSWORD não estão disponíveis. Somente os testes E2E autenticados serão ignorados."
+            echo "### E2E autenticado ignorado" >> "$GITHUB_STEP_SUMMARY"
+            echo "Os secrets \`E2E_USER_EMAIL\` e \`E2E_USER_PASSWORD\` não estão disponíveis neste contexto (por exemplo, Pull Request de fork). Os testes mockados ainda serão executados sem credenciais; os autenticados serão ignorados. Build, testes unitários, testes das Firestore Rules e type-checks também serão executados." >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Checkout repository
@@ -69,10 +69,9 @@ jobs:
       - name: Type-check Playwright tests
         run: npm run type-check:playwright
 
-  e2e:
-    name: E2E Tests (Chromium, Firefox, WebKit)
+  e2e-mock:
+    name: E2E Mock Tests (Chromium, Firefox, WebKit)
     needs: verify
-    if: needs.verify.outputs.e2e_enabled == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -92,7 +91,32 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run E2E tests
-        run: npm run test:e2e
+        run: npm run test:e2e:mock
+
+  e2e-auth:
+    name: E2E Auth Tests (Chromium, Firefox, WebKit)
+    needs: [verify, e2e-mock]
+    if: needs.verify.outputs.e2e_enabled == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run authenticated E2E tests
+        run: npm run test:e2e:auth
         env:
           E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}

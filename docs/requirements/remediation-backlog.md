@@ -19,7 +19,7 @@ O levantamento original considerou o código e os testes então existentes, as S
 
 O levantamento original registrou **20 itens**: 4 de implementação parcial, 4 de inconsistência documental, 3 limitações técnicas/comportamentais e 9 confirmações ou definições. Esses quantitativos são a baseline histórica, não o estado atual das correções.
 
-> **Situação atual:** as FIX-001 a FIX-021 e FIX-022 a FIX-024 estão concluídas no escopo registrado. As FIX-025 (integração do perfil Angular) e FIX-026 (investigação E2E) estão abertas e documentadas abaixo. O trabalho local de regras da FIX-021 está encerrado; publicação/verificação no Firebase remoto não ocorreu e depende de autorização específica. Os itens históricos preservam a baseline e suas pendências futuras aparecem separadamente.
+> **Situação atual:** as FIX-001 a FIX-021 e FIX-022 a FIX-024 estão concluídas no escopo registrado. A FIX-025 (integração do perfil Angular) permanece aberta; a FIX-026 (isolamento Firebase Emulators e Playwright) foi encerrada após implementação e validações locais e no GitHub Actions. O trabalho local de regras da FIX-021 está encerrado; publicação/verificação no Firebase remoto não ocorreu e depende de autorização específica. Os itens históricos preservam a baseline e suas pendências futuras aparecem separadamente.
 
 | Categoria | P0 | P1 | P2 | P3 | Total |
 |---|---:|---:|---:|---:|---:|
@@ -41,7 +41,7 @@ As **20 FIXs da baseline estão encerradas**. A FIX-021 e as FIX-022, FIX-023 e 
 | D. Confirmação e definição | FIX-012 a FIX-020 | Encerradas por confirmação externa, decisão de escopo/documentação ou ampliação de cobertura E2E. |
 | **Total** | **FIX-001 a FIX-020** | **20 encerradas; pendências futuras relacionadas permanecem discriminadas abaixo.** |
 
-Permanecem como trabalho futuro ou definição de escopo, não como FIXs abertas: finalidade do dashboard (RF-070), melhorias genéricas sem critérios de aceite, avaliação WCAG 2.2 AA proposta para Sprint 11, checklist e verificação pós-publicação da Sprint 10, além da publicação/verificação das regras locais no Firebase remoto, sujeita a autorização específica. A futura API também deverá validar tokens com Firebase Admin SDK. A integração Angular do perfil e a investigação das falhas E2E estão rastreadas nas FIX-025 e FIX-026.
+Permanecem como trabalho futuro ou definição de escopo, não como FIXs abertas: finalidade do dashboard (RF-070), melhorias genéricas sem critérios de aceite, avaliação WCAG 2.2 AA proposta para Sprint 11, checklist e verificação pós-publicação da Sprint 10, além da publicação/verificação das regras locais no Firebase remoto, sujeita a autorização específica. A futura API também deverá validar tokens com Firebase Admin SDK. A integração Angular do perfil permanece rastreada na FIX-025. A revisão do `firestore-debug.log`, reescrito durante a validação dos emuladores, é uma pendência documental independente da FIX-026 e não afeta seu encerramento.
 
 ### 3.2 FIXs posteriores à baseline
 
@@ -52,13 +52,13 @@ Permanecem como trabalho futuro ou definição de escopo, não como FIXs abertas
 | FIX-023 | D. Definição de comportamento | Concluída em 10/11/2026. |
 | FIX-024 | A. Implementação parcial | Concluída em 10/11/2026. |
 | FIX-025 | A. Implementação parcial | Aberta; ciclo de vida do perfil Angular ainda não implementado. |
-| FIX-026 | A. Implementação parcial | Aberta; investigação/correção E2E ainda não iniciada. |
+| FIX-026 | A. Implementação parcial | Encerrada após correções de isolamento e validações local e no GitHub Actions; cobertura e três navegadores preservados. |
 
-As FIX-021 a FIX-026 não integram os quantitativos históricos da tabela da seção 3.1. A FIX-021 concluiu Rules e testes locais; a FIX-022 tratou validadores documentais, a FIX-023 formalizou a política de controles desabilitados, a FIX-024 alinhou o `equalsToValidator`, e as FIX-025/026 mantêm pendentes a integração do perfil e a investigação E2E. Os detalhes da FIX-021 e das novas FIXs 025/026 estão na seção 4.
+As FIX-021 a FIX-026 não integram os quantitativos históricos da tabela da seção 3.1. A FIX-021 concluiu Rules e testes locais; a FIX-022 tratou validadores documentais, a FIX-023 formalizou a política de controles desabilitados, a FIX-024 alinhou o `equalsToValidator`, a FIX-025 mantém pendente a integração do perfil e a FIX-026 foi encerrada após corrigir e validar o isolamento E2E. Os detalhes estão na seção 4.
 
 ## 4. Histórico e status das FIX-001 a FIX-026
 
-As categorias e descrições das FIX-001 a FIX-020 preservam o levantamento original. As FIX-021 a FIX-024 foram concluídas em etapas posteriores; as FIX-025 e FIX-026 estão abertas. Nenhum registro histórico anterior foi removido. Cada item registra seu encerramento ou status e as pendências futuras relacionadas.
+As categorias e descrições das FIX-001 a FIX-020 preservam o levantamento original. As FIX-021 a FIX-024 foram concluídas em etapas posteriores; a FIX-025 permanece aberta e a FIX-026 foi encerrada. Nenhum registro histórico anterior foi removido. Cada item registra seu encerramento ou status e as pendências futuras relacionadas.
 
 ### A. Implementação parcial
 
@@ -465,7 +465,7 @@ As categorias e descrições das FIX-001 a FIX-020 preservam o levantamento orig
 
 - **Escopo concluído em 12/11/2026:** regras locais de `users/{uid}` implementadas, versionadas e auditadas conforme ADR-030; matriz de autorização preservada.
 - **Validação local:** 35 testes em 7 arquivos passaram no Firestore Emulator `demo-firebase-starter-rules`; `npm run type-check:firestore-tests` e `git diff --check` passaram. Nenhum acesso ao Firebase real ou deploy foi realizado.
-- **Integração CI:** os testes Firestore estão no job `verify`. No run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549), o `verify` foi aprovado, mas aquela execução usou uma revisão anterior às regras/testes locais atuais. A revisão atual ainda precisa de uma execução bem-sucedida no GitHub Actions. O job E2E falhou nesse run e a investigação foi transferida para a FIX-026.
+- **Integração CI:** os testes Firestore estão no job `verify`. O run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549) usou uma revisão anterior às regras/testes locais atuais; o job E2E falhou e motivou a investigação da FIX-026. A execução posterior do workflow atualizado foi aprovada, conforme validação final registrada nesta correção.
 - **Transferências:** o ciclo de vida do perfil Angular (UID, criação após verificação e idempotência) foi separado na FIX-025. Não faz parte da conclusão local das Security Rules.
 - **Estado remoto:** regras não publicadas nesta FIX; o estado atual do Firebase remoto permanece desconhecido. Publicação/verificação depende de autorização específica e do planejamento de publicação.
 - **Status:** concluída tecnicamente para implementação, testes e auditoria das regras locais; sem declaração de publicação em produção.
@@ -477,12 +477,14 @@ As categorias e descrições das FIX-001 a FIX-020 preservam o levantamento orig
 - **Escopo:** usar o UID do Firebase Authentication como ID de `users/{uid}`; corrigir a incompatibilidade do `UserRepository`/`addDoc`; criar somente após verificação de e-mail; persistir inicialmente apenas o e-mail; criar idempotentemente o perfil quando ausente, sem depender exclusivamente do botão “Já verifiquei”; manter Authentication como fonte oficial do e-mail; não implementar alteração de e-mail; excluir somente o documento Firestore, sem excluir a conta Authentication; preservar as Security Rules existentes.
 - **Status:** aberta, especificada; implementação não iniciada nesta etapa.
 
-### FIX-026 — Investigar e corrigir falhas nos testes E2E com Playwright (aberta)
+### FIX-026 — Isolar Firebase Emulators e Playwright nos testes E2E (encerrada)
 
-- **Objetivo:** identificar as causas das falhas observadas no GitHub Actions e corrigi-las sem reduzir a cobertura.
-- **Escopo:** reproduzir falhas localmente quando possível; analisar logs/relatórios do Actions; avaliar projetos mock e auth e Chromium, Firefox e WebKit; corrigir causas reais; preservar a separação entre projetos mockados e autenticados e a execução dos mocks sem credenciais reais; validar novamente a suíte completa.
-- **Evidência inicial:** o run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549) teve `verify` aprovado e job E2E com falha. A falha não foi investigada nesta etapa.
-- **Status:** aberta; investigação e implementação não iniciadas nesta etapa.
+- **Objetivo:** corrigir as falhas de isolamento E2E sem reduzir cobertura.
+- **Implementação:** os providers conectam Auth e Firestore aos emuladores somente com configuração explícita; `npm start` usa Firebase real; `npm run start:emulators` inicia os emuladores para desenvolvimento; os comandos Playwright separam projetos mockados e autenticados; o CI separa os jobs, executa mocks sem credenciais e usa secrets somente na autenticação real. A decisão está na [ADR-031](../adr/ADR-031-selecao-explicita-dos-firebase-emulators.md).
+- **Validação local:** 63/63 execuções mockadas sem credenciais, 10/10 autenticadas com a conta real e 73/73 na suíte completa passaram. Foram preservados Chromium, Firefox e WebKit. Também passaram 231 testes unitários, build, type-check Playwright, type-check Firestore e `git diff --check`.
+- **Validação CI:** o workflow atualizado foi executado com sucesso no GitHub Actions. O run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549), anterior às correções, permanece como registro da falha original.
+- **Encerramento:** concluída em 13/11/2026. Não houve redução de testes ou navegadores.
+- **Pendência independente:** `firestore-debug.log` foi reescrito durante validações locais e precisa de revisão própria. Essa ocorrência não integra o escopo funcional da FIX-026 nem impede seu encerramento.
 
 ## 5. Dependências identificadas no levantamento original (histórico)
 

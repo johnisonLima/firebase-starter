@@ -1,6 +1,6 @@
 # Estratégia de Testes E2E
 
-Este documento descreve a estratégia de testes end-to-end efetivamente implementada no Firebase Starter. Ele complementa a [ADR-023](../adr/ADR-023-playwright-e2e-testing.md) e as decisões registradas nas [ADR-025](../adr/ADR-025-autenticacao-real-e-sessao-reutilizavel-nos-testes-e2e.md), [ADR-026](../adr/ADR-026-interceptacao-fail-closed-do-firebase-auth-nos-testes-e2e.md) e [ADR-027](../adr/ADR-027-execucao-dos-testes-no-github-actions.md).
+Este documento descreve a estratégia de testes end-to-end efetivamente implementada no Firebase Starter. Ele complementa a [ADR-023](../adr/ADR-023-playwright-e2e-testing.md), as decisões registradas nas [ADR-025](../adr/ADR-025-autenticacao-real-e-sessao-reutilizavel-nos-testes-e2e.md), [ADR-026](../adr/ADR-026-interceptacao-fail-closed-do-firebase-auth-nos-testes-e2e.md), [ADR-027](../adr/ADR-027-execucao-dos-testes-no-github-actions.md) e [ADR-031](../adr/ADR-031-selecao-explicita-dos-firebase-emulators.md).
 
 ## 3.1 Objetivo e escopo
 
@@ -106,7 +106,7 @@ test.use({ storageState: AUTH_STATE_PATH });
 
 Isso evita repetir o login em cada teste e mantém o fluxo real validado no setup.
 
-Os projetos `mock-chromium`, `mock-firefox` e `mock-webkit` selecionam os demais testes com `grepInvert: /@authenticated/` e não dependem do setup. Assim, os fluxos simulados podem ser executados sem `E2E_USER_EMAIL` e `E2E_USER_PASSWORD`.
+Os projetos `mock-chromium`, `mock-firefox` e `mock-webkit` selecionam os demais testes com `grepInvert: /@authenticated/` e não dependem do setup. Para que o projeto setup não seja selecionado por padrão junto com os mocks, use `npm run test:e2e:mock` (ou selecione explicitamente os projetos `mock-*`). Assim, os fluxos simulados executam sem credenciais e sem carregar `.env`.
 
 ### Isolamento
 
@@ -161,7 +161,7 @@ Os cenários também verificam `handledOperations` para confirmar que a sequênc
 
 Os cenários com mocks não criam contas reais e não enviam e-mails reais. As operações de cadastro, recuperação e verificação são respondidas pela infraestrutura de interceptação. O comportamento fail-closed impede que uma operação não autorizada chegue ao Firebase real.
 
-A interceptação cobre apenas os hosts do Firebase Authentication. Outros serviços não são simulados por essa infraestrutura.
+A interceptação cobre apenas os hosts do Firebase Authentication. Outros serviços não são simulados por essa infraestrutura. A configuração padrão de E2E não conecta Firebase Emulators; cenários que não invocam Firestore não fazem operações nele.
 
 ## 3.6 Navegadores e execução
 
@@ -184,13 +184,13 @@ Esse comando executa o setup e todos os projetos configurados.
 ### Execução sem autenticação real
 
 ```bash
-npx playwright test --project=mock-chromium --project=mock-firefox --project=mock-webkit
+npm run test:e2e:mock
 ```
 
 ### Execução autenticada
 
 ```bash
-npx playwright test --project=auth-chromium --project=auth-firefox --project=auth-webkit
+npm run test:e2e:auth
 ```
 
 Os projetos autenticados exigem os secrets/variáveis E2E e executam o projeto `setup` antes dos testes.
@@ -248,13 +248,15 @@ O workflow está em `.github/workflows/ci.yml` e é acionado por `push` e `pull_
 
 Os testes das regras iniciam somente o Firestore Emulator usando `demo-firebase-starter-rules`; não recebem os secrets E2E nem acessam projetos Firebase reais. O Vitest usa `vitest.firestore.config.ts` e inclui apenas `tests/firestore/**/*.spec.ts`, separado da raiz Playwright `tests/playwright/`.
 
-**`e2e`** — depende de `verify` e só executa quando os secrets estão disponíveis:
+**`e2e-mock`** — depende de `verify`, não recebe secrets e executa `npm run test:e2e:mock` nos três navegadores.
+
+**`e2e-auth`** — depende de `verify` e `e2e-mock`; só executa quando os secrets estão disponíveis:
 
 1. checkout;
 2. Node.js 22 com cache npm;
 3. `npm ci`;
 4. `npx playwright install --with-deps`;
-5. `npm run test:e2e`.
+5. `npm run test:e2e:auth`.
 
 ### Secrets
 
@@ -265,20 +267,20 @@ Os testes das regras iniciam somente o Firestore Emulator usando `demo-firebase-
 Em Pull Requests de fork e de Dependabot, os secrets não são disponibilizados. Nesse caso:
 
 - `verify` continua executando build, testes unitários e type-check;
-- o job `e2e` é marcado como `skipped`;
-- o workflow emite warning e registra no `$GITHUB_STEP_SUMMARY` que a suíte E2E foi ignorada;
+- `e2e-mock` executa normalmente sem credenciais;
+- `e2e-auth` é marcado como `skipped` e o resumo informa que somente a parte autenticada não foi executada;
 - a validação é explicitamente parcial.
 
 O workflow não usa `pull_request_target`.
 
 ### Validação completa versus parcial
 
-- **Completa:** secrets disponíveis, `verify` aprovado e `e2e` executado nos três navegadores.
-- **Parcial:** secrets indisponíveis, `verify` aprovado e `e2e` skipped, com aviso explícito.
+- **Completa:** secrets disponíveis, `verify`, mocks e autenticação real aprovados nos três navegadores.
+- **Parcial:** secrets indisponíveis, `verify` e mocks aprovados; autenticação real skipped, com aviso explícito.
 
-A execução da FIX-020 é evidência histórica e não valida a revisão atual. No run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549), o job `verify` passou e o job E2E falhou; a investigação foi transferida para a FIX-026. Esse run antecede as regras/testes locais atuais, que ainda precisam de uma execução bem-sucedida no GitHub Actions. O comportamento de Pull Requests de fork e de Dependabot sem secrets não foi validado diretamente.
+A execução da FIX-020 e o run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549) são evidências anteriores às correções: naquele run, `verify` passou e E2E falhou, motivando a FIX-026. A execução posterior do workflow atualizado passou no GitHub Actions. Em contextos sem secrets, os mocks continuam executando e os testes autenticados são explicitamente ignorados. O comportamento específico de Pull Requests de fork e Dependabot sem secrets não foi validado diretamente.
 
-Antes da implementação complementar da separação de projetos, a suíte local tinha 67 testes aprovados. Após a inclusão dos dois cenários E2E e a execução em três navegadores, `npx playwright test --list` lista 73 execuções, incluindo o teste de setup.
+Antes da implementação complementar da separação de projetos, a suíte local tinha 67 execuções aprovadas. A suíte atual lista e executa 73 execuções, incluindo setup: 63 mockadas e 10 autenticadas, mantendo Chromium, Firefox e WebKit. A validação final da FIX-026 também registrou 231 testes unitários, build e type-checks aprovados.
 
 ## 3.8 Segurança
 
