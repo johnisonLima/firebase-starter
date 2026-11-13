@@ -8,9 +8,7 @@ import { AUTH_STATE_PATH, login } from './support/auth';
 setup('autentica a conta E2E dedicada', async ({ page }) => {
   await login(page);
 
-  await expect(
-    page.getByRole('button', { name: 'Logout' }),
-  ).toBeVisible();
+  await expect(page.locator('app-user-account-dropdown').getByRole('button')).toBeVisible();
 
   await mkdir(dirname(AUTH_STATE_PATH), { recursive: true });
 
