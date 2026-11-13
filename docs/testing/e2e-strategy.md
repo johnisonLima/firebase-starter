@@ -278,9 +278,9 @@ O workflow não usa `pull_request_target`.
 - **Completa:** secrets disponíveis, `verify`, mocks e autenticação real aprovados nos três navegadores.
 - **Parcial:** secrets indisponíveis, `verify` e mocks aprovados; autenticação real skipped, com aviso explícito.
 
-A execução da FIX-020 é evidência histórica e não valida a revisão atual. No run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549), o job `verify` passou e o job E2E falhou; a investigação foi transferida para a FIX-026. Esse run antecede as regras/testes locais atuais, que ainda precisam de uma execução bem-sucedida no GitHub Actions. O comportamento de Pull Requests de fork e de Dependabot sem secrets não foi validado diretamente.
+A execução da FIX-020 e o run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549) são evidências anteriores às correções: naquele run, `verify` passou e E2E falhou, motivando a FIX-026. A execução posterior do workflow atualizado passou no GitHub Actions. Em contextos sem secrets, os mocks continuam executando e os testes autenticados são explicitamente ignorados. O comportamento específico de Pull Requests de fork e Dependabot sem secrets não foi validado diretamente.
 
-Antes da implementação complementar da separação de projetos, a suíte local tinha 67 testes aprovados. Após a inclusão dos dois cenários E2E e a execução em três navegadores, `npx playwright test --list` lista 73 execuções, incluindo o teste de setup.
+Antes da implementação complementar da separação de projetos, a suíte local tinha 67 execuções aprovadas. A suíte atual lista e executa 73 execuções, incluindo setup: 63 mockadas e 10 autenticadas, mantendo Chromium, Firefox e WebKit. A validação final da FIX-026 também registrou 231 testes unitários, build e type-checks aprovados.
 
 ## 3.8 Segurança
 
