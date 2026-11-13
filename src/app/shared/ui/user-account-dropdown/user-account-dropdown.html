@@ -1,0 +1,110 @@
+<div class="user-account-dropdown">
+
+  <!-- Trigger -->
+  <button
+    #trigger
+    class="user-account-dropdown__trigger"
+    type="button"
+    aria-haspopup="menu"
+    aria-controls="user-account-menu"
+    [attr.aria-expanded]="isOpen()"
+    (click)="toggle()"
+    (keydown)="onTriggerKeydown($event)"
+    >
+    @if (user().photoURL) {
+      <img
+        class="user-account-dropdown__avatar"
+        [src]="user().photoURL"
+        [alt]="displayName()"
+      />
+    }
+
+    <span class="user-account-dropdown__name">
+      {{ displayName() }}
+    </span>
+
+    <span
+      class="user-account-dropdown__chevron"
+      aria-hidden="true"
+    >
+        <svg lucideChevronDown></svg>
+    </span>
+  </button>
+
+  <!-- Dropdown Menu -->
+  @if (isOpen()) {
+    <div
+        #menu
+        id="user-account-menu"
+        class="user-account-dropdown__menu"
+        role="menu"
+        aria-label="Menu da conta"
+        (keydown)="onMenuKeydown($event)"
+    >
+
+      <!-- User Information -->
+      <div class="user-account-dropdown__header">
+
+        @if (user().photoURL) {
+          <img
+            class="user-account-dropdown__avatar"
+            [src]="user().photoURL"
+            [alt]="displayName()"
+          />
+        }
+
+        <div class="user-account-dropdown__identity">
+          <span class="user-account-dropdown__display-name">
+            {{ displayName() }}
+          </span>
+
+          <span class="user-account-dropdown__email">
+            {{ user().email }}
+          </span>
+        </div>
+
+      </div>
+
+      <div class="user-account-dropdown__separator"></div>
+
+      <!-- Account -->
+      <button
+        class="user-account-dropdown__item"
+        type="button"
+        role="menuitem"
+        (click)="onAccountClick()"
+      >
+        <svg lucideUserRound aria-hidden="true"></svg>
+        <span>Minha conta</span>
+      </button>
+
+      <div class="user-account-dropdown__separator"></div>
+
+      <!-- Appearance -->
+      <button
+        class="user-account-dropdown__item"
+        type="button"
+        role="menuitem"
+        (click)="onAppearanceClick()"
+      >
+        <svg lucideSettings2 aria-hidden="true"></svg>
+        <span>Preferências</span>
+      </button>
+
+      <div class="user-account-dropdown__separator"></div>
+
+      <!-- Logout -->
+      <button
+        class="user-account-dropdown__item user-account-dropdown__item--destructive"
+        type="button"
+        role="menuitem"
+        (click)="onLogoutClick()"
+      >
+        <svg lucideLogOut aria-hidden="true"></svg>
+        <span>Sair</span>
+      </button>
+
+    </div>
+  }
+
+</div>
