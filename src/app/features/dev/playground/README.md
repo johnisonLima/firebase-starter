@@ -332,7 +332,7 @@ A rota `/playground` é protegida por:
 
 ### Testes E2E
 
-`tests/app/playground.spec.ts` cobre apenas o redirecionamento para `/login` quando o usuário não está autenticado.
+`tests/playwright/app/playground.spec.ts` cobre apenas o redirecionamento para `/login` quando o usuário não está autenticado.
 
 ### O que não está coberto
 

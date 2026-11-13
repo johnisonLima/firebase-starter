@@ -89,6 +89,8 @@ Preparar e publicar a aplicação.
 - Deploy.
 - Checklist de publicação.
 
+As Security Rules locais de `users/{uid}` e seus testes foram concluídos e versionados na FIX-021. A publicação ou verificação no Firebase remoto não ocorreu nessa FIX e depende de autorização específica; a Sprint 10 deve planejar essa etapa sem presumir que já foi executada.
+
 ---
 
 ## Sprint 11 — Qualidade e acessibilidade

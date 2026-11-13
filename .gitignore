@@ -63,3 +63,9 @@ node_modules/
 .env
 .env.*
 !.env.example
+
+# Agents
+.agents/
+
+# Firebase emulators
+emulator-data/

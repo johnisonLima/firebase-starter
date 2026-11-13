@@ -48,31 +48,27 @@ A estrutura atual dos testes é:
 
 ```text
 tests/
-├── app/
-│   ├── access.spec.ts
-│   └── playground.spec.ts
-├── auth/
-│   ├── dashboard.spec.ts
-│   ├── forgot-password.spec.ts
-│   ├── login.spec.ts
-│   ├── register.spec.ts
-│   └── verify-email.spec.ts
-├── auth.setup.ts
-└── support/
-    ├── auth.ts
-    └── firebase-auth-routes.ts
+├── playwright/
+│   ├── app/
+│   ├── auth/
+│   ├── support/
+│   └── auth.setup.ts
+└── firestore/
+    ├── firestore.rules.test-utils.ts
+    └── firestore.rules.spec.ts
 ```
 
-- `tests/app/access.spec.ts`: valida o redirecionamento do acesso inicial para login.
-- `tests/app/playground.spec.ts`: valida a proteção da rota do Playground.
-- `tests/auth/login.spec.ts`: exibição do login, navegação ao cadastro e redirecionamento de usuário autenticado.
-- `tests/auth/register.spec.ts`: validações, sucesso, erro e interceptação do cadastro.
-- `tests/auth/forgot-password.spec.ts`: validações, sucesso, erro e interceptação da recuperação de senha.
-- `tests/auth/verify-email.spec.ts`: sessão não verificada, confirmação, falha de consulta, reenvio e interceptação.
-- `tests/auth/dashboard.spec.ts`: acesso não autenticado, sessão reutilizada, reload, logout e login real.
-- `tests/auth.setup.ts`: projeto de setup que realiza o login real e grava o `storageState`.
-- `tests/support/auth.ts`: caminho do estado de autenticação, leitura das credenciais e helper `login(page)`.
-- `tests/support/firebase-auth-routes.ts`: infraestrutura única de interceptação do Firebase Auth.
+- `tests/playwright/app/access.spec.ts`: valida o redirecionamento do acesso inicial para login.
+- `tests/playwright/app/playground.spec.ts`: valida a proteção da rota do Playground.
+- `tests/playwright/auth/login.spec.ts`: exibição do login, navegação ao cadastro e redirecionamento de usuário autenticado.
+- `tests/playwright/auth/register.spec.ts`: validações, sucesso, erro e interceptação do cadastro.
+- `tests/playwright/auth/forgot-password.spec.ts`: validações, sucesso, erro e interceptação da recuperação de senha.
+- `tests/playwright/auth/verify-email.spec.ts`: sessão não verificada, confirmação, falha de consulta, reenvio e interceptação.
+- `tests/playwright/auth/dashboard.spec.ts`: acesso não autenticado, sessão reutilizada, reload, logout e login real.
+- `tests/playwright/auth.setup.ts`: projeto de setup que realiza o login real e grava o `storageState`.
+- `tests/playwright/support/auth.ts`: caminho do estado de autenticação, leitura das credenciais e helper `login(page)`.
+- `tests/playwright/support/firebase-auth-routes.ts`: infraestrutura única de interceptação do Firebase Auth.
+- `tests/firestore/`: utilitário e arquivo de testes das Security Rules, executados em configuração separada do Playwright.
 
 O `playwright.config.ts` define um projeto `setup`, três projetos `mock-*` e três projetos `auth-*`, além do `baseURL` em `http://localhost:4200` e do `webServer` que inicia a aplicação.
 
@@ -91,14 +87,14 @@ Localmente, elas podem vir de um arquivo `.env` ignorado pelo Git. No GitHub Act
 
 ### Projeto de setup
 
-`tests/auth.setup.ts` é executado pelo projeto `setup`. Ele:
+`tests/playwright/auth.setup.ts` é executado pelo projeto `setup`. Ele:
 
 1. chama `login(page)`;
 2. valida que o usuário chegou ao dashboard e que o botão de logout está visível;
 3. cria o diretório `test-results/`, se necessário;
 4. grava o estado em `test-results/auth-state.json` com `page.context().storageState()`.
 
-O helper `login(page)` em `tests/support/auth.ts` preenche o formulário real de login e valida a URL `/dashboard`.
+O helper `login(page)` em `tests/playwright/support/auth.ts` preenche o formulário real de login e valida a URL `/dashboard`.
 
 ### Reutilização da sessão
 
@@ -122,7 +118,7 @@ Os projetos `mock-chromium`, `mock-firefox` e `mock-webkit` selecionam os demais
 
 ## 3.5 Mocks do Firebase
 
-A infraestrutura de mocks está em `tests/support/firebase-auth-routes.ts`. Ela intercepta as chamadas HTTP do Firebase Authentication usando `page.route`.
+A infraestrutura de mocks está em `tests/playwright/support/firebase-auth-routes.ts`. Ela intercepta as chamadas HTTP do Firebase Authentication usando `page.route`.
 
 ### Operações suportadas
 
@@ -202,16 +198,16 @@ Os projetos autenticados exigem os secrets/variáveis E2E e executam o projeto `
 ### Execução por navegador
 
 ```bash
-npx playwright test --project=chromium
-npx playwright test --project=firefox
-npx playwright test --project=webkit
+npx playwright test --project=mock-chromium --project=auth-chromium
+npx playwright test --project=mock-firefox --project=auth-firefox
+npx playwright test --project=mock-webkit --project=auth-webkit
 ```
 
 ### Execução direcionada por arquivo
 
 ```bash
-npx playwright test tests/auth/login.spec.ts
-npx playwright test tests/auth/register.spec.ts --project=firefox
+npx playwright test tests/playwright/auth/login.spec.ts
+npx playwright test tests/playwright/auth/register.spec.ts --project=mock-firefox
 ```
 
 ### Execução por título
@@ -239,13 +235,18 @@ O workflow está em `.github/workflows/ci.yml` e é acionado por `push` e `pull_
 
 **`verify`** — sempre executa:
 
-1. verificação de disponibilidade dos secrets;
+1. verificação de disponibilidade dos secrets E2E;
 2. checkout;
 3. Node.js 22 com cache npm;
-4. `npm ci`;
-5. `npm run build`;
-6. `npm run test:unit`;
-7. `npm run type-check:playwright`.
+4. `npm ci` (inclui `firebase-tools` 15.35.0 como dependência local);
+5. Configuração do Java 21 (Temurin) para o Firestore Emulator;
+6. `npm run type-check:firestore-tests`;
+7. `npm run test:firestore-rules`;
+8. `npm run build`;
+9. `npm run test:unit`;
+10. `npm run type-check:playwright`.
+
+Os testes das regras iniciam somente o Firestore Emulator usando `demo-firebase-starter-rules`; não recebem os secrets E2E nem acessam projetos Firebase reais. O Vitest usa `vitest.firestore.config.ts` e inclui apenas `tests/firestore/**/*.spec.ts`, separado da raiz Playwright `tests/playwright/`.
 
 **`e2e`** — depende de `verify` e só executa quando os secrets estão disponíveis:
 
@@ -275,7 +276,7 @@ O workflow não usa `pull_request_target`.
 - **Completa:** secrets disponíveis, `verify` aprovado e `e2e` executado nos três navegadores.
 - **Parcial:** secrets indisponíveis, `verify` aprovado e `e2e` skipped, com aviso explícito.
 
-A execução normal do workflow no GitHub Actions, com os secrets disponíveis, foi validada com sucesso na FIX-020. As validações locais da Etapa 6 também foram concluídas com sucesso. O comportamento de Pull Requests de fork e de Dependabot sem secrets não foi validado diretamente.
+A execução da FIX-020 é evidência histórica e não valida a revisão atual. No run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549), o job `verify` passou e o job E2E falhou; a investigação foi transferida para a FIX-026. Esse run antecede as regras/testes locais atuais, que ainda precisam de uma execução bem-sucedida no GitHub Actions. O comportamento de Pull Requests de fork e de Dependabot sem secrets não foi validado diretamente.
 
 Antes da implementação complementar da separação de projetos, a suíte local tinha 67 testes aprovados. Após a inclusão dos dois cenários E2E e a execução em três navegadores, `npx playwright test --list` lista 73 execuções, incluindo o teste de setup.
 
@@ -316,6 +317,19 @@ npm run type-check:playwright
 npm run test:e2e
 ```
 
+## 3.11 Testes das Firestore Security Rules
+
+Os testes das regras ficam em `tests/firestore/` e usam Vitest com `@firebase/rules-unit-testing`. A configuração `vitest.firestore.config.ts` inclui somente `tests/firestore/**/*.spec.ts`; assim, esses arquivos não são descobertos pelo Playwright, cuja raiz é `tests/playwright/`.
+
+O comando `npm run test:firestore-rules` inicia o Firebase Emulator Suite com `--only firestore` e o project ID `demo-firebase-starter-rules`. A biblioteca cria contextos autenticados simulados; o Firebase Auth Emulator não é iniciado. O utilitário aponta explicitamente para `127.0.0.1:8180` e carrega as regras locais de `firestore.rules`. Não há deploy nem conexão configurada com projeto Firebase real nesse fluxo.
+
+```bash
+npm run test:firestore-rules
+npm run type-check:firestore-tests
+```
+
+A suíte tem 35 testes distribuídos em sete arquivos; testes e type-check passaram localmente na FIX-021. Ela cobre autenticação, combinações de claims, operações e validação dos documentos, usando somente o Emulator demo. A cobertura, comandos e limites identificados estão registrados em [`firestore-authorization.md`](../security/firestore-authorization.md); acompanhe o andamento na FIX-021 em `docs/requirements/remediation-backlog.md`.
+
 ## Referências
 
 - [ADR-014 — Obrigatoriedade de testes unitários para código de domínio](../adr/ADR-014-obrigatoriedade-de-testes-unitários.md)
@@ -326,5 +340,5 @@ npm run test:e2e
 - [Secrets do CI](../ci/secrets.md)
 - `.github/workflows/ci.yml`
 - `playwright.config.ts`
-- `tests/support/auth.ts`
-- `tests/support/firebase-auth-routes.ts`
+- `tests/playwright/support/auth.ts`
+- `tests/playwright/support/firebase-auth-routes.ts`
