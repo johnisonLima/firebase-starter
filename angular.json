@@ -64,6 +64,12 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
+            "emulators": {
+              "buildTarget": "firebase_starter:build:development",
+              "define": {
+                "FIREBASE_USE_EMULATORS": "true"
+              }
+            },
             "production": {
               "buildTarget": "firebase_starter:build:production"
             },
@@ -73,6 +79,9 @@
           },
           "defaultConfiguration": "development",
           "options": {
+            "define": {
+              "FIREBASE_USE_EMULATORS": "false"
+            },
             "port": 4200,
             "host": "0.0.0.0",
             "allowedHosts": ["localhost", "192.168.0.115", "192.168.0.124"]

@@ -477,12 +477,14 @@ As categorias e descrições das FIX-001 a FIX-020 preservam o levantamento orig
 - **Escopo:** usar o UID do Firebase Authentication como ID de `users/{uid}`; corrigir a incompatibilidade do `UserRepository`/`addDoc`; criar somente após verificação de e-mail; persistir inicialmente apenas o e-mail; criar idempotentemente o perfil quando ausente, sem depender exclusivamente do botão “Já verifiquei”; manter Authentication como fonte oficial do e-mail; não implementar alteração de e-mail; excluir somente o documento Firestore, sem excluir a conta Authentication; preservar as Security Rules existentes.
 - **Status:** aberta, especificada; implementação não iniciada nesta etapa.
 
-### FIX-026 — Investigar e corrigir falhas nos testes E2E com Playwright (aberta)
+### FIX-026 — Investigar e corrigir falhas nos testes E2E com Playwright (implementação local; validação CI pendente)
 
 - **Objetivo:** identificar as causas das falhas observadas no GitHub Actions e corrigi-las sem reduzir a cobertura.
 - **Escopo:** reproduzir falhas localmente quando possível; analisar logs/relatórios do Actions; avaliar projetos mock e auth e Chromium, Firefox e WebKit; corrigir causas reais; preservar a separação entre projetos mockados e autenticados e a execução dos mocks sem credenciais reais; validar novamente a suíte completa.
 - **Evidência inicial:** o run histórico [#118](https://github.com/johnisonLima/firebase-starter/actions/runs/43317356549) teve `verify` aprovado e job E2E com falha. A falha não foi investigada nesta etapa.
-- **Status:** aberta; investigação e implementação não iniciadas nesta etapa.
+- **Implementação:** providers Firebase agora exigem flag explícita para emuladores; os scripts selecionam mocks ou autenticação real; CI executa mocks sem secrets e auth separadamente; ADR-031 e estratégia E2E foram atualizadas.
+- **Validação local:** `npm run build`, type-check Playwright, 63/63 testes mockados sem credenciais, 10/10 testes autenticados e 73/73 testes na suíte completa passaram. A listagem completa permanece em 73 execuções nos três navegadores.
+- **Pendências:** o comando `npm run start:emulators` iniciou os emuladores, mas a aplicação não subiu porque a porta 4200 já estava em uso. O workflow atualizado ainda precisa ser executado no GitHub Actions. FIX-026 permanece aberta até essas validações.
 
 ## 5. Dependências identificadas no levantamento original (histórico)
 

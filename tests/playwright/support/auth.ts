@@ -1,6 +1,5 @@
-import 'dotenv/config';
-
 import { expect, type Page } from '@playwright/test';
+import { config as loadDotEnv } from 'dotenv';
 
 /**
  * Estado de autenticação preparado pelo projeto `setup` e reutilizado apenas
@@ -17,6 +16,10 @@ interface E2ECredentials {
 }
 
 function getE2ECredentials(): E2ECredentials {
+  if (!process.env.E2E_USER_EMAIL || !process.env.E2E_USER_PASSWORD) {
+    loadDotEnv();
+  }
+
   const email = process.env.E2E_USER_EMAIL;
   const password = process.env.E2E_USER_PASSWORD;
 
