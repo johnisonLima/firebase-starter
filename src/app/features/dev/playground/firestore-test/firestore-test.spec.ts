@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { User } from '@features/users/models/user';
+import { User } from '@core/data/models/user';
 
 import { FirestoreTest } from './firestore-test';
 import { PlaygroundUserRepository } from './playground-user.repository';

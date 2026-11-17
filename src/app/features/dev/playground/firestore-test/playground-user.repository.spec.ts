@@ -2,7 +2,7 @@ import type { Firestore } from 'firebase/firestore';
 
 import { DataProvider } from '@core/data/providers/data-provider';
 
-import { User } from '@features/users/models/user';
+import { User } from '@core/data/models/user';
 
 import { PlaygroundUserRepository } from './playground-user.repository';
 
