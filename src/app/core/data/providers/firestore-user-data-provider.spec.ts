@@ -20,12 +20,13 @@ describe('FirestoreUserDataProvider', () => {
   const firestore = { marker: 'firestore' } as never;
   const uid = 'auth-user-123';
   const email = 'person@example.com';
+  const documentRef = { path: `users/${uid}` };
   let provider: FirestoreUserDataProvider;
 
   beforeEach(() => {
     vi.clearAllMocks();
     provider = new FirestoreUserDataProvider(firestore);
-    vi.mocked(doc).mockReturnValue({ path: `users/${uid}` } as never);
+    vi.mocked(doc).mockReturnValue(documentRef as never);
   });
 
   describe('ensureProfile()', () => {
@@ -140,12 +141,20 @@ describe('FirestoreUserDataProvider', () => {
       vi.mocked(getDoc).mockResolvedValue({ exists: () => true } as never);
 
       await expect(provider.exists(uid)).resolves.toBe(true);
+      expect(doc).toHaveBeenCalledTimes(1);
+      expect(doc).toHaveBeenCalledWith(firestore, Collections.USERS, uid);
+      expect(getDoc).toHaveBeenCalledTimes(1);
+      expect(getDoc).toHaveBeenCalledWith(documentRef);
     });
 
     it('returns false when the document does not exist', async () => {
       vi.mocked(getDoc).mockResolvedValue({ exists: () => false } as never);
 
       await expect(provider.exists(uid)).resolves.toBe(false);
+      expect(doc).toHaveBeenCalledTimes(1);
+      expect(doc).toHaveBeenCalledWith(firestore, Collections.USERS, uid);
+      expect(getDoc).toHaveBeenCalledTimes(1);
+      expect(getDoc).toHaveBeenCalledWith(documentRef);
     });
 
     it('propagates read errors', async () => {

@@ -1,5 +1,5 @@
 import { Firestore } from 'firebase/firestore';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { User } from '../models/user';
 import { FirestoreUserDataProvider } from '../providers/firestore-user-data-provider';
@@ -10,23 +10,23 @@ describe('UserRepository', () => {
   const uid = 'auth-user-123';
   const email = 'person@example.com';
   const profile: User = { id: uid, email };
+  const firestoreUserDataProvider = FirestoreUserDataProvider.prototype;
   let repository: UserRepository;
   let ensureProfileSpy: ReturnType<typeof vi.spyOn>;
   let findByIdSpy: ReturnType<typeof vi.spyOn>;
   let deleteSpy: ReturnType<typeof vi.spyOn>;
   let existsSpy: ReturnType<typeof vi.spyOn>;
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-    ensureProfileSpy = vi.spyOn(FirestoreUserDataProvider.prototype, 'ensureProfile');
-    findByIdSpy = vi.spyOn(FirestoreUserDataProvider.prototype, 'findById');
-    deleteSpy = vi.spyOn(FirestoreUserDataProvider.prototype, 'delete');
-    existsSpy = vi.spyOn(FirestoreUserDataProvider.prototype, 'exists');
-    repository = new UserRepository(firestore);
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
-  it('constructs the specialized provider with the supplied Firestore instance', () => {
-    expect(repository).toBeInstanceOf(UserRepository);
+  beforeEach(() => {
+    ensureProfileSpy = vi.spyOn(firestoreUserDataProvider, 'ensureProfile');
+    findByIdSpy = vi.spyOn(firestoreUserDataProvider, 'findById');
+    deleteSpy = vi.spyOn(firestoreUserDataProvider, 'delete');
+    existsSpy = vi.spyOn(firestoreUserDataProvider, 'exists');
+    repository = new UserRepository(firestore);
   });
 
   describe('ensureProfile()', () => {
@@ -34,6 +34,13 @@ describe('UserRepository', () => {
       ensureProfileSpy.mockResolvedValue('created');
 
       await expect(repository.ensureProfile(uid, email)).resolves.toBe('created');
+      expect(ensureProfileSpy).toHaveBeenCalledWith(uid, email);
+    });
+
+    it('preserves already-existed when the profile already exists', async () => {
+      ensureProfileSpy.mockResolvedValue('already-existed');
+
+      await expect(repository.ensureProfile(uid, email)).resolves.toBe('already-existed');
       expect(ensureProfileSpy).toHaveBeenCalledWith(uid, email);
     });
 
@@ -50,6 +57,13 @@ describe('UserRepository', () => {
       findByIdSpy.mockResolvedValue(profile);
 
       await expect(repository.findById(uid)).resolves.toBe(profile);
+      expect(findByIdSpy).toHaveBeenCalledWith(uid);
+    });
+
+    it('preserves null when no user exists for the UID', async () => {
+      findByIdSpy.mockResolvedValue(null);
+
+      await expect(repository.findById(uid)).resolves.toBeNull();
       expect(findByIdSpy).toHaveBeenCalledWith(uid);
     });
 
@@ -82,6 +96,13 @@ describe('UserRepository', () => {
       existsSpy.mockResolvedValue(true);
 
       await expect(repository.exists(uid)).resolves.toBe(true);
+      expect(existsSpy).toHaveBeenCalledWith(uid);
+    });
+
+    it('preserves false when the user document does not exist', async () => {
+      existsSpy.mockResolvedValue(false);
+
+      await expect(repository.exists(uid)).resolves.toBe(false);
       expect(existsSpy).toHaveBeenCalledWith(uid);
     });
 
