@@ -1,6 +1,7 @@
 import {
   deleteDoc,
   doc,
+  DocumentReference,
   Firestore,
   getDoc,
   runTransaction,
@@ -18,15 +19,15 @@ export class FirestoreUserDataProvider implements UserDataProvider {
     private readonly firestore: Firestore
   ) {}
 
+  private getUserDocRef(uid: string): DocumentReference {
+    return doc(this.firestore, Collections.USERS, uid);
+  }
+
   public async ensureProfile(
     uid: string,
     email: string
   ): Promise<EnsureProfileResult> {
-    const userRef = doc(
-      this.firestore,
-      Collections.USERS,
-      uid
-    );
+    const userRef = this.getUserDocRef(uid);
 
     return runTransaction(this.firestore, async transaction => {
       const snapshot = await transaction.get(userRef);
@@ -42,11 +43,7 @@ export class FirestoreUserDataProvider implements UserDataProvider {
   }
 
   public async findById(uid: string): Promise<User | null> {
-    const userRef = doc(
-      this.firestore,
-      Collections.USERS,
-      uid
-    );
+    const userRef = this.getUserDocRef(uid);
 
     const snapshot = await getDoc(userRef);
 
@@ -61,21 +58,13 @@ export class FirestoreUserDataProvider implements UserDataProvider {
   }
 
   public async delete(uid: string): Promise<void> {
-    const userRef = doc(
-      this.firestore,
-      Collections.USERS,
-      uid
-    );
+    const userRef = this.getUserDocRef(uid);
 
     await deleteDoc(userRef);
   }
 
   public async exists(uid: string): Promise<boolean> {
-    const userRef = doc(
-      this.firestore,
-      Collections.USERS,
-      uid
-    );
+    const userRef = this.getUserDocRef(uid);
 
     const snapshot = await getDoc(userRef);
 
