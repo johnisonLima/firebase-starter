@@ -36,6 +36,7 @@ export class AuthService {
   private readonly _profileSyncError = signal<unknown | null>(null);
 
   private _authSessionVersion = 0;
+  private _pendingOperations = 0;
 
   readonly user = this._user.asReadonly();
   readonly loading = this._loading.asReadonly();
@@ -79,7 +80,7 @@ export class AuthService {
         return;
       }
 
-      this._loading.set(false);
+      this.updateLoadingState();
 
       this._resolveAuthInitialization();
     });
@@ -173,6 +174,7 @@ export class AuthService {
   }
 
   private async execute<T>(action: () => Promise<T>): Promise<T> {
+    this._pendingOperations += 1;
     this._loading.set(true);
     this._error.set(null);
 
@@ -182,8 +184,13 @@ export class AuthService {
       this._error.set(getAuthErrorMessage(error));
       throw error;
     } finally {
-      this._loading.set(false);
+      this._pendingOperations -= 1;
+      this.updateLoadingState();
     }
+  }
+
+  private updateLoadingState(): void {
+    this._loading.set(this._pendingOperations > 0);
   }
 
   private async ensureUserProfile(user: User, sessionVersion: number): Promise<void> {
