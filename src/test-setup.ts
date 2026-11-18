@@ -9,8 +9,17 @@ interface FirebaseAuthMock {
   signOut: ReturnType<typeof vi.fn>;
 }
 
+interface FirebaseFirestoreMock {
+  doc: ReturnType<typeof vi.fn>;
+  getDoc: ReturnType<typeof vi.fn>;
+  setDoc: ReturnType<typeof vi.fn>;
+  deleteDoc: ReturnType<typeof vi.fn>;
+  runTransaction: ReturnType<typeof vi.fn>;
+}
+
 const globalWithMock = globalThis as typeof globalThis & {
   __firebaseAuthMock?: FirebaseAuthMock;
+  __firebaseFirestoreMock?: FirebaseFirestoreMock;
 };
 
 /**
@@ -37,5 +46,26 @@ vi.mock('firebase/auth', async importOriginal => {
   return {
     ...actual,
     ...firebaseAuthMock,
+  };
+});
+
+/**
+ * Keep Firestore API mocks shared across test files because the Angular Vitest
+ * runner reuses the module cache when `isolate` is disabled.
+ */
+vi.mock('firebase/firestore', async importOriginal => {
+  const actual = await importOriginal<typeof import('firebase/firestore')>();
+
+  const firebaseFirestoreMock = (globalWithMock.__firebaseFirestoreMock ??= {
+    doc: vi.fn(),
+    getDoc: vi.fn(),
+    setDoc: vi.fn(),
+    deleteDoc: vi.fn(),
+    runTransaction: vi.fn(),
+  });
+
+  return {
+    ...actual,
+    ...firebaseFirestoreMock,
   };
 });

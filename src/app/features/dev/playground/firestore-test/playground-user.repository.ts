@@ -6,7 +6,7 @@ import { BaseRepository } from '@core/data/repositories/base-repository';
 import { FirestoreDataProvider } from '@core/data/providers/firestore-data-provider';
 import { FIRESTORE } from '@core/firebase/firebase.tokens';
 
-import { User } from '@features/users/models/user';
+import { User } from '@core/data/models/user';
 
 /**
  * Coleção exclusiva do Playground. Não reutiliza `Collections.USERS`

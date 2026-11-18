@@ -3,11 +3,18 @@ import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerificati
 import { getAuthErrorMessage } from './auth.errors';
 
 import { FIREBASE_AUTH } from '../firebase/firebase.tokens';
+import { UserRepository } from '@core/data/repositories/user.repository';
 
 export type AuthState =
   | 'unknown'
   | 'authenticated'
   | 'unauthenticated';
+
+export type ProfileSyncState =
+  | 'idle'
+  | 'syncing'
+  | 'synced'
+  | 'error';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +32,12 @@ export class AuthService {
 
   private _resolveAuthInitialization!: () => void;
 
+  private readonly _profileSyncState = signal<ProfileSyncState>('idle');
+  private readonly _profileSyncError = signal<unknown | null>(null);
+
+  private _authSessionVersion = 0;
+  private _pendingOperations = 0;
+
   readonly user = this._user.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
@@ -37,8 +50,16 @@ export class AuthService {
   readonly photoURL = computed(() => this.user()?.photoURL ?? '');
   readonly emailVerified = this._emailVerified.asReadonly();
 
+  private readonly userRepository = inject(UserRepository);
+
+  readonly profileSyncState = this._profileSyncState.asReadonly();
+  readonly profileSyncError = this._profileSyncError.asReadonly();
+
   constructor() {
-    onAuthStateChanged(this.auth, user => {
+    onAuthStateChanged(this.auth, async user => {
+
+      const sessionVersion = ++this._authSessionVersion;
+
       this._user.set(user);
       this._emailVerified.set(user?.emailVerified ?? false);
 
@@ -48,7 +69,18 @@ export class AuthService {
           : 'unauthenticated'
       );
 
-      this._loading.set(false);
+      if (user) {
+        await this.ensureUserProfile(user, sessionVersion);
+      } else {
+        this._profileSyncState.set('idle');
+        this._profileSyncError.set(null);
+      }
+
+      if (sessionVersion !== this._authSessionVersion) {
+        return;
+      }
+
+      this.updateLoadingState();
 
       this._resolveAuthInitialization();
     });
@@ -104,7 +136,14 @@ export class AuthService {
       return;
     }
 
+    const sessionVersion = this._authSessionVersion;
+
     await this.execute(() => user.reload());
+
+    // Verifica se a sessão continua sendo a mesma.
+    if (!this.isCurrentSession(user, sessionVersion)) {
+      return;
+    }
 
     const currentUser = this.auth.currentUser;
 
@@ -113,6 +152,10 @@ export class AuthService {
     // O SDK muta a instância do usuário no reload. Atualizamos o signal
     // derivado explicitamente para que os guards reajam à nova verificação.
     this._emailVerified.set(currentUser?.emailVerified ?? false);
+
+    if (currentUser) {
+      await this.ensureUserProfile(currentUser, sessionVersion);
+    }
 
   }
 
@@ -131,6 +174,7 @@ export class AuthService {
   }
 
   private async execute<T>(action: () => Promise<T>): Promise<T> {
+    this._pendingOperations += 1;
     this._loading.set(true);
     this._error.set(null);
 
@@ -140,7 +184,57 @@ export class AuthService {
       this._error.set(getAuthErrorMessage(error));
       throw error;
     } finally {
-      this._loading.set(false);
+      this._pendingOperations -= 1;
+      this.updateLoadingState();
     }
+  }
+
+  private updateLoadingState(): void {
+    this._loading.set(this._pendingOperations > 0);
+  }
+
+  private async ensureUserProfile(user: User, sessionVersion: number): Promise<void> {
+
+    if (!this.isCurrentSession(user, sessionVersion)) {
+      return;
+    }
+
+    if (!user.emailVerified || !user.email) {
+      this._profileSyncState.set('idle');
+      this._profileSyncError.set(null);
+      return;
+    }
+
+    this._profileSyncState.set('syncing');
+    this._profileSyncError.set(null);
+
+    try {
+      await this.userRepository.ensureProfile(user.uid, user.email);
+
+      if (!this.isCurrentSession(user, sessionVersion)) {
+        return;
+      }
+
+      this._profileSyncState.set('synced');
+
+    } catch (error) {
+
+      if (!this.isCurrentSession(user, sessionVersion)) {
+        return;
+      }
+
+      this._profileSyncError.set(error);
+      this._profileSyncState.set('error');
+    }
+  }
+
+  private isCurrentSession(
+    user: User,
+    sessionVersion: number
+  ): boolean {
+    return (
+      sessionVersion === this._authSessionVersion &&
+      this.auth.currentUser?.uid === user.uid
+    );
   }
 }

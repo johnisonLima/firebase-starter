@@ -19,7 +19,7 @@ O levantamento original considerou o código e os testes então existentes, as S
 
 O levantamento original registrou **20 itens**: 4 de implementação parcial, 4 de inconsistência documental, 3 limitações técnicas/comportamentais e 9 confirmações ou definições. Esses quantitativos são a baseline histórica, não o estado atual das correções.
 
-> **Situação atual:** as FIX-001 a FIX-021 e FIX-022 a FIX-024 estão concluídas no escopo registrado. A FIX-025 (integração do perfil Angular) permanece aberta; a FIX-026 (isolamento Firebase Emulators e Playwright) foi encerrada após implementação e validações locais e no GitHub Actions. O trabalho local de regras da FIX-021 está encerrado; publicação/verificação no Firebase remoto não ocorreu e depende de autorização específica. Os itens históricos preservam a baseline e suas pendências futuras aparecem separadamente.
+> **Situação atual:** as FIX-001 a FIX-026 estão concluídas no escopo registrado. A FIX-025 (integração do perfil Angular) foi aprovada na revisão técnica final independente do Antigravity em 18/11/2026. O trabalho local de regras da FIX-021 está encerrado; publicação/verificação no Firebase remoto não ocorreu e depende de autorização específica. Os itens históricos preservam a baseline e suas pendências futuras aparecem separadamente.
 
 | Categoria | P0 | P1 | P2 | P3 | Total |
 |---|---:|---:|---:|---:|---:|
@@ -51,14 +51,14 @@ Permanecem como trabalho futuro ou definição de escopo, não como FIXs abertas
 | FIX-022 | A. Implementação parcial | Concluída em 10/11/2026. |
 | FIX-023 | D. Definição de comportamento | Concluída em 10/11/2026. |
 | FIX-024 | A. Implementação parcial | Concluída em 10/11/2026. |
-| FIX-025 | A. Implementação parcial | Aberta; ciclo de vida do perfil Angular ainda não implementado. |
+| FIX-025 | A. Implementação parcial | Concluída em 18/11/2026 após aprovação da revisão técnica final independente do Antigravity. |
 | FIX-026 | A. Implementação parcial | Encerrada após correções de isolamento e validações local e no GitHub Actions; cobertura e três navegadores preservados. |
 
-As FIX-021 a FIX-026 não integram os quantitativos históricos da tabela da seção 3.1. A FIX-021 concluiu Rules e testes locais; a FIX-022 tratou validadores documentais, a FIX-023 formalizou a política de controles desabilitados, a FIX-024 alinhou o `equalsToValidator`, a FIX-025 mantém pendente a integração do perfil e a FIX-026 foi encerrada após corrigir e validar o isolamento E2E. Os detalhes estão na seção 4.
+As FIX-021 a FIX-026 não integram os quantitativos históricos da tabela da seção 3.1. A FIX-021 concluiu Rules e testes locais; a FIX-022 tratou validadores documentais, a FIX-023 formalizou a política de controles desabilitados, a FIX-024 alinhou o `equalsToValidator`, a FIX-025 concluiu a integração do perfil após revisão técnica final e a FIX-026 foi encerrada após corrigir e validar o isolamento E2E. Os detalhes estão na seção 4.
 
 ## 4. Histórico e status das FIX-001 a FIX-026
 
-As categorias e descrições das FIX-001 a FIX-020 preservam o levantamento original. As FIX-021 a FIX-024 foram concluídas em etapas posteriores; a FIX-025 permanece aberta e a FIX-026 foi encerrada. Nenhum registro histórico anterior foi removido. Cada item registra seu encerramento ou status e as pendências futuras relacionadas.
+As categorias e descrições das FIX-001 a FIX-020 preservam o levantamento original. As FIX-021 a FIX-026 foram concluídas em etapas posteriores. Nenhum registro histórico anterior foi removido. Cada item registra seu encerramento ou status e as pendências futuras relacionadas.
 
 ### A. Implementação parcial
 
@@ -471,11 +471,18 @@ As categorias e descrições das FIX-001 a FIX-020 preservam o levantamento orig
 - **Status:** concluída tecnicamente para implementação, testes e auditoria das regras locais; sem declaração de publicação em produção.
 - **Relação com requisitos:** RNF-042.
 
-### FIX-025 — Integração do perfil de usuário com Firebase Authentication e Cloud Firestore (aberta)
+### FIX-025 — Integração do perfil de usuário com Firebase Authentication e Cloud Firestore (concluída)
 
 - **Objetivo:** implementar o ciclo de vida do perfil, respeitando o contrato de [`docs/data/user-profile.md`](../data/user-profile.md), a matriz de [`docs/security/firestore-authorization.md`](../security/firestore-authorization.md), a [ADR-030](../adr/ADR-030-autorizacao-de-perfis-por-custom-claims-do-firebase-authentication.md) e as regras locais em `firestore.rules`.
 - **Escopo:** usar o UID do Firebase Authentication como ID de `users/{uid}`; corrigir a incompatibilidade do `UserRepository`/`addDoc`; criar somente após verificação de e-mail; persistir inicialmente apenas o e-mail; criar idempotentemente o perfil quando ausente, sem depender exclusivamente do botão “Já verifiquei”; manter Authentication como fonte oficial do e-mail; não implementar alteração de e-mail; excluir somente o documento Firestore, sem excluir a conta Authentication; preservar as Security Rules existentes.
-- **Status:** aberta, especificada; implementação não iniciada nesta etapa.
+- **PRB-01 — Integração do ciclo de vida do perfil:** resolvido. O `AuthService` coordena a criação e sincronização do perfil após a confirmação da verificação do e-mail.
+- **PRB-02 — Testes de integração Auth + Firestore:** resolvido. Foram adicionados testes para o comportamento de sincronização do perfil.
+- **ACH-01 — Intermitência nos testes Vitest:** resolvido. O mock parcial do Firebase Firestore foi centralizado em `src/test-setup.ts`, eliminando o conflito de cache compartilhado entre arquivos de teste.
+- **Mock E2E do Firestore:** implementado para simular as operações da API REST do Firestore necessárias à validação do fluxo de verificação de e-mail e criação do perfil.
+- **Revisão técnica final:** aprovada pelo Antigravity em 18/11/2026, avaliando o commit `05f3fcd`. A revisão aprovou a camada de persistência, a integração Authentication + Firestore e a criação idempotente do perfil, sem impedimentos técnicos ao encerramento.
+- **Validação final registrada:** Vitest 293/293; Firestore Rules 35/35; Playwright 106/106 nos três navegadores (Chromium, Firefox e WebKit), conforme execução do Codex; três execuções consecutivas de Vitest com 293/293; type-check dos testes Firestore e Playwright aprovados; build aprovado; `git diff --check` aprovado.
+- **Observação de ambiente:** na revisão independente, o Antigravity validou Chromium e WebKit, mas não conseguiu inicializar o Firefox por limitação do sandbox (`clone() ENOSYS`). Isso não foi identificado como falha do Firefox nem da implementação.
+- **Status:** concluída em 18/11/2026 após aprovação técnica final independente. A implementação e as correções complementares já estavam commitadas; este registro não altera o histórico Git.
 
 ### FIX-026 — Isolar Firebase Emulators e Playwright nos testes E2E (encerrada)
 

@@ -16,6 +16,7 @@ import {
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FIREBASE_AUTH } from '../firebase/firebase.tokens';
+import { UserRepository } from '@core/data/repositories/user.repository';
 
 import { AuthService } from './auth.service';
 
@@ -52,7 +53,8 @@ function createDeferred<T>() {
 describe('AuthService', () => {
   let service: AuthService;
   let authMock: { currentUser: User | null };
-  let authStateCallback: (user: User | null) => void;
+  let authStateCallback: (user: User | null) => Promise<void>;
+  const ensureProfileMock = vi.fn();
 
   const signInMock = vi.mocked(signInWithEmailAndPassword);
   const registerMock = vi.mocked(createUserWithEmailAndPassword);
@@ -64,14 +66,15 @@ describe('AuthService', () => {
     vi.resetAllMocks();
 
     authMock = { currentUser: null };
-    authStateCallback = () => {
+    ensureProfileMock.mockResolvedValue('created');
+    authStateCallback = async () => {
       throw new Error('Callback de autenticação não configurado');
     };
 
     vi.mocked(onAuthStateChanged).mockImplementation((_auth, nextOrObserver) => {
       authStateCallback = nextOrObserver as unknown as (
         user: User | null,
-      ) => void;
+      ) => Promise<void>;
 
       return () => {};
     });
@@ -88,6 +91,7 @@ describe('AuthService', () => {
           provide: FIREBASE_AUTH,
           useValue: authMock as unknown as Auth,
         },
+        { provide: UserRepository, useValue: { ensureProfile: ensureProfileMock } },
       ],
     });
 
@@ -118,7 +122,7 @@ describe('AuthService', () => {
 
       expect(initialized).toBe(false);
 
-      authStateCallback(null);
+      await authStateCallback(null);
       await initialization;
 
       expect(initialized).toBe(true);
@@ -128,10 +132,11 @@ describe('AuthService', () => {
   });
 
   describe('mudanças de estado de autenticação', () => {
-    it('deve atualizar os signals derivados quando houver usuário', () => {
+    it('deve atualizar os signals derivados quando houver usuário', async () => {
       const user = createUser();
+      authMock.currentUser = user;
 
-      authStateCallback(user);
+      await authStateCallback(user);
 
       expect(service.authState()).toBe('authenticated');
       expect(service.user()).toBe(user);
@@ -143,8 +148,8 @@ describe('AuthService', () => {
       expect(service.loading()).toBe(false);
     });
 
-    it('deve refletir o estado não autenticado quando não houver usuário', () => {
-      authStateCallback(null);
+    it('deve refletir o estado não autenticado quando não houver usuário', async () => {
+      await authStateCallback(null);
 
       expect(service.authState()).toBe('unauthenticated');
       expect(service.user()).toBeNull();
@@ -192,6 +197,56 @@ describe('AuthService', () => {
       await expect(operation).rejects.toBe(error);
 
       expect(service.error()).toBe('E-mail ou senha inválidos.');
+      expect(service.loading()).toBe(false);
+    });
+  });
+
+  describe('concorrência do loading', () => {
+    it('não encerra o loading de B quando um reload antigo de A termina', async () => {
+      const userA = createUser({ uid: 'user-a' });
+      const userB = createUser({ uid: 'user-b' });
+      const reloadA = createDeferred<void>();
+      const operationB = createDeferred<void>();
+      authMock.currentUser = userA;
+      await authStateCallback(userA);
+      userA.reload.mockReturnValue(reloadA.promise);
+
+      const oldReload = service.reloadUser();
+      authMock.currentUser = userB;
+      await authStateCallback(userB);
+      sendPasswordResetEmailMock.mockReturnValue(operationB.promise);
+      const currentOperation = service.resetPassword(userB.email!);
+
+      expect(service.loading()).toBe(true);
+
+      reloadA.resolve();
+      await oldReload;
+
+      expect(service.loading()).toBe(true);
+
+      operationB.resolve();
+      await currentOperation;
+
+      expect(service.loading()).toBe(false);
+    });
+
+    it('mantém loading ativo até todas as operações concorrentes terminarem', async () => {
+      const loginOperation = createDeferred<UserCredential>();
+      const resetOperation = createDeferred<void>();
+      signInMock.mockReturnValue(loginOperation.promise);
+      sendPasswordResetEmailMock.mockReturnValue(resetOperation.promise);
+
+      const login = service.login('a@example.com', 'senha');
+      const reset = service.resetPassword('a@example.com');
+
+      loginOperation.resolve({} as UserCredential);
+      await login;
+
+      expect(service.loading()).toBe(true);
+
+      resetOperation.resolve();
+      await reset;
+
       expect(service.loading()).toBe(false);
     });
   });
@@ -319,6 +374,7 @@ describe('AuthService', () => {
 
       expect(service.loading()).toBe(false);
       expect(service.error()).toBeNull();
+      expect(ensureProfileMock).not.toHaveBeenCalled();
     });
 
     it('deve recarregar o usuário e atualizar o signal', async () => {
@@ -360,6 +416,124 @@ describe('AuthService', () => {
 
       expect(service.user()).toBe(user);
       expect(service.emailVerified()).toBe(true);
+    });
+  });
+
+  describe('sincronização do perfil', () => {
+    it('não garante perfil sem sessão, sem e-mail verificado ou sem e-mail', async () => {
+      await authStateCallback(null);
+      const unverified = createUser({ emailVerified: false });
+      authMock.currentUser = unverified;
+      await authStateCallback(unverified);
+      const noEmail = createUser({ email: null });
+      authMock.currentUser = noEmail;
+      await authStateCallback(noEmail);
+
+      expect(ensureProfileMock).not.toHaveBeenCalled();
+    });
+
+    it.each(['created', 'already-existed'] as const)(
+      'considera sincronizado quando ensureProfile retorna %s', async result => {
+        ensureProfileMock.mockResolvedValue(result);
+        const user = createUser();
+        authMock.currentUser = user;
+
+        await authStateCallback(user);
+
+        expect(ensureProfileMock).toHaveBeenCalledWith(user.uid, user.email);
+        expect(service.profileSyncState()).toBe('synced');
+      },
+    );
+
+    it('cria perfil quando reloadUser observa a verificação do e-mail', async () => {
+      const user = createUser({ emailVerified: false });
+      authMock.currentUser = user;
+      await authStateCallback(user);
+      ensureProfileMock.mockClear();
+      user.reload.mockImplementation(async () => {
+        (user as unknown as { emailVerified: boolean }).emailVerified = true;
+      });
+
+      await service.reloadUser();
+
+      expect(ensureProfileMock).toHaveBeenCalledWith(user.uid, user.email);
+      expect(service.profileSyncState()).toBe('synced');
+    });
+
+    it('não cria perfil quando reloadUser mantém o e-mail não verificado', async () => {
+      const user = createUser({ emailVerified: false });
+      authMock.currentUser = user;
+      await authStateCallback(user);
+      ensureProfileMock.mockClear();
+
+      await service.reloadUser();
+
+      expect(ensureProfileMock).not.toHaveBeenCalled();
+    });
+
+    it('isola falha de persistência do estado de autenticação e permite nova tentativa', async () => {
+      const error = new Error('Firestore indisponível');
+      const user = createUser();
+      authMock.currentUser = user;
+      ensureProfileMock.mockRejectedValueOnce(error);
+
+      await authStateCallback(user);
+
+      expect(service.profileSyncState()).toBe('error');
+      expect(service.profileSyncError()).toBe(error);
+      expect(service.authState()).toBe('authenticated');
+      expect(authMock.currentUser).toBe(user);
+
+      ensureProfileMock.mockResolvedValueOnce('already-existed');
+      await service.reloadUser();
+
+      expect(service.profileSyncState()).toBe('synced');
+      expect(service.profileSyncError()).toBeNull();
+      expect(service.authState()).toBe('authenticated');
+    });
+
+    it('ignora conclusão de sincronização da sessão anterior', async () => {
+      const deferredA = createDeferred<'created' | 'already-existed'>();
+      const deferredB = createDeferred<'created' | 'already-existed'>();
+      ensureProfileMock
+        .mockReturnValueOnce(deferredA.promise)
+        .mockReturnValueOnce(deferredB.promise);
+      const userA = createUser({ uid: 'user-a' });
+      const userB = createUser({ uid: 'user-b' });
+      authMock.currentUser = userA;
+      const oldSession = authStateCallback(userA);
+      authMock.currentUser = userB;
+      const currentSession = authStateCallback(userB);
+      deferredA.resolve('created');
+      await oldSession;
+
+      expect(service.profileSyncState()).toBe('syncing');
+      deferredB.resolve('already-existed');
+      await currentSession;
+
+      expect(service.user()).toBe(userB);
+      expect(service.profileSyncState()).toBe('synced');
+      expect(ensureProfileMock).toHaveBeenNthCalledWith(1, 'user-a', userA.email);
+      expect(ensureProfileMock).toHaveBeenNthCalledWith(2, 'user-b', userB.email);
+    });
+
+    it('não aplica reload antigo sobre os signals da sessão atual', async () => {
+      const userA = createUser({ uid: 'user-a' });
+      const userB = createUser({ uid: 'user-b' });
+      const deferredReload = createDeferred<void>();
+      authMock.currentUser = userA;
+      await authStateCallback(userA);
+      userA.reload.mockReturnValue(deferredReload.promise);
+      const oldReload = service.reloadUser();
+
+      authMock.currentUser = userB;
+      await authStateCallback(userB);
+      deferredReload.resolve();
+      await oldReload;
+
+      expect(service.user()).toBe(userB);
+      expect(service.userEmail()).toBe(userB.email);
+      expect(service.emailVerified()).toBe(userB.emailVerified);
     });
   });
 
