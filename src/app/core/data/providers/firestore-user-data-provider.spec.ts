@@ -3,18 +3,12 @@ import {
   doc,
   getDoc,
   runTransaction,
+  setDoc,
 } from 'firebase/firestore';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { Collections } from '../collections/collections';
 import { FirestoreUserDataProvider } from './firestore-user-data-provider';
-
-vi.mock('firebase/firestore', () => ({
-  deleteDoc: vi.fn(),
-  doc: vi.fn(() => ({ path: 'users/test-uid' })),
-  getDoc: vi.fn(),
-  runTransaction: vi.fn(),
-}));
 
 describe('FirestoreUserDataProvider', () => {
   const firestore = { marker: 'firestore' } as never;
@@ -24,7 +18,11 @@ describe('FirestoreUserDataProvider', () => {
   let provider: FirestoreUserDataProvider;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.mocked(doc).mockReset();
+    vi.mocked(getDoc).mockReset();
+    vi.mocked(setDoc).mockReset();
+    vi.mocked(deleteDoc).mockReset();
+    vi.mocked(runTransaction).mockReset();
     provider = new FirestoreUserDataProvider(firestore);
     vi.mocked(doc).mockReturnValue(documentRef as never);
   });

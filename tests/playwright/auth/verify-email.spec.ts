@@ -140,6 +140,22 @@ test.describe('Verificação de e-mail', () => {
       page.getByText('dashboard works!', { exact: true }),
     ).toBeVisible();
 
+    expect(
+      mock.firestore.operations.map(({ operation }) => operation),
+    ).toEqual(['batchGet', 'commit']);
+    expect(mock.firestore.operations[0]?.documentPaths).toEqual([
+      'users/e2e-user',
+    ]);
+    expect(mock.firestore.profileWrites).toEqual([
+      {
+        documentPath: 'users/e2e-user',
+        fields: { email: USER_EMAIL },
+      },
+    ]);
+    expect(mock.firestore.getProfile('e2e-user')).toEqual({
+      email: USER_EMAIL,
+    });
+
     expect(mock.handledOperations).toEqual([
       'signInWithPassword',
       'lookup',

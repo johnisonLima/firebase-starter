@@ -4,6 +4,10 @@ import {
   type Request,
   type Route,
 } from '@playwright/test';
+import {
+  mockFirebaseFirestore,
+  type FirebaseFirestoreMock,
+} from './firebase-firestore-routes';
 
 export type FirebaseAuthOperation =
   | 'signUp'
@@ -35,6 +39,7 @@ export interface FirebaseAuthMockOptions {
 export interface FirebaseAuthMock {
   readonly handledOperations: FirebaseAuthOperation[];
   readonly blockedRequests: string[];
+  readonly firestore: FirebaseFirestoreMock;
 
   /**
    * Substitui a resposta de uma operação durante o cenário. Útil para
@@ -141,6 +146,7 @@ export async function mockFirebaseAuth(
   page: Page,
   options: FirebaseAuthMockOptions,
 ): Promise<FirebaseAuthMock> {
+  const firestore = await mockFirebaseFirestore(page);
   const allowed = new Set(options.allow);
   const handledOperations: FirebaseAuthOperation[] = [];
   const blockedRequests: string[] = [];
@@ -202,6 +208,7 @@ export async function mockFirebaseAuth(
   return {
     handledOperations,
     blockedRequests,
+    firestore,
 
     setResponse(
       operation: FirebaseAuthOperation,
@@ -220,6 +227,7 @@ export async function mockFirebaseAuth(
         blockedRequests,
         'Operações do Firebase Authentication não autorizadas foram interceptadas',
       ).toEqual([]);
+      firestore.expectNoUnexpectedRequests();
     },
   };
 }
